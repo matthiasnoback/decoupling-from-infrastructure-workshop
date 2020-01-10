@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+    php:
+        image: php:7.2-alpine
+        volumes:
+            - ./:/opt/project:cached
+        working_dir: /opt/project
+        user: ${HOST_UID}:${HOST_GID}
+
+    composer:
+        image: composer:1.8
+        volumes:
+            - ./:/app:cached
+            - ~/.composer:/tmp:cached
+        user: ${HOST_UID}:${HOST_GID}
