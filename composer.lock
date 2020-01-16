@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e368aff4cf238e6e7922d9f9766242fa",
+    "content-hash": "2a78eb46e647c8453067471d3ec69c5f",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -1959,6 +1959,36 @@
                 "versions"
             ],
             "time": "2018-06-13T13:22:40+00:00"
+        },
+        {
+            "name": "matthiasnoback/behat-expect-exception",
+            "version": "v0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matthiasnoback/behat-expect-exception.git",
+                "reference": "9dfa73d7107b0391f55b0f0ac2047a97c0430f62"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matthiasnoback/behat-expect-exception/zipball/9dfa73d7107b0391f55b0f0ac2047a97c0430f62",
+                "reference": "9dfa73d7107b0391f55b0f0ac2047a97c0430f62",
+                "shasum": ""
+            },
+            "require-dev": {
+                "behat/behat": "^3.5",
+                "php": "^7.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2020-01-23T17:27:41+00:00"
         },
         {
             "name": "myclabs/deep-copy",
