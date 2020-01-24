@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\Acceptance\Support;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\BuyTicket\BuyTicket;
 use DevPro\Application\ListUpcomingEvents\ListUpcomingEvents;
 use DevPro\Application\ListUpcomingEvents\UpcomingEvent;
 use DevPro\Application\ScheduleTraining\ScheduleTraining;
@@ -124,5 +125,14 @@ final class TestServiceContainer
     public function scheduleTraining(): ScheduleTraining
     {
         return new ScheduleTraining($this->trainingRepository());
+    }
+
+    public function buyTicket(): BuyTicket
+    {
+        return new BuyTicket(
+            $this->trainingRepository(),
+            $this->userRepository(),
+            $this->ticketRepository()
+        );
     }
 }

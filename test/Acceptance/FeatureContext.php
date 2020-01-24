@@ -7,6 +7,8 @@ use Assert\Assert;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
+use DevPro\Domain\Model\Training\TrainingId;
+use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserId;
 use RuntimeException;
 use Test\Acceptance\Support\TestServiceContainer;
@@ -24,6 +26,11 @@ final class FeatureContext implements Context
      * @var string | null
      */
     private $title;
+
+    /**
+     * @var TrainingId | null
+     */
+    private $trainingId;
 
     public function __construct()
     {
@@ -49,6 +56,42 @@ final class FeatureContext implements Context
             $title,
             $date
         );
+    }
+
+    /**
+     * @Given the organizer has scheduled a training
+     */
+    public function theOrganizerHasScheduledATraining()
+    {
+        $this->trainingId = $this->container->scheduleTraining()->schedule(
+            $this->theOrganizer()->asString(),
+            'The title',
+            '01-01-2020'
+        );
+    }
+
+    /**
+     * @When a user buys a ticket for this training
+     */
+    public function aUserBuysATicketForThisTraining()
+    {
+        Assert::that($this->trainingId)->isInstanceOf(TrainingId::class);
+
+        $user = User::create($this->container->userRepository()->nextIdentity());
+        $this->container->userRepository()->save($user);
+
+        $this->container->buyTicket()->buyForTraining(
+            $this->trainingId->asString(),
+            $user->userId()->asString()
+        );
+    }
+
+    /**
+     * @Then they should be registered as an attendee
+     */
+    public function theyShouldBeRegisteredAsAnAttendee()
+    {
+        throw new PendingException();
     }
 
     /**

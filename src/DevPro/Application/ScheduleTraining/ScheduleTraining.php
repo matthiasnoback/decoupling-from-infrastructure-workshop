@@ -6,6 +6,7 @@ namespace DevPro\Application\ScheduleTraining;
 use Assert\Assert;
 use DateTimeImmutable;
 use DevPro\Domain\Model\Training\Training;
+use DevPro\Domain\Model\Training\TrainingId;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserId;
 
@@ -21,18 +22,22 @@ final class ScheduleTraining
         $this->trainingRepository = $trainingRepository;
     }
 
-    public function schedule(string $organizerId, string $title, string $scheduledDate): void
+    public function schedule(string $organizerId, string $title, string $scheduledDate): TrainingId
     {
         $scheduledDate = DateTimeImmutable::createFromFormat('d-m-Y', $scheduledDate);
         Assert::that($scheduledDate)->isInstanceOf(DateTimeImmutable::class);
 
+        $trainingId = $this->trainingRepository->nextIdentity();
+
         $training = Training::schedule(
-            $this->trainingRepository->nextIdentity(),
+            $trainingId,
             UserId::fromString($organizerId),
             $title,
             $scheduledDate
         );
 
         $this->trainingRepository->save($training);
+
+        return $trainingId;
     }
 }
