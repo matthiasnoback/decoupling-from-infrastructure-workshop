@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\Acceptance\Support;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\ScheduleTraining\ScheduleTraining;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
@@ -90,5 +91,10 @@ final class TestServiceContainer
     public function ticketRepository(): TicketRepository
     {
         return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository($this->eventDispatcher());
+    }
+
+    public function scheduleTraining(): ScheduleTraining
+    {
+        return new ScheduleTraining($this->trainingRepository());
     }
 }
