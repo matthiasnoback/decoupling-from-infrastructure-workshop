@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\Acceptance\Support;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\CreateUser;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
@@ -96,5 +97,10 @@ final class TestServiceContainer
     public function ticketRepository(): TicketRepository
     {
         return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
+    }
+
+    public function createUser(): CreateUser
+    {
+        return new CreateUser($this->userRepository(), $this->eventDispatcher());
     }
 }

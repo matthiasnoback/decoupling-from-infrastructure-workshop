@@ -49,11 +49,11 @@ final class FeatureContext implements Context
 
     private function theOrganizer(): UserId
     {
-        return UserId::fromString('bb235de9-c15d-4bd8-9bc3-d31e4cc0e96f');
+        return $this->container->createUser()->create('The organizer');
     }
 
     private function aUser(): UserId
     {
-        return UserId::fromString('ce3270f0-c454-4046-b9f8-3280db052892');
+        return $this->container->createUser()->create('A user');
     }
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DevPro\Domain\Model\User;
 
+use Assert\Assert;
 use DevPro\Domain\Model\Common\EventRecordingCapabilities;
 
 final class User
@@ -14,14 +15,22 @@ final class User
      */
     private $userId;
 
-    private function __construct(UserId $userId)
+    /**
+     * @var string
+     */
+    private $name;
+
+    private function __construct(UserId $userId, string $name)
     {
+        Assert::that($name)->notEmpty('The name of a user should not be empty');
+
         $this->userId = $userId;
+        $this->name = $name;
     }
 
-    public static function create(UserId $userId): self
+    public static function create(UserId $userId, string $name): self
     {
-        return new self($userId);
+        return new self($userId, $name);
     }
 
     public function userId(): UserId
