@@ -4,9 +4,12 @@ declare(strict_types=1);
 namespace Test\Acceptance\Support;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\ListUpcomingEvents\ListUpcomingEvents;
+use DevPro\Application\ListUpcomingEvents\UpcomingEvent;
 use DevPro\Application\ScheduleTraining\ScheduleTraining;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
+use DevPro\Domain\Model\Training\TrainingWasScheduled;
 use DevPro\Domain\Model\User\UserRepository;
 
 final class TestServiceContainer
@@ -41,6 +44,11 @@ final class TestServiceContainer
      */
     private $ticketRepository;
 
+    /**
+     * @var InMemoryListUpcomingEvents | null
+     */
+    private $listUpcomingEvents;
+
     private function clock(): ClockForTesting
     {
         return $this->clock ?? $this->clock = new ClockForTesting();
@@ -52,9 +60,22 @@ final class TestServiceContainer
             $this->eventDispatcher = new EventDispatcher();
 
             $this->eventDispatcher->subscribeToAllEvents($this->eventSubscriberSpy());
+            $this->eventDispatcher->subscribeToAllEvents(
+                function (object $event): void {
+                    echo '- Event dispatched: ' . get_class($event) . "\n";
+                });
 
-            // Register your own subscribers here:
-            // $this->>eventDispatcher->registerSubscriber(EventClass::class, [$this->service(), 'methodName']);
+            $this->eventDispatcher->registerSubscriber(
+                TrainingWasScheduled::class,
+                function (TrainingWasScheduled $trainingWasScheduled): void {
+                    $upcomingEvent = new UpcomingEvent(
+                        $trainingWasScheduled->trainingId(),
+                        $trainingWasScheduled->title()
+                    );
+                    $this->listUpcomingEvents()->add($upcomingEvent);
+                }
+            );
+
         }
 
         return $this->eventDispatcher;
@@ -85,12 +106,19 @@ final class TestServiceContainer
 
     public function trainingRepository(): TrainingRepository
     {
-        return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository($this->eventDispatcher());
+        return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository(
+                $this->eventDispatcher());
     }
 
     public function ticketRepository(): TicketRepository
     {
-        return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository($this->eventDispatcher());
+        return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository(
+                $this->eventDispatcher());
+    }
+
+    public function listUpcomingEvents(): ListUpcomingEvents
+    {
+        return $this->listUpcomingEvents ?? $this->listUpcomingEvents = new InMemoryListUpcomingEvents();
     }
 
     public function scheduleTraining(): ScheduleTraining

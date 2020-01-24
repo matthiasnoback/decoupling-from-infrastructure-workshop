@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Test\Acceptance;
 
+use Assert\Assert;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
 use DevPro\Domain\Model\User\UserId;
+use RuntimeException;
 use Test\Acceptance\Support\TestServiceContainer;
 
 final class FeatureContext implements Context
@@ -17,6 +19,11 @@ final class FeatureContext implements Context
      * @var TestServiceContainer
      */
     private $container;
+
+    /**
+     * @var string | null
+     */
+    private $title;
 
     public function __construct()
     {
@@ -36,6 +43,7 @@ final class FeatureContext implements Context
      */
     public function theOrganizerSchedulesANewTrainingCalledFor(string $title, string $date): void
     {
+        $this->title = $title;
         $this->container->scheduleTraining()->schedule(
             $this->theOrganizer()->asString(),
             $title,
@@ -48,7 +56,15 @@ final class FeatureContext implements Context
      */
     public function itShowsUpOnTheListOfUpcomingEvents(): void
     {
-        throw new PendingException();
+        Assert::that($this->title)->string();
+
+        foreach ($this->container->listUpcomingEvents()->listUpcomingEvents() as $upcomingEvent) {
+            if ($upcomingEvent->title() === $this->title) {
+                return;
+            }
+        }
+
+        throw new RuntimeException('We did not find the scheduled training on the list of upcoming events');
     }
 
     private function theOrganizer(): UserId
