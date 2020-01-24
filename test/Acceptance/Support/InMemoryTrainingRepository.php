@@ -7,6 +7,7 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Domain\Model\Training\Training;
 use DevPro\Domain\Model\Training\TrainingId;
 use DevPro\Domain\Model\Training\TrainingRepository;
+use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
 final class InMemoryTrainingRepository implements TrainingRepository
@@ -40,5 +41,10 @@ final class InMemoryTrainingRepository implements TrainingRepository
         }
 
         return $this->entities[$id->asString()];
+    }
+
+    public function nextIdentity(): TrainingId
+    {
+        return TrainingId::fromString(Uuid::uuid4()->toString());
     }
 }

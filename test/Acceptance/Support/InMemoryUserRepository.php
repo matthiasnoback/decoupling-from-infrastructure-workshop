@@ -7,6 +7,7 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserId;
 use DevPro\Domain\Model\User\UserRepository;
+use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
 final class InMemoryUserRepository implements UserRepository
@@ -40,5 +41,10 @@ final class InMemoryUserRepository implements UserRepository
         }
 
         return $this->entities[$id->asString()];
+    }
+
+    public function nextIdentity(): UserId
+    {
+        return UserId::fromString(Uuid::uuid4()->toString());
     }
 }

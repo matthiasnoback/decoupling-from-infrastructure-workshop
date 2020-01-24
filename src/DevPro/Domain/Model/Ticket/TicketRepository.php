@@ -13,4 +13,6 @@ interface TicketRepository
      * @throws RuntimeException When the entity could not be found
      */
     public function getById(TicketId $id): Ticket;
+
+    public function nextIdentity(): TicketId;
 }

@@ -13,4 +13,6 @@ interface TrainingRepository
      * @throws RuntimeException When the entity could not be found
      */
     public function getById(TrainingId $trainingId): Training;
+
+    public function nextIdentity(): TrainingId;
 }

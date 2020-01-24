@@ -7,6 +7,7 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Domain\Model\Ticket\Ticket;
 use DevPro\Domain\Model\Ticket\TicketId;
 use DevPro\Domain\Model\Ticket\TicketRepository;
+use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
 final class InMemoryTicketRepository implements TicketRepository
@@ -40,5 +41,10 @@ final class InMemoryTicketRepository implements TicketRepository
         }
 
         return $this->entities[$id->asString()];
+    }
+
+    public function nextIdentity(): TicketId
+    {
+        return TicketId::fromString(Uuid::uuid4()->toString());
     }
 }
