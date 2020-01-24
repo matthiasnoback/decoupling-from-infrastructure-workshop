@@ -52,8 +52,14 @@ final class TestServiceContainer
 
             $this->eventDispatcher->subscribeToAllEvents($this->eventSubscriberSpy());
 
+            $this->eventDispatcher->subscribeToAllEvents(
+                function (object $event): void {
+                    echo '- Event dispatched: ' . get_class($event) . "\n";
+                }
+            );
+
             // Register your own subscribers here:
-            // $this->>eventDispatcher->registerSubscriber(EventClass::class, [$this->service(), 'methodName']);
+            // $this->eventDispatcher->registerSubscriber(EventClass::class, [$this->service(), 'methodName']);
         }
 
         return $this->eventDispatcher;
