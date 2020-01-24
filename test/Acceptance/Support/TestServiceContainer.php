@@ -85,16 +85,16 @@ final class TestServiceContainer
 
     public function userRepository(): UserRepository
     {
-        return $this->userRepository ?? $this->userRepository = new InMemoryUserRepository($this->eventDispatcher());
+        return $this->userRepository ?? $this->userRepository = new InMemoryUserRepository();
     }
 
     public function trainingRepository(): TrainingRepository
     {
-        return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository($this->eventDispatcher());
+        return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository();
     }
 
     public function ticketRepository(): TicketRepository
     {
-        return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository($this->eventDispatcher());
+        return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
     }
 }
