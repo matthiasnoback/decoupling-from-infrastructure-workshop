@@ -46,4 +46,9 @@ final class TrainingWasScheduled
     {
         return $this->scheduledDate;
     }
+
+    public function __toString(): string
+    {
+        return 'trainingId: ' . $this->trainingId->asString();
+    }
 }

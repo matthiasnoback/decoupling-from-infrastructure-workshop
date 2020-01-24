@@ -33,4 +33,9 @@ final class TicketWasBoughtForTraining
     {
         return $this->trainingId;
     }
+
+    public function __toString(): string
+    {
+        return 'trainingId: ' . $this->trainingId->asString() . ', userId: ' . $this->userId->asString();
+    }
 }

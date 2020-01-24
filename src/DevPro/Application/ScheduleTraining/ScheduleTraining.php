@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DevPro\Application\ScheduleTraining;
 
 use Assert\Assert;
+use Common\EventDispatcher\EventDispatcher;
 use DateTimeImmutable;
 use DevPro\Domain\Model\Training\Training;
 use DevPro\Domain\Model\Training\TrainingId;
@@ -17,9 +18,17 @@ final class ScheduleTraining
      */
     private $trainingRepository;
 
-    public function __construct(TrainingRepository $trainingRepository)
-    {
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
+    public function __construct(
+        TrainingRepository $trainingRepository,
+        EventDispatcher $eventDispatcher
+    ) {
         $this->trainingRepository = $trainingRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function schedule(string $organizerId, string $title, string $scheduledDate): TrainingId
@@ -37,6 +46,8 @@ final class ScheduleTraining
         );
 
         $this->trainingRepository->save($training);
+
+        $this->eventDispatcher->dispatchAll($training->releaseEvents());
 
         return $trainingId;
     }

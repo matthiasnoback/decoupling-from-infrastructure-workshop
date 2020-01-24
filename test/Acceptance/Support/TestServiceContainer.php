@@ -5,10 +5,12 @@ namespace Test\Acceptance\Support;
 
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\BuyTicket\BuyTicket;
+use DevPro\Application\BuyTicket\RegisterAttendee;
 use DevPro\Application\ListUpcomingEvents\ListUpcomingEvents;
 use DevPro\Application\ListUpcomingEvents\UpcomingEvent;
 use DevPro\Application\ScheduleTraining\ScheduleTraining;
 use DevPro\Domain\Model\Ticket\TicketRepository;
+use DevPro\Domain\Model\Ticket\TicketWasBoughtForTraining;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\Training\TrainingWasScheduled;
 use DevPro\Domain\Model\User\UserRepository;
@@ -63,7 +65,7 @@ final class TestServiceContainer
             $this->eventDispatcher->subscribeToAllEvents($this->eventSubscriberSpy());
             $this->eventDispatcher->subscribeToAllEvents(
                 function (object $event): void {
-                    echo '- Event dispatched: ' . get_class($event) . "\n";
+                    echo '- Event dispatched: ' . get_class($event) . ': ' . (string)$event . "\n";
                 });
 
             $this->eventDispatcher->registerSubscriber(
@@ -77,6 +79,10 @@ final class TestServiceContainer
                 }
             );
 
+            $this->eventDispatcher->registerSubscriber(
+                TicketWasBoughtForTraining::class,
+                [$this->registerAttendee(), 'whenTicketWasBoughtForTraining']
+            );
         }
 
         return $this->eventDispatcher;
@@ -102,19 +108,17 @@ final class TestServiceContainer
 
     public function userRepository(): UserRepository
     {
-        return $this->userRepository ?? $this->userRepository = new InMemoryUserRepository($this->eventDispatcher());
+        return $this->userRepository ?? $this->userRepository = new InMemoryUserRepository();
     }
 
     public function trainingRepository(): TrainingRepository
     {
-        return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository(
-                $this->eventDispatcher());
+        return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository();
     }
 
     public function ticketRepository(): TicketRepository
     {
-        return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository(
-                $this->eventDispatcher());
+        return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
     }
 
     public function listUpcomingEvents(): ListUpcomingEvents
@@ -124,7 +128,7 @@ final class TestServiceContainer
 
     public function scheduleTraining(): ScheduleTraining
     {
-        return new ScheduleTraining($this->trainingRepository());
+        return new ScheduleTraining($this->trainingRepository(), $this->eventDispatcher());
     }
 
     public function buyTicket(): BuyTicket
@@ -132,7 +136,16 @@ final class TestServiceContainer
         return new BuyTicket(
             $this->trainingRepository(),
             $this->userRepository(),
-            $this->ticketRepository()
+            $this->ticketRepository(),
+            $this->eventDispatcher()
+        );
+    }
+
+    public function registerAttendee(): RegisterAttendee
+    {
+        return new RegisterAttendee(
+            $this->trainingRepository(),
+            $this->eventDispatcher()
         );
     }
 }

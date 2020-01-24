@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace DevPro\Application\BuyTicket;
 
+use Common\EventDispatcher\EventDispatcher;
 use DevPro\Domain\Model\Ticket\Ticket;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingId;
@@ -27,14 +28,21 @@ final class BuyTicket
      */
     private $ticketRepository;
 
+    /**
+     * @var EventDispatcher
+     */
+    private $eventDispatcher;
+
     public function __construct(
         TrainingRepository $trainingRepository,
         UserRepository $userRepository,
-        TicketRepository $ticketRepository
+        TicketRepository $ticketRepository,
+        EventDispatcher $eventDispatcher
     ) {
         $this->trainingRepository = $trainingRepository;
         $this->userRepository = $userRepository;
         $this->ticketRepository = $ticketRepository;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public function buyForTraining(string $trainingId, string $userId): void
@@ -49,5 +57,7 @@ final class BuyTicket
         );
 
         $this->ticketRepository->save($ticket);
+
+        $this->eventDispatcher->dispatchAll($ticket->releaseEvents());
     }
 }

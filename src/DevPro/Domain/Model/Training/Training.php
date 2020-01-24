@@ -31,6 +31,10 @@ final class Training
      * @var DateTimeImmutable
      */
     private $scheduledDate;
+    /**
+     * @var array & UserId[]
+     */
+    private $attendees = [];
 
     private function __construct(
         TrainingId $trainingId,
@@ -67,5 +71,12 @@ final class Training
     public function trainingId(): TrainingId
     {
         return $this->trainingId;
+    }
+
+    public function registerAttendee(UserId $userId)
+    {
+        $this->attendees[] = $userId;
+
+        $this->recordThat(new AttendeeWasRegistered($this->trainingId, $userId));
     }
 }

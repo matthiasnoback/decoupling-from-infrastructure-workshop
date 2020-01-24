@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Test\Acceptance\Support;
 
-use Common\EventDispatcher\EventDispatcher;
 use DevPro\Domain\Model\Training\Training;
 use DevPro\Domain\Model\Training\TrainingId;
 use DevPro\Domain\Model\Training\TrainingRepository;
@@ -17,21 +16,9 @@ final class InMemoryTrainingRepository implements TrainingRepository
      */
     private $entities = [];
 
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
-
-    public function __construct(EventDispatcher $eventDispatcher)
-    {
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
     public function save(Training $entity): void
     {
         $this->entities[$entity->trainingId()->asString()] = $entity;
-
-        $this->eventDispatcher->dispatchAll($entity->releaseEvents());
     }
 
     public function getById(TrainingId $id): Training

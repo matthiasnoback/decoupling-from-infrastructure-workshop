@@ -5,8 +5,8 @@ namespace Test\Acceptance;
 
 use Assert\Assert;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
+use DevPro\Domain\Model\Training\AttendeeWasRegistered;
 use DevPro\Domain\Model\Training\TrainingId;
 use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserId;
@@ -31,6 +31,11 @@ final class FeatureContext implements Context
      * @var TrainingId | null
      */
     private $trainingId;
+
+    /**
+     * @var UserId | null
+     */
+    private $userId;
 
     public function __construct()
     {
@@ -79,6 +84,7 @@ final class FeatureContext implements Context
 
         $user = User::create($this->container->userRepository()->nextIdentity());
         $this->container->userRepository()->save($user);
+        $this->userId = $user->userId();
 
         $this->container->buyTicket()->buyForTraining(
             $this->trainingId->asString(),
@@ -91,7 +97,18 @@ final class FeatureContext implements Context
      */
     public function theyShouldBeRegisteredAsAnAttendee()
     {
-        throw new PendingException();
+        Assert::that($this->trainingId)->isInstanceOf(TrainingId::class);
+        Assert::that($this->userId)->isInstanceOf(UserId::class);
+
+        foreach ($this->container->eventSubscriberSpy()->dispatchedEvents() as $event) {
+            if ($event instanceof AttendeeWasRegistered
+                && $event->trainingId()->equals($this->trainingId)
+                && $event->userId()->equals($this->userId)) {
+                return;
+            }
+        }
+
+        throw new RuntimeException('Expected an AttendeeWasRegistered event');
     }
 
     /**
