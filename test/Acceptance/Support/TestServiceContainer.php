@@ -6,9 +6,11 @@ namespace Test\Acceptance\Support;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\BuyTicket;
 use DevPro\Application\CreateUser;
+use DevPro\Application\RegisterAttendee;
 use DevPro\Application\TrainingEventSubscriber;
 use DevPro\Application\UpcomingEventsRepository;
 use DevPro\Domain\Model\Ticket\TicketRepository;
+use DevPro\Domain\Model\Ticket\TicketWasBoughtForTraining;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\Training\TrainingWasScheduled;
 use DevPro\Domain\Model\User\UserRepository;
@@ -78,6 +80,11 @@ final class TestServiceContainer
                 TrainingWasScheduled::class,
                 [$this->trainingEventSubscriber(), 'whenTrainingWasScheduled']
             );
+
+            $this->eventDispatcher->registerSubscriber(
+                TicketWasBoughtForTraining::class,
+                [$this->registerAttendee(), 'whenTicketWasBoughtForTraining']
+            );
         }
 
         return $this->eventDispatcher;
@@ -138,6 +145,14 @@ final class TestServiceContainer
             $this->userRepository(),
             $this->trainingRepository(),
             $this->ticketRepository(),
+            $this->eventDispatcher()
+        );
+    }
+
+    private function registerAttendee(): RegisterAttendee
+    {
+        return new RegisterAttendee(
+            $this->trainingRepository(),
             $this->eventDispatcher()
         );
     }

@@ -41,11 +41,21 @@ final class Ticket
         UserId $userId,
         TrainingId $trainingId
     ): self {
-        return new self(
+        $ticket = new self(
             $ticketId,
             $userId,
             $trainingId
         );
+
+        $ticket->recordThat(
+            new TicketWasBoughtForTraining(
+                $ticketId,
+                $trainingId,
+                $userId
+            )
+        );
+
+        return $ticket;
     }
 
     public function ticketId(): TicketId
