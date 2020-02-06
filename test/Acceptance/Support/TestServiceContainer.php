@@ -5,8 +5,11 @@ namespace Test\Acceptance\Support;
 
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\CreateUser;
+use DevPro\Application\TrainingEventSubscriber;
+use DevPro\Application\UpcomingEventsRepository;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
+use DevPro\Domain\Model\Training\TrainingWasScheduled;
 use DevPro\Domain\Model\User\UserRepository;
 
 final class TestServiceContainer
@@ -41,7 +44,17 @@ final class TestServiceContainer
      */
     private $ticketRepository;
 
-    private function clock(): ClockForTesting
+    /**
+     * @var TrainingEventSubscriber
+     */
+    private $trainingEventSubscriber;
+
+    /**
+     * @var UpcomingEventsRepository
+     */
+    private $upcomingEventsRepository;
+
+    public function clock(): ClockForTesting
     {
         return $this->clock ?? $this->clock = new ClockForTesting();
     }
@@ -60,7 +73,10 @@ final class TestServiceContainer
             );
 
             // Register your own subscribers here:
-            // $this->eventDispatcher->registerSubscriber(EventClass::class, [$this->service(), 'methodName']);
+            $this->eventDispatcher->registerSubscriber(
+                TrainingWasScheduled::class,
+                [$this->trainingEventSubscriber(), 'whenTrainingWasScheduled']
+            );
         }
 
         return $this->eventDispatcher;
@@ -94,9 +110,20 @@ final class TestServiceContainer
         return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository();
     }
 
+
+    public function upcomingEventsRepository(): UpcomingEventsRepository
+    {
+        return $this->upcomingEventsRepository ?? $this->upcomingEventsRepository = new InMemoryUpcomingEventsRepository();
+    }
+
     public function ticketRepository(): TicketRepository
     {
         return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
+    }
+
+    public function trainingEventSubscriber(): TrainingEventSubscriber
+    {
+        return $this->trainingEventSubscriber ?? $this->trainingEventSubscriber = new TrainingEventSubscriber($this->upcomingEventsRepository());
     }
 
     public function createUser(): CreateUser

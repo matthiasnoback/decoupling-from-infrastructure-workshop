@@ -3,18 +3,25 @@ declare(strict_types=1);
 
 namespace Test\Acceptance\Support;
 
+use DevPro\Application\ListTrainings;
+use DevPro\Application\EventForList;
 use DevPro\Domain\Model\Training\Training;
 use DevPro\Domain\Model\Training\TrainingId;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
-final class InMemoryTrainingRepository implements TrainingRepository
+final class InMemoryTrainingRepository implements TrainingRepository, ListTrainings
 {
     /**
      * @var array & Training[]
      */
     private $entities = [];
+
+    /**
+     * @var EventForList[]
+     */
+    private $upcoming;
 
     public function save(Training $entity): void
     {
@@ -33,5 +40,16 @@ final class InMemoryTrainingRepository implements TrainingRepository
     public function nextIdentity(): TrainingId
     {
         return TrainingId::fromString(Uuid::uuid4()->toString());
+    }
+
+    public function getUpcoming(\DateTimeImmutable $now): array
+    {
+        return array_filter($this->upcoming, function(EventForList $training) use ($now) {
+            return $training->scheduledFor->isInTheFuture($now);
+        });
+    }
+
+    public function addUpcoming(EventForList $training): void {
+        $this->upcoming[] = $training;
     }
 }

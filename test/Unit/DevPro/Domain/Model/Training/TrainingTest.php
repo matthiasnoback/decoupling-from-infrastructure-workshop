@@ -48,9 +48,9 @@ final class TrainingTest extends TestCase
         return TrainingId::fromString('eaa631d0-3760-43f5-a8cf-f239aadfe4aa');
     }
 
-    private function someDate(): DateTimeImmutable
+    private function someDate(): ScheduledDate
     {
-        return new DateTimeImmutable();
+        return ScheduledDate::fromDateTime(new DateTimeImmutable('now'));
     }
 
     private function someTitle(): string

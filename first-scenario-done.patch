@@ -1,0 +1,588 @@
+diff --git a/src/DevPro/Application/EventForList.php b/src/DevPro/Application/EventForList.php
+new file mode 100644
+index 0000000..59c7d3c
+--- /dev/null
++++ b/src/DevPro/Application/EventForList.php
+@@ -0,0 +1,32 @@
++<?php
++/**
++ * Class TrainingForList
++ * @package DevPro\Application *
++ * @copyright   2020 UniWeb bvba
++ * @since       2020-02-06 15:14
++ * @author      michael.rosmane
++ */
++
++namespace DevPro\Application;
++
++use DevPro\Domain\Model\Training\ScheduledDate;
++use DevPro\Domain\Model\Training\TrainingId;
++
++class EventForList
++{
++    /**
++     * @var TrainingId
++     */
++    public $trainingId;
++
++    /**
++     * @var  ScheduledDate
++     */
++    public $scheduledFor;
++
++    /**
++     * @var string
++     */
++    public $name;
++
++}
+\ No newline at end of file
+diff --git a/src/DevPro/Application/ListTrainings.php b/src/DevPro/Application/ListTrainings.php
+new file mode 100644
+index 0000000..1a73422
+--- /dev/null
++++ b/src/DevPro/Application/ListTrainings.php
+@@ -0,0 +1,15 @@
++<?php
++/**
++ * Class ListTrainings
++ * @package DevPro\Application *
++ * @copyright   2020 UniWeb bvba
++ * @since       2020-02-06 15:04
++ * @author      michael.rosmane
++ */
++
++namespace DevPro\Application;
++
++interface ListTrainings
++{
++
++}
+\ No newline at end of file
+diff --git a/src/DevPro/Application/ScheduleTraining.php b/src/DevPro/Application/ScheduleTraining.php
+new file mode 100644
+index 0000000..897a3a6
+--- /dev/null
++++ b/src/DevPro/Application/ScheduleTraining.php
+@@ -0,0 +1,57 @@
++<?php
++declare(strict_types=1);
++
++namespace DevPro\Application;
++
++use Common\EventDispatcher\EventDispatcher;
++use DevPro\Domain\Model\Training\ScheduledDate;
++use DevPro\Domain\Model\Training\Training;
++use DevPro\Domain\Model\Training\TrainingId;
++use DevPro\Domain\Model\Training\TrainingRepository;
++use DevPro\Domain\Model\User\User;
++use DevPro\Domain\Model\User\UserId;
++use DevPro\Domain\Model\User\UserRepository;
++
++final class ScheduleTraining
++{
++    /**
++     * @var TrainingRepository
++     */
++    private $trainingRepository;
++
++    /**
++     * @var UserRepository
++     */
++    private $userRepository;
++
++    /**
++     * @var EventDispatcher
++     */
++    private $eventDispatcher;
++
++    public function __construct(
++        TrainingRepository $trainingRepository,
++        UserRepository $userRepository,
++        EventDispatcher $eventDispatcher
++    ) {
++        $this->trainingRepository = $trainingRepository;
++        $this->userRepository = $userRepository;
++        $this->eventDispatcher = $eventDispatcher;
++    }
++
++    public function scheduleTraining(string $name, $date, $organizerId): TrainingId
++    {
++        $training = Training::schedule(
++            $this->trainingRepository->nextIdentity(),
++            $this->userRepository->getById($organizerId)->userId(),
++            $name,
++            ScheduledDate::fromString($date)
++        );
++
++        $this->trainingRepository->save($training);
++
++        $this->eventDispatcher->dispatchAll($training->releaseEvents());
++
++        return $training->trainingId();
++    }
++}
+diff --git a/src/DevPro/Application/TrainingEventSubscriber.php b/src/DevPro/Application/TrainingEventSubscriber.php
+new file mode 100644
+index 0000000..37ae4fd
+--- /dev/null
++++ b/src/DevPro/Application/TrainingEventSubscriber.php
+@@ -0,0 +1,36 @@
++<?php
++/**
++ * Class TrainingEventSubscriber
++ * @package DevPro\Application *
++ * @copyright   2020 UniWeb bvba
++ * @since       2020-02-06 15:24
++ * @author      michael.rosmane
++ */
++
++namespace DevPro\Application;
++
++use DevPro\Domain\Model\Training\TrainingWasScheduled;
++
++class TrainingEventSubscriber
++{
++    /**
++     * @var UpcomingEventsRepository
++     */
++    private $upcomingEventsRepository;
++
++    public function __construct(UpcomingEventsRepository $upcomingEventsRepository)
++    {
++        $this->upcomingEventsRepository = $upcomingEventsRepository;
++    }
++
++    public function whenTrainingWasScheduled(TrainingWasScheduled $event) {
++        $item = new EventForList();
++
++        $item->scheduledFor= $event->scheduledDate();
++        $item->name= $event->title();
++        $item->trainingId= $event->trainingId();
++
++        $this->upcomingEventsRepository->add($item);
++    }
++
++}
+\ No newline at end of file
+diff --git a/src/DevPro/Application/UpcomingEventsRepository.php b/src/DevPro/Application/UpcomingEventsRepository.php
+new file mode 100644
+index 0000000..19589ab
+--- /dev/null
++++ b/src/DevPro/Application/UpcomingEventsRepository.php
+@@ -0,0 +1,16 @@
++<?php
++/**
++ * Class UpcomingEvents
++ * @package DevPro\Application *
++ * @copyright   2020 UniWeb bvba
++ * @since       2020-02-06 15:38
++ * @author      michael.rosmane
++ */
++
++namespace DevPro\Application;
++
++interface UpcomingEventsRepository
++{
++    public function list(\DateTimeImmutable $now): array;
++    public function add(EventForList $training): void;
++}
+\ No newline at end of file
+diff --git a/src/DevPro/Domain/Model/Training/ScheduledDate.php b/src/DevPro/Domain/Model/Training/ScheduledDate.php
+new file mode 100644
+index 0000000..2120f62
+--- /dev/null
++++ b/src/DevPro/Domain/Model/Training/ScheduledDate.php
+@@ -0,0 +1,71 @@
++<?php
++declare(strict_types=1);
++
++namespace DevPro\Domain\Model\Training;
++
++use Assert\Assert;
++use DateTimeImmutable;
++use InvalidArgumentException;
++use RuntimeException;
++use Throwable;
++
++final class ScheduledDate
++{
++    const DATE_TIME_FORMAT = 'd-m-Y';
++
++    /**
++     * @var string
++     */
++    private $dateTime;
++
++    private function __construct(string $dateTime)
++    {
++        $this->dateTime = $dateTime;
++    }
++
++    public static function fromString(string $dateTime): ScheduledDate
++    {
++        try {
++            $dateTimeImmutable = DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $dateTime);
++            if ($dateTimeImmutable === false) {
++                throw new RuntimeException('The provided date/time string did not match the expected format');
++            }
++        } catch (Throwable $throwable) {
++            throw new InvalidArgumentException(
++                sprintf(
++                    'Invalid date/time format. Provided: %s, expected format: %s',
++                    $dateTime,
++                    self::DATE_TIME_FORMAT
++                ),
++                0,
++                $throwable
++            );
++        }
++
++        return self::fromDateTime($dateTimeImmutable);
++    }
++
++    public static function fromDateTime(DateTimeImmutable $dateTime): ScheduledDate
++    {
++        return new self($dateTime->format(self::DATE_TIME_FORMAT));
++    }
++
++    public function asString(): string
++    {
++        return $this->dateTime;
++    }
++
++    public function isInTheFuture(DateTimeImmutable $now): bool
++    {
++        return $now < $this->toDateTimeImmutable();
++    }
++
++    public function toDateTimeImmutable(): DateTimeImmutable
++    {
++        $date =  DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $this->dateTime);
++
++        Assert::that($date)->isInstanceOf(DateTimeImmutable::class);
++
++        return $date;
++    }
++}
+diff --git a/src/DevPro/Domain/Model/Training/Training.php b/src/DevPro/Domain/Model/Training/Training.php
+index 2595a18..a8eec28 100644
+--- a/src/DevPro/Domain/Model/Training/Training.php
++++ b/src/DevPro/Domain/Model/Training/Training.php
+@@ -28,7 +28,7 @@ final class Training
+     private $title;
+ 
+     /**
+-     * @var DateTimeImmutable
++     * @var ScheduledDate
+      */
+     private $scheduledDate;
+ 
+@@ -36,7 +36,7 @@ final class Training
+         TrainingId $trainingId,
+         UserId $organizerId,
+         string $title,
+-        DateTimeImmutable $scheduledDate
++        ScheduledDate $scheduledDate
+     ) {
+         Assert::that($title)->notEmpty('Title should not be empty');
+ 
+@@ -50,7 +50,7 @@ final class Training
+         TrainingId $trainingId,
+         UserId $organizerId,
+         string $title,
+-        DateTimeImmutable $scheduledDate
++        ScheduledDate $scheduledDate
+     ): self {
+         $training = new self(
+             $trainingId,
+diff --git a/src/DevPro/Domain/Model/Training/TrainingWasScheduled.php b/src/DevPro/Domain/Model/Training/TrainingWasScheduled.php
+index ad947f8..425e66d 100644
+--- a/src/DevPro/Domain/Model/Training/TrainingWasScheduled.php
++++ b/src/DevPro/Domain/Model/Training/TrainingWasScheduled.php
+@@ -18,14 +18,14 @@ final class TrainingWasScheduled
+     private $title;
+ 
+     /**
+-     * @var DateTimeImmutable
++     * @var ScheduledDate
+      */
+     private $scheduledDate;
+ 
+     public function __construct(
+         TrainingId $trainingId,
+         string $title,
+-        DateTimeImmutable $scheduledDate
++        ScheduledDate $scheduledDate
+     ) {
+         $this->trainingId = $trainingId;
+         $this->title = $title;
+@@ -42,7 +42,7 @@ final class TrainingWasScheduled
+         return $this->title;
+     }
+ 
+-    public function scheduledDate(): DateTimeImmutable
++    public function scheduledDate(): ScheduledDate
+     {
+         return $this->scheduledDate;
+     }
+diff --git a/test/Acceptance/FeatureContext.php b/test/Acceptance/FeatureContext.php
+index 3ad7ff3..9289df5 100644
+--- a/test/Acceptance/FeatureContext.php
++++ b/test/Acceptance/FeatureContext.php
+@@ -6,7 +6,15 @@ namespace Test\Acceptance;
+ use Behat\Behat\Context\Context;
+ use Behat\Behat\Tester\Exception\PendingException;
+ use BehatExpectException\ExpectException;
++use DevPro\Application\EventForList;
++use DevPro\Application\ScheduleTraining;
++use DevPro\Application\UpcomingEventsRepository;
++use DevPro\Domain\Model\Training\TrainingRepository;
++use DevPro\Domain\Model\User\User;
+ use DevPro\Domain\Model\User\UserId;
++use DevPro\Domain\Model\User\UserRepository;
++use Test\Acceptance\Support\InMemoryTrainingRepository;
++use Test\Acceptance\Support\InMemoryUserRepository;
+ use Test\Acceptance\Support\TestServiceContainer;
+ 
+ final class FeatureContext implements Context
+@@ -18,9 +26,37 @@ final class FeatureContext implements Context
+      */
+     private $container;
+ 
++    /**
++     * @var TrainingRepository
++     */
++    private $trainingRepository;
++
++    /**
++     * @var UserRepository
++     */
++    private $userRepository;
++
++    /**
++     * @var UpcomingEventsRepository
++     */
++    private $upcomingEventsRepository;
++
++    /**
++     * @var UserId
++     */
++    private $organiserId;
++
++    /**
++     * @var string
++     */
++    private $trainingTitle;
++
+     public function __construct()
+     {
+         $this->container = new TestServiceContainer();
++        $this->userRepository = $this->container->userRepository();
++        $this->trainingRepository = $this->container->trainingRepository();
++        $this->upcomingEventsRepository = $this->container->upcomingEventsRepository();
+     }
+ 
+     /**
+@@ -36,7 +72,11 @@ final class FeatureContext implements Context
+      */
+     public function theOrganizerSchedulesANewTrainingCalledFor(string $title, string $date): void
+     {
+-        throw new PendingException();
++        $this->organiserId = $this->theOrganizer();
++        $this->trainingTitle = $title;
++        $service = new ScheduleTraining($this->trainingRepository, $this->userRepository, $this->container->eventDispatcher());
++
++        $service->scheduleTraining($title, $date, $this->organiserId);
+     }
+ 
+     /**
+@@ -44,7 +84,13 @@ final class FeatureContext implements Context
+      */
+     public function itShowsUpOnTheListOfUpcomingEvents(): void
+     {
+-        throw new PendingException();
++        $list = $this->upcomingEventsRepository->list($this->container->clock()->currentTime());
++        $title = $this->trainingTitle;
++        $result = array_filter($list, function(EventForList $event) use ($title) {
++            return $event->name === $title;
++        });
++
++        assertGreaterThanOrEqual(1, count($result));
+     }
+ 
+     private function theOrganizer(): UserId
+diff --git a/test/Acceptance/Support/InMemoryTrainingRepository.php b/test/Acceptance/Support/InMemoryTrainingRepository.php
+index f823eab..1e28d43 100644
+--- a/test/Acceptance/Support/InMemoryTrainingRepository.php
++++ b/test/Acceptance/Support/InMemoryTrainingRepository.php
+@@ -3,19 +3,26 @@ declare(strict_types=1);
+ 
+ namespace Test\Acceptance\Support;
+ 
++use DevPro\Application\ListTrainings;
++use DevPro\Application\EventForList;
+ use DevPro\Domain\Model\Training\Training;
+ use DevPro\Domain\Model\Training\TrainingId;
+ use DevPro\Domain\Model\Training\TrainingRepository;
+ use Ramsey\Uuid\Uuid;
+ use RuntimeException;
+ 
+-final class InMemoryTrainingRepository implements TrainingRepository
++final class InMemoryTrainingRepository implements TrainingRepository, ListTrainings
+ {
+     /**
+      * @var array & Training[]
+      */
+     private $entities = [];
+ 
++    /**
++     * @var EventForList[]
++     */
++    private $upcoming;
++
+     public function save(Training $entity): void
+     {
+         $this->entities[$entity->trainingId()->asString()] = $entity;
+@@ -34,4 +41,15 @@ final class InMemoryTrainingRepository implements TrainingRepository
+     {
+         return TrainingId::fromString(Uuid::uuid4()->toString());
+     }
++
++    public function getUpcoming(\DateTimeImmutable $now): array
++    {
++        return array_filter($this->upcoming, function(EventForList $training) use ($now) {
++            return $training->scheduledFor->isInTheFuture($now);
++        });
++    }
++
++    public function addUpcoming(EventForList $training): void {
++        $this->upcoming[] = $training;
++    }
+ }
+diff --git a/test/Acceptance/Support/InMemoryUpcomingEventsRepository.php b/test/Acceptance/Support/InMemoryUpcomingEventsRepository.php
+new file mode 100644
+index 0000000..5cd9f66
+--- /dev/null
++++ b/test/Acceptance/Support/InMemoryUpcomingEventsRepository.php
+@@ -0,0 +1,34 @@
++<?php
++declare(strict_types=1);
++
++namespace Test\Acceptance\Support;
++
++use DevPro\Application\ListTrainings;
++use DevPro\Application\EventForList;
++use DevPro\Application\UpcomingEventsRepository;
++use DevPro\Domain\Model\Training\Training;
++use DevPro\Domain\Model\Training\TrainingId;
++use DevPro\Domain\Model\Training\TrainingRepository;
++use Ramsey\Uuid\Uuid;
++use RuntimeException;
++
++final class InMemoryUpcomingEventsRepository implements UpcomingEventsRepository
++{
++
++    /**
++     * @var EventForList[]
++     */
++    private $records;
++
++    public function list(\DateTimeImmutable $now): array
++    {
++        return array_filter($this->records, function(EventForList $event) use ($now) {
++           return $event->scheduledFor->isInTheFuture($now);
++        });
++    }
++
++    public function add(EventForList $training): void
++    {
++        $this->records[] = $training;
++    }
++}
+diff --git a/test/Acceptance/Support/TestServiceContainer.php b/test/Acceptance/Support/TestServiceContainer.php
+index d4af9c5..38522ca 100644
+--- a/test/Acceptance/Support/TestServiceContainer.php
++++ b/test/Acceptance/Support/TestServiceContainer.php
+@@ -5,8 +5,11 @@ namespace Test\Acceptance\Support;
+ 
+ use Common\EventDispatcher\EventDispatcher;
+ use DevPro\Application\CreateUser;
++use DevPro\Application\TrainingEventSubscriber;
++use DevPro\Application\UpcomingEventsRepository;
+ use DevPro\Domain\Model\Ticket\TicketRepository;
+ use DevPro\Domain\Model\Training\TrainingRepository;
++use DevPro\Domain\Model\Training\TrainingWasScheduled;
+ use DevPro\Domain\Model\User\UserRepository;
+ 
+ final class TestServiceContainer
+@@ -41,7 +44,17 @@ final class TestServiceContainer
+      */
+     private $ticketRepository;
+ 
+-    private function clock(): ClockForTesting
++    /**
++     * @var TrainingEventSubscriber
++     */
++    private $trainingEventSubscriber;
++
++    /**
++     * @var UpcomingEventsRepository
++     */
++    private $upcomingEventsRepository;
++
++    public function clock(): ClockForTesting
+     {
+         return $this->clock ?? $this->clock = new ClockForTesting();
+     }
+@@ -60,7 +73,10 @@ final class TestServiceContainer
+             );
+ 
+             // Register your own subscribers here:
+-            // $this->eventDispatcher->registerSubscriber(EventClass::class, [$this->service(), 'methodName']);
++            $this->eventDispatcher->registerSubscriber(
++                TrainingWasScheduled::class,
++                [$this->trainingEventSubscriber(), 'whenTrainingWasScheduled']
++            );
+         }
+ 
+         return $this->eventDispatcher;
+@@ -94,11 +110,22 @@ final class TestServiceContainer
+         return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository();
+     }
+ 
++
++    public function upcomingEventsRepository(): UpcomingEventsRepository
++    {
++        return $this->upcomingEventsRepository ?? $this->upcomingEventsRepository = new InMemoryUpcomingEventsRepository();
++    }
++
+     public function ticketRepository(): TicketRepository
+     {
+         return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
+     }
+ 
++    public function trainingEventSubscriber(): TrainingEventSubscriber
++    {
++        return $this->trainingEventSubscriber ?? $this->trainingEventSubscriber = new TrainingEventSubscriber($this->upcomingEventsRepository());
++    }
++
+     public function createUser(): CreateUser
+     {
+         return new CreateUser($this->userRepository(), $this->eventDispatcher());
+diff --git a/test/Unit/DevPro/Domain/Model/Training/TrainingTest.php b/test/Unit/DevPro/Domain/Model/Training/TrainingTest.php
+index 88d449f..44d40e5 100644
+--- a/test/Unit/DevPro/Domain/Model/Training/TrainingTest.php
++++ b/test/Unit/DevPro/Domain/Model/Training/TrainingTest.php
+@@ -48,9 +48,9 @@ final class TrainingTest extends TestCase
+         return TrainingId::fromString('eaa631d0-3760-43f5-a8cf-f239aadfe4aa');
+     }
+ 
+-    private function someDate(): DateTimeImmutable
++    private function someDate(): ScheduledDate
+     {
+-        return new DateTimeImmutable();
++        return ScheduledDate::fromDateTime(new DateTimeImmutable('now'));
+     }
+ 
+     private function someTitle(): string
