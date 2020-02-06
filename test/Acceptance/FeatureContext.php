@@ -3,18 +3,17 @@ declare(strict_types=1);
 
 namespace Test\Acceptance;
 
+use Assert\Assert;
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
 use DevPro\Application\EventForList;
 use DevPro\Application\ScheduleTraining;
 use DevPro\Application\UpcomingEventsRepository;
+use DevPro\Domain\Model\Training\AttendeeWasRegistered;
 use DevPro\Domain\Model\Training\TrainingRepository;
-use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserId;
 use DevPro\Domain\Model\User\UserRepository;
-use Test\Acceptance\Support\InMemoryTrainingRepository;
-use Test\Acceptance\Support\InMemoryUserRepository;
+use RuntimeException;
 use Test\Acceptance\Support\TestServiceContainer;
 
 final class FeatureContext implements Context
@@ -51,6 +50,16 @@ final class FeatureContext implements Context
      */
     private $trainingTitle;
 
+    /**
+     * @var string | null
+     */
+    private $trainingId;
+
+    /**
+     * @var string | null
+     */
+    private $userId;
+
     public function __construct()
     {
         $this->container = new TestServiceContainer();
@@ -74,9 +83,14 @@ final class FeatureContext implements Context
     {
         $this->organiserId = $this->theOrganizer();
         $this->trainingTitle = $title;
-        $service = new ScheduleTraining($this->trainingRepository, $this->userRepository, $this->container->eventDispatcher());
+        $service = new ScheduleTraining(
+            $this->trainingRepository,
+            $this->userRepository,
+            $this->container->eventDispatcher());
 
-        $service->scheduleTraining($title, $date, $this->organiserId);
+        $trainingId = $service->scheduleTraining($title, $date, $this->organiserId);
+
+        $this->trainingId = $trainingId->asString();
     }
 
     /**
@@ -86,9 +100,11 @@ final class FeatureContext implements Context
     {
         $list = $this->upcomingEventsRepository->list($this->container->clock()->currentTime());
         $title = $this->trainingTitle;
-        $result = array_filter($list, function(EventForList $event) use ($title) {
-            return $event->name === $title;
-        });
+        $result = array_filter(
+            $list,
+            function (EventForList $event) use ($title) {
+                return $event->name === $title;
+            });
 
         assertGreaterThanOrEqual(1, count($result));
     }
@@ -98,8 +114,50 @@ final class FeatureContext implements Context
         return $this->container->createUser()->create('The organizer');
     }
 
+    /**
+     * @Given the organizer has scheduled a training
+     */
+    public function theOrganizerHasScheduledATraining()
+    {
+        $this->theOrganizerSchedulesANewTrainingCalledFor('A title', '06-02-2020');
+    }
+
+    /**
+     * @When a user buys a ticket for this training
+     */
+    public function aUserBuysATicketForThisTraining()
+    {
+        Assert::that($this->trainingId)->string();
+
+        $this->container->buyTicket()->buyTicket($this->aUser()->asString(), $this->trainingId);
+    }
+
     private function aUser(): UserId
     {
-        return $this->container->createUser()->create('A user');
+        $userId = $this->container->createUser()->create('A user');
+
+        $this->userId = $userId->asString();
+
+        return $userId;
+    }
+
+    /**
+     * @Then they should be registered as an attendee
+     */
+    public function theyShouldBeRegisteredAsAnAttendee(): void
+    {
+        $dispatchedEvents = $this->container->eventSubscriberSpy()->dispatchedEvents();
+
+        foreach ($dispatchedEvents as $dispatchedEvent) {
+            if ($dispatchedEvent instanceof AttendeeWasRegistered) {
+                assertEquals($this->trainingId, $dispatchedEvent->trainingId()->asString());
+                assertEquals($this->userId, $dispatchedEvent->userId()->asString());
+                return;
+            }
+        }
+
+        throw new RuntimeException(
+            'User ' . $this->userId . ' was not registered as an attendee for training ' . $this->trainingId
+        );
     }
 }

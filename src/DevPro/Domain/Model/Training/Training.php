@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace DevPro\Domain\Model\Training;
 
 use Assert\Assert;
-use DateTimeImmutable;
 use DevPro\Domain\Model\Common\EventRecordingCapabilities;
 use DevPro\Domain\Model\User\UserId;
 
@@ -31,6 +30,11 @@ final class Training
      * @var ScheduledDate
      */
     private $scheduledDate;
+
+    /**
+     * @var array & UserId[]
+     */
+    private $attendees = [];
 
     private function __construct(
         TrainingId $trainingId,
@@ -67,5 +71,12 @@ final class Training
     public function trainingId(): TrainingId
     {
         return $this->trainingId;
+    }
+
+    public function registerAttendee(UserId $userId): void
+    {
+        $this->attendees[] = $userId;
+
+        $this->recordThat(new AttendeeWasRegistered($this->trainingId, $userId));
     }
 }

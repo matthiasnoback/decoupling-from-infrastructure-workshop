@@ -5,7 +5,6 @@ Feature: Registration
     When the organizer schedules a new training called "Decoupling from infrastructure" for "24-01-2020"
     Then it shows up on the list of upcoming events
 
-  @ignore
   Scenario: Attendees can register themselves for sessions
     Given the organizer has scheduled a training
     When a user buys a ticket for this training
