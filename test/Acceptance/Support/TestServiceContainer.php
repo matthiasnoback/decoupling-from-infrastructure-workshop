@@ -7,6 +7,7 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\CreateUser;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
+use DevPro\Domain\Model\Training\TrainingWasScheduled;
 use DevPro\Domain\Model\User\UserRepository;
 
 final class TestServiceContainer
@@ -61,6 +62,11 @@ final class TestServiceContainer
 
             // Register your own subscribers here:
             // $this->eventDispatcher->registerSubscriber(EventClass::class, [$this->service(), 'methodName']);
+            $this->eventDispatcher->registerSubscriber(
+                TrainingWasScheduled::class,
+                function (TrainingWasScheduled $event) {
+                }
+            );
         }
 
         return $this->eventDispatcher;

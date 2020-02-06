@@ -28,7 +28,7 @@ final class Training
     private $title;
 
     /**
-     * @var DateTimeImmutable
+     * @var ScheduledDate
      */
     private $scheduledDate;
 
@@ -36,7 +36,7 @@ final class Training
         TrainingId $trainingId,
         UserId $organizerId,
         string $title,
-        DateTimeImmutable $scheduledDate
+        ScheduledDate $scheduledDate
     ) {
         Assert::that($title)->notEmpty('Title should not be empty');
 
@@ -50,7 +50,7 @@ final class Training
         TrainingId $trainingId,
         UserId $organizerId,
         string $title,
-        DateTimeImmutable $scheduledDate
+        ScheduledDate $scheduledDate
     ): self {
         $training = new self(
             $trainingId,

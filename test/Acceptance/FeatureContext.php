@@ -6,7 +6,13 @@ namespace Test\Acceptance;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
+use DevPro\Application\ScheduleTraining;
+use DevPro\Domain\Model\Training\TrainingRepository;
+use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserId;
+use DevPro\Domain\Model\User\UserRepository;
+use Test\Acceptance\Support\InMemoryTrainingRepository;
+use Test\Acceptance\Support\InMemoryUserRepository;
 use Test\Acceptance\Support\TestServiceContainer;
 
 final class FeatureContext implements Context
@@ -18,9 +24,26 @@ final class FeatureContext implements Context
      */
     private $container;
 
+    /**
+     * @var TrainingRepository
+     */
+    private $trainingRepository;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @var UserId
+     */
+    private $organiserId;
+
     public function __construct()
     {
         $this->container = new TestServiceContainer();
+        $this->userRepository = $this->container->userRepository();
+        $this->trainingRepository = $this->container->trainingRepository();
     }
 
     /**
@@ -36,7 +59,10 @@ final class FeatureContext implements Context
      */
     public function theOrganizerSchedulesANewTrainingCalledFor(string $title, string $date): void
     {
-        throw new PendingException();
+        $this->organiserId = $this->theOrganizer();
+        $service = new ScheduleTraining($this->trainingRepository, $this->userRepository, $this->container->eventDispatcher());
+
+        $service->scheduleTraining($title, $date, $this->organiserId);
     }
 
     /**

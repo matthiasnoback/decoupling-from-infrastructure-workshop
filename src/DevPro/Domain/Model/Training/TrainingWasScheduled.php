@@ -18,14 +18,14 @@ final class TrainingWasScheduled
     private $title;
 
     /**
-     * @var DateTimeImmutable
+     * @var ScheduledDate
      */
     private $scheduledDate;
 
     public function __construct(
         TrainingId $trainingId,
         string $title,
-        DateTimeImmutable $scheduledDate
+        ScheduledDate $scheduledDate
     ) {
         $this->trainingId = $trainingId;
         $this->title = $title;
@@ -42,7 +42,7 @@ final class TrainingWasScheduled
         return $this->title;
     }
 
-    public function scheduledDate(): DateTimeImmutable
+    public function scheduledDate(): ScheduledDate
     {
         return $this->scheduledDate;
     }
