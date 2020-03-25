@@ -39,13 +39,20 @@ final class ScheduleTraining
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function scheduleTraining(string $name, $date, $organizerId): TrainingId
-    {
+    public function scheduleTraining(
+        string $name,
+        string $date,
+        string $organizerId,
+        int $maximumNumberOfAttendees
+    ): TrainingId {
+        $organizer = $this->userRepository->getById(UserId::fromString($organizerId));
+
         $training = Training::schedule(
             $this->trainingRepository->nextIdentity(),
-            $this->userRepository->getById($organizerId)->userId(),
+            $organizer->userId(),
             $name,
-            ScheduledDate::fromString($date)
+            ScheduledDate::fromString($date),
+            $maximumNumberOfAttendees
         );
 
         $this->trainingRepository->save($training);

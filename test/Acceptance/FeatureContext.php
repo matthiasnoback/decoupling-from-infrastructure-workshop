@@ -5,6 +5,7 @@ namespace Test\Acceptance;
 
 use Assert\Assert;
 use Behat\Behat\Context\Context;
+use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
 use DevPro\Application\EventForList;
 use DevPro\Application\ScheduleTraining;
@@ -41,7 +42,7 @@ final class FeatureContext implements Context
     private $upcomingEventsRepository;
 
     /**
-     * @var UserId
+     * @var string | null
      */
     private $organiserId;
 
@@ -79,34 +80,47 @@ final class FeatureContext implements Context
     /**
      * @When the organizer schedules a new training called :title for :date
      */
-    public function theOrganizerSchedulesANewTrainingCalledFor(string $title, string $date): void
-    {
-        $this->organiserId = $this->theOrganizer();
+    public function theOrganizerSchedulesANewTrainingCalledFor(
+        string $title,
+        string $date,
+        int $maximumNumberOfAttendees = 10
+    ): void {
+        $this->organiserId = $this->theOrganizer()->asString();
         $this->trainingTitle = $title;
         $service = new ScheduleTraining(
             $this->trainingRepository,
             $this->userRepository,
-            $this->container->eventDispatcher());
+            $this->container->eventDispatcher()
+        );
 
-        $trainingId = $service->scheduleTraining($title, $date, $this->organiserId);
+        $trainingId = $service->scheduleTraining($title, $date, $this->organiserId, $maximumNumberOfAttendees);
 
         $this->trainingId = $trainingId->asString();
     }
 
     /**
      * @Then it shows up on the list of upcoming events
+     * @Then the training still shows up on the list of upcoming events
      */
     public function itShowsUpOnTheListOfUpcomingEvents(): void
     {
-        $list = $this->upcomingEventsRepository->list($this->container->clock()->currentTime());
-        $title = $this->trainingTitle;
-        $result = array_filter(
-            $list,
-            function (EventForList $event) use ($title) {
-                return $event->name === $title;
-            });
+        Assert::that($this->trainingTitle)->string();
 
-        assertGreaterThanOrEqual(1, count($result));
+        $this->getUpcomingEventByName($this->trainingTitle);
+    }
+
+    private function getUpcomingEventByName(string $name): EventForList
+    {
+        $list = $this->upcomingEventsRepository->list($this->container->clock()->currentTime());
+
+        foreach ($list as $event) {
+            /** @var EventForList $event */
+            if ($event->name === $name) {
+                return $event;
+            }
+        }
+
+        throw new RuntimeException('Could not find upcoming event with name ' . $name);
     }
 
     private function theOrganizer(): UserId
@@ -159,5 +173,50 @@ final class FeatureContext implements Context
         throw new RuntimeException(
             'User ' . $this->userId . ' was not registered as an attendee for training ' . $this->trainingId
         );
+    }
+
+    /**
+     * @Given the organizer has scheduled a training with a maximum of :maximumNumberOfAttendees attendees
+     */
+    public function theOrganizerHasScheduledATrainingWithAMaximumOfAttendees(int $maximumNumberOfAttendees)
+    {
+        $this->theOrganizerSchedulesANewTrainingCalledFor('A title', '10-02-2020', $maximumNumberOfAttendees);
+    }
+
+    /**
+     * @Given so far :numberOfAttendees attendees have registered themselves for this training
+     */
+    public function soFarAttendeesHaveRegisteredThemselvesForThisTraining(int $numberOfAttendees)
+    {
+        Assert::that($this->trainingId)->string();
+
+        for ($i = 1; $i <= $numberOfAttendees; $i++) {
+            $this->container->buyTicket()->buyTicket(
+                $this->aUser()->asString(),
+                $this->trainingId
+            );
+        }
+    }
+
+    /**
+     * @Then it will be marked as Sold out
+     */
+    public function itWillBeMarkedAsSoldOut()
+    {
+        Assert::that($this->trainingTitle)->string();
+
+        $upcomingEvent = $this->getUpcomingEventByName($this->trainingTitle);
+
+        assertTrue($upcomingEvent->isSoldOut);
+    }
+
+    /**
+     * @Then it's impossible to buy another ticket for this training
+     */
+    public function itsImpossibleToBuyAnotherTicketForThisTraining()
+    {
+        $this->shouldFail(function () {
+            $this->aUserBuysATicketForThisTraining();
+        });
     }
 }

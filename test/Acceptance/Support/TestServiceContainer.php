@@ -11,6 +11,7 @@ use DevPro\Application\TrainingEventSubscriber;
 use DevPro\Application\UpcomingEventsRepository;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Ticket\TicketWasBoughtForTraining;
+use DevPro\Domain\Model\Training\MaximumNumberOfAttendeesWasReached;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\Training\TrainingWasScheduled;
 use DevPro\Domain\Model\User\UserRepository;
@@ -79,6 +80,10 @@ final class TestServiceContainer
             $this->eventDispatcher->registerSubscriber(
                 TrainingWasScheduled::class,
                 [$this->trainingEventSubscriber(), 'whenTrainingWasScheduled']
+            );
+            $this->eventDispatcher->registerSubscriber(
+                MaximumNumberOfAttendeesWasReached::class,
+                [$this->trainingEventSubscriber(), 'whenMaximumNumberOfAttendeesWasReached']
             );
 
             $this->eventDispatcher->registerSubscriber(

@@ -51,7 +51,7 @@ final class BuyTicket
         $user = $this->userRepository->getById(UserId::fromString($userId));
         $training = $this->trainingRepository->getById(TrainingId::fromString($trainingId));
 
-        $ticket = Ticket::buyForTraining($ticketId, $user->userId(), $training->trainingId());
+        $ticket = $training->buyTicket($ticketId, $user->userId());
 
         $this->ticketRepository->save($ticket);
 

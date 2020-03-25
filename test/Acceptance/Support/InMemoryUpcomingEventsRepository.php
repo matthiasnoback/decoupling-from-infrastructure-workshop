@@ -27,8 +27,22 @@ final class InMemoryUpcomingEventsRepository implements UpcomingEventsRepository
         });
     }
 
+    public function getById(TrainingId $trainingId): EventForList
+    {
+        if (!isset($this->records[$trainingId->asString()])) {
+            throw new RuntimeException('Training not found: '. $trainingId->asString());
+        }
+
+        return $this->records[$trainingId->asString()];
+    }
+
     public function add(EventForList $training): void
     {
-        $this->records[] = $training;
+        $this->records[$training->trainingId->asString()] = $training;
+    }
+
+    public function update(EventForList $eventForList): void
+    {
+        $this->records[$eventForList->trainingId->asString()] = $eventForList;
     }
 }

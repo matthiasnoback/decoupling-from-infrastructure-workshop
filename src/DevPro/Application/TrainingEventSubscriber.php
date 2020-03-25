@@ -10,6 +10,7 @@
 namespace DevPro\Application;
 
 use DevPro\Domain\Model\Training\TrainingWasScheduled;
+use DevPro\Domain\Model\Training\MaximumNumberOfAttendeesWasReached;
 
 class TrainingEventSubscriber
 {
@@ -33,4 +34,11 @@ class TrainingEventSubscriber
         $this->upcomingEventsRepository->add($item);
     }
 
+    public function whenMaximumNumberOfAttendeesWasReached(MaximumNumberOfAttendeesWasReached $event): void
+    {
+        $upcomingEvent = $this->upcomingEventsRepository->getById($event->trainingId());
+        $upcomingEvent->isSoldOut = true;
+
+        $this->upcomingEventsRepository->update($upcomingEvent);
+    }
 }

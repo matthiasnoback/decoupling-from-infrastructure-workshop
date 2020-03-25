@@ -1,7 +1,9 @@
 Feature: Registration
 
-  Scenario: A scheduled training shows up in Upcoming events
+  Background:
     Given today is "01-01-2020"
+
+  Scenario: A scheduled training shows up in Upcoming events
     When the organizer schedules a new training called "Decoupling from infrastructure" for "24-01-2020"
     Then it shows up on the list of upcoming events
 
@@ -10,7 +12,6 @@ Feature: Registration
     When a user buys a ticket for this training
     Then they should be registered as an attendee
 
-  @ignore
   Scenario: Attendees can't register themselves if the maximum number of attendees was reached
     Given the organizer has scheduled a training with a maximum of 5 attendees
     And so far 4 attendees have registered themselves for this training

@@ -29,4 +29,8 @@ class EventForList
      */
     public $name;
 
+    /**
+     * @var bool
+     */
+    public $isSoldOut;
 }

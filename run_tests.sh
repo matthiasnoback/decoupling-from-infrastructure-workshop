@@ -4,4 +4,4 @@ set -e
 
 vendor/bin/phpstan analyse
 vendor/bin/phpunit --testsuite unit -v
-vendor/bin/behat --suite acceptance --tags="~@ignore" -vvv
+vendor/bin/behat --suite acceptance --tags="~@ignore" -v
