@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\Acceptance\Support;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\CreateTraining;
 use DevPro\Application\CreateUser;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
@@ -102,5 +103,10 @@ final class TestServiceContainer
     public function createUser(): CreateUser
     {
         return new CreateUser($this->userRepository(), $this->eventDispatcher());
+    }
+
+    public function createTraining(): CreateTraining
+    {
+        return new CreateTraining($this->trainingRepository(), $this->eventDispatcher());
     }
 }
