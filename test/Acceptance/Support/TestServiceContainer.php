@@ -5,6 +5,7 @@ namespace Test\Acceptance\Support;
 
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\CreateUser;
+use DevPro\Application\ScheduleTraining;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
@@ -102,5 +103,14 @@ final class TestServiceContainer
     public function createUser(): CreateUser
     {
         return new CreateUser($this->userRepository(), $this->eventDispatcher());
+    }
+
+    public function scheduleTraining(): ScheduleTraining
+    {
+        return new ScheduleTraining(
+            $this->trainingRepository(),
+            $this->userRepository(),
+            $this->eventDispatcher()
+        );
     }
 }

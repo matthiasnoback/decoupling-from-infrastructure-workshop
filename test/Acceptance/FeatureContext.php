@@ -7,6 +7,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
 use DevPro\Domain\Model\User\UserId;
+use PHPUnit\Framework\Assert;
 use Test\Acceptance\Support\TestServiceContainer;
 
 final class FeatureContext implements Context
@@ -36,7 +37,11 @@ final class FeatureContext implements Context
      */
     public function theOrganizerSchedulesANewTrainingCalledFor(string $title, string $date): void
     {
-        throw new PendingException();
+        $this->container->scheduleTraining()->schedule(
+            $this->theOrganizer()->asString(),
+            $title,
+            $date
+        );
     }
 
     /**
