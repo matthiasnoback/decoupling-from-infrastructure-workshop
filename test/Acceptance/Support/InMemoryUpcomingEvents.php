@@ -17,4 +17,9 @@ final class InMemoryUpcomingEvents implements UpcomingEvents
     {
         $this->upcomingEvents[] = $upcomingEvent;
     }
+
+    public function findAll(): array
+    {
+        return $this->upcomingEvents;
+    }
 }

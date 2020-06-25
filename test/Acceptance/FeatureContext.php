@@ -6,6 +6,7 @@ namespace Test\Acceptance;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
+use DevPro\Application\UpcomingEvent;
 use DevPro\Domain\Model\User\UserId;
 use PHPUnit\Framework\Assert;
 use Test\Acceptance\Support\TestServiceContainer;
@@ -18,6 +19,11 @@ final class FeatureContext implements Context
      * @var TestServiceContainer
      */
     private $container;
+
+    /**
+     * @var string | null
+     */
+    private $titleOfScheduledTraining = null;
 
     public function __construct()
     {
@@ -37,6 +43,8 @@ final class FeatureContext implements Context
      */
     public function theOrganizerSchedulesANewTrainingCalledFor(string $title, string $date): void
     {
+        $this->titleOfScheduledTraining = $title;
+
         $this->container->scheduleTraining()->schedule(
             $this->theOrganizer()->asString(),
             $title,
@@ -49,7 +57,11 @@ final class FeatureContext implements Context
      */
     public function itShowsUpOnTheListOfUpcomingEvents(): void
     {
-        throw new PendingException();
+        $titles = array_map(function (UpcomingEvent $event): string {
+            return $event->title();
+        }, $this->container->upcomingEvents()->findAll());
+
+        Assert::assertContains($this->titleOfScheduledTraining, $titles);
     }
 
     private function theOrganizer(): UserId
