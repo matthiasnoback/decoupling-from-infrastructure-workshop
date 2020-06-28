@@ -7,10 +7,15 @@ use DevPro\Domain\Model\User\UserId;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @testdox Basic Training
+ * @covers \DevPro\Domain\Model\Training\Training
+ */
 final class TrainingTest extends TestCase
 {
     /**
      * @test
+     * @testdox A training can be scheduled and retrieved
      */
     public function it_can_be_scheduled(): void
     {
@@ -29,6 +34,7 @@ final class TrainingTest extends TestCase
 
     /**
      * @test
+     * @testdox A training cannot be scheduled with an empty title
      */
     public function the_title_should_not_be_empty(): void
     {
