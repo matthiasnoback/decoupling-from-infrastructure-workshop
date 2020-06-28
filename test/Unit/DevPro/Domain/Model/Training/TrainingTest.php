@@ -33,7 +33,7 @@ final class TrainingTest extends TestCase
     public function the_title_should_not_be_empty(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageRegExp('/title/i');
+        $this->expectExceptionMessageMatches('/title/i');
 
         Training::schedule(
             $this->someTrainingId(),
