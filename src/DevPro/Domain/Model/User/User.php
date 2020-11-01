@@ -12,12 +12,13 @@ final class User
 
     private UserId $userId;
     private string $name;
+    private bool $isOrganizer;
 
     private function __construct()
     {
     }
 
-    public static function create(UserId $userId, string $name): self
+    public static function createNormalUser(UserId $userId, string $name): self
     {
         $instance = new self();
 
@@ -25,6 +26,18 @@ final class User
 
         $instance->userId = $userId;
         $instance->name = $name;
+        $instance->isOrganizer = false;
+
+        return $instance;
+    }
+
+    public static function createOrganizer(UserId $userId): self
+    {
+        $instance = new self();
+
+        $instance->userId = $userId;
+        $instance->name = 'Organizer';
+        $instance->isOrganizer = true;
 
         return $instance;
     }
@@ -38,7 +51,8 @@ final class User
     {
         return [
             'id' => $this->userId->asString(),
-            'name' => $this->name
+            'name' => $this->name,
+            'isOrganizer' => $this->isOrganizer
         ];
     }
 
@@ -48,6 +62,7 @@ final class User
 
         $instance->userId = UserId::fromString($data['id']);
         $instance->name = $data['name'];
+        $instance->isOrganizer = (bool)$data['isOrganizer'];
 
         return $instance;
     }

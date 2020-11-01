@@ -21,25 +21,19 @@ use Doctrine\DBAL\DriverManager;
  */
 class DevelopmentServiceContainer extends AbstractServiceContainer
 {
-    private string $projectRootDir;
+    private string $varDirectory;
     private ?Connection $connection = null;
     private ?UserRepositoryUsingDbal $userRepository = null;
-    private string $varDir;
 
     protected function environment(): string
     {
         return 'development';
     }
 
-    public function __construct(string $projectRootDir)
+    public function __construct(string $varDirectory)
     {
-        Assert::that($projectRootDir)->directory();
-        $this->projectRootDir = $projectRootDir;
-
-        $this->varDir = $projectRootDir . '/var';
-        if (!is_dir($this->varDir)) {
-            mkdir($this->varDir);
-        }
+        Assert::that($varDirectory)->directory();
+        $this->varDirectory = $varDirectory;
     }
 
     public function boot(): void
@@ -68,7 +62,7 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
             $this->connection = DriverManager::getConnection(
                 [
                     'driver' => 'pdo_sqlite',
-                    'path' => $this->varDir . '/' . $this->environment() . '.sqlite'
+                    'path' => $this->varDirectory . '/' . $this->environment() . '.sqlite'
                 ]
             );
         }

@@ -9,7 +9,7 @@ final class AdapterTestServiceContainer extends DevelopmentServiceContainer
 {
     public function __construct()
     {
-        parent::__construct(__DIR__ . '/../../../../');
+        parent::__construct(sys_get_temp_dir());
     }
 
     public function userRepository(): UserRepository

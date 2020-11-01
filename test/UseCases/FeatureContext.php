@@ -46,7 +46,7 @@ final class FeatureContext implements Context
 
     private function theOrganizer(): UserId
     {
-        return $this->container->createUser()->create('The organizer');
+        return $this->container->createOrganizer()->create();
     }
 
     private function aUser(): UserId

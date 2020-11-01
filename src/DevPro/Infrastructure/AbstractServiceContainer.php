@@ -6,6 +6,7 @@ namespace DevPro\Infrastructure;
 use Assert\Assert;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
+use DevPro\Application\CreateOrganizer;
 use DevPro\Application\CreateUser;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
@@ -54,5 +55,10 @@ abstract class AbstractServiceContainer implements ServiceContainer
     public function createUser(): CreateUser
     {
         return new CreateUser($this->userRepository(), $this->eventDispatcher());
+    }
+
+    public function createOrganizer(): CreateOrganizer
+    {
+        return new CreateOrganizer($this->userRepository(), $this->eventDispatcher());
     }
 }

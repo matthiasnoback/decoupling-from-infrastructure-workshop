@@ -38,6 +38,7 @@ final class SchemaManager
         $users = $schema->createTable('users');
         $users->addColumn('id', 'string');
         $users->addColumn('name', 'string');
+        $users->addColumn('isOrganizer', 'boolean');
         $users->setPrimaryKey(['id']);
 
         // Here you can add your own tables to the schema

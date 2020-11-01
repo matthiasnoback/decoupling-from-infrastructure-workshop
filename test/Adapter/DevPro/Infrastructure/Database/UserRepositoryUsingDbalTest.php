@@ -25,14 +25,28 @@ final class UserRepositoryUsingDbalTest extends TestCase
     /**
      * @test
      */
-    public function it_can_save_and_retrieve_a_user(): void
+    public function it_can_save_and_retrieve_a_normal_user(): void
     {
-        $user = User::create($this->repository->nextIdentity(), 'Username');
+        $user = User::createNormalUser($this->repository->nextIdentity(), 'Username');
 
         $this->repository->save($user);
 
         $fromDatabase = $this->repository->getById($user->userId());
 
         self::assertEquals($user, $fromDatabase);
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_save_and_retrieve_an_organizer(): void
+    {
+        $organizer = User::createOrganizer($this->repository->nextIdentity());
+
+        $this->repository->save($organizer);
+
+        $fromDatabase = $this->repository->getById($organizer->userId());
+
+        self::assertEquals($organizer, $fromDatabase);
     }
 }
