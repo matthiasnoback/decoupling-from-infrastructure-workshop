@@ -14,5 +14,10 @@ interface UserRepository
      */
     public function getById(UserId $userId): User;
 
+    /**
+     * @throws RuntimeException When the entity could not be found
+     */
+    public function getUserByName(string $name): User;
+
     public function nextIdentity(): UserId;
 }

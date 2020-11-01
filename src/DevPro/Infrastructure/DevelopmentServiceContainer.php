@@ -12,6 +12,7 @@ use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
 use DevPro\Infrastructure\Database\SchemaManager;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
+use DevPro\Infrastructure\Web\Controllers;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 
@@ -41,6 +42,11 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
         parent::boot();
 
         $this->schemaManager()->updateSchema();
+    }
+
+    public function controllers(): Controllers
+    {
+        return new Controllers($this->application(), $this->userRepository());
     }
 
     protected function clock(): Clock
