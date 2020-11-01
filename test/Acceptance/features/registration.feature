@@ -1,9 +1,9 @@
 Feature: Registration
 
-  Scenario: A scheduled training shows up in Upcoming events
+  Scenario: A scheduled training shows up in Upcoming trainings
     Given today is "01-01-2020"
     When the organizer schedules a new training called "Decoupling from infrastructure" for "24-01-2020"
-    Then it shows up on the list of upcoming events
+    Then it shows up on the list of upcoming trainings
 
   @ignore
   Scenario: Attendees can register themselves for sessions
@@ -16,7 +16,7 @@ Feature: Registration
     Given the organizer has scheduled a training with a maximum of 5 attendees
     And so far 4 attendees have registered themselves for this training
     When a user buys a ticket for this training
-    Then the training still shows up on the list of upcoming events
+    Then the training still shows up on the list of upcoming trainings
     But it will be marked as Sold out
     And it's impossible to buy another ticket for this training
 
@@ -27,10 +27,10 @@ Feature: Registration
     Then it's impossible to buy a ticket for this training
 
   @ignore
-  Scenario: On the day of the training, it will no longer be an upcoming event
+  Scenario: On the day of the training, it will no longer be an upcoming training
     Given a training has been scheduled for "24-01-2020"
     When it's "24-01-2020"
-    Then it does not show up on the list of upcoming events anymore
+    Then it does not show up on the list of upcoming trainings anymore
 
   @ignore
   Scenario: Requesting a refund for a ticket frees up a seat for someone else

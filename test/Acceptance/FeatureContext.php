@@ -40,9 +40,9 @@ final class FeatureContext implements Context
     }
 
     /**
-     * @Then it shows up on the list of upcoming events
+     * @Then it shows up on the list of upcoming trainings
      */
-    public function itShowsUpOnTheListOfUpcomingEvents(): void
+    public function itShowsUpOnTheListOfUpcomingTrainings(): void
     {
         throw new PendingException();
     }
