@@ -1,14 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace DevPro\Application;
+namespace DevPro\Application\Users;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserId;
 use DevPro\Domain\Model\User\UserRepository;
 
-final class CreateOrganizer
+final class CreateOrganizerHandler
 {
     private UserRepository $userRepository;
     private EventDispatcher $eventDispatcher;
@@ -21,7 +22,7 @@ final class CreateOrganizer
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function create(): UserId
+    public function handle(CreateOrganizer $command): UserId
     {
         $organizer = User::createOrganizer(
             $this->userRepository->nextIdentity()

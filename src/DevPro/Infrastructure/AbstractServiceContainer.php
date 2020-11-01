@@ -5,9 +5,11 @@ namespace DevPro\Infrastructure;
 
 use Assert\Assert;
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\Application;
+use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
-use DevPro\Application\CreateOrganizer;
-use DevPro\Application\CreateUser;
+use DevPro\Application\Users\CreateOrganizerHandler;
+use DevPro\Application\Users\CreateUserHandler;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
@@ -22,6 +24,11 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     public function boot(): void
     {
+    }
+
+    public function application(): ApplicationInterface
+    {
+        return new Application($this);
     }
 
     public function eventDispatcher(): EventDispatcher
@@ -52,13 +59,13 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     abstract protected function ticketRepository(): TicketRepository;
 
-    public function createUser(): CreateUser
+    public function createUser(): CreateUserHandler
     {
-        return new CreateUser($this->userRepository(), $this->eventDispatcher());
+        return new CreateUserHandler($this->userRepository(), $this->eventDispatcher());
     }
 
-    public function createOrganizer(): CreateOrganizer
+    public function createOrganizer(): CreateOrganizerHandler
     {
-        return new CreateOrganizer($this->userRepository(), $this->eventDispatcher());
+        return new CreateOrganizerHandler($this->userRepository(), $this->eventDispatcher());
     }
 }
