@@ -12,9 +12,9 @@ use RuntimeException;
 final class InMemoryUserRepository implements UserRepository
 {
     /**
-     * @var array & User[]
+     * @var array<User> & User[]
      */
-    private $entities = [];
+    private array $entities = [];
 
     public function save(User $entity): void
     {

@@ -7,20 +7,9 @@ use DateTimeImmutable;
 
 final class TrainingWasScheduled
 {
-    /**
-     * @var TrainingId
-     */
-    private $trainingId;
-
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var DateTimeImmutable
-     */
-    private $scheduledDate;
+    private TrainingId $trainingId;
+    private string $title;
+    private DateTimeImmutable $scheduledDate;
 
     public function __construct(
         TrainingId $trainingId,

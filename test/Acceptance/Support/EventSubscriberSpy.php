@@ -6,9 +6,9 @@ namespace Test\Acceptance\Support;
 final class EventSubscriberSpy
 {
     /**
-     * @var array<object>
+     * @var array<object> & object[]
      */
-    private $events = [];
+    private array $events = [];
 
     public function __invoke(object $event): void
     {

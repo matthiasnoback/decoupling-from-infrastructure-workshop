@@ -12,9 +12,9 @@ use RuntimeException;
 final class InMemoryTicketRepository implements TicketRepository
 {
     /**
-     * @var array & Ticket[]
+     * @var array<Ticket> & Ticket[]
      */
-    private $entities = [];
+    private array $entities = [];
 
     public function save(Ticket $entity): void
     {

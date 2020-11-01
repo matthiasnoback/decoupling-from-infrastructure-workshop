@@ -12,10 +12,7 @@ final class ClockForTesting implements Clock
 {
     private const DATE_FORMAT = 'd-m-Y';
 
-    /**
-     * @var DateTimeImmutable | null
-     */
-    private $dateTime;
+    private ?DateTimeImmutable $dateTime;
 
     public function setCurrentDate(string $date): void
     {

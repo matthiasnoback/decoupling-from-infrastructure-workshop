@@ -7,10 +7,6 @@ use DevPro\Domain\Model\User\UserId;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @testdox Training (entity)
- * @see Training
- */
 final class TrainingTest extends TestCase
 {
     /**

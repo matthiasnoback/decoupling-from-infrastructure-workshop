@@ -13,10 +13,7 @@ final class FeatureContext implements Context
 {
     use ExpectException;
 
-    /**
-     * @var TestServiceContainer
-     */
-    private $container;
+    private TestServiceContainer $container;
 
     public function __construct()
     {

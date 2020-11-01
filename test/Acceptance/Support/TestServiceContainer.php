@@ -11,35 +11,12 @@ use DevPro\Domain\Model\User\UserRepository;
 
 final class TestServiceContainer
 {
-    /**
-     * @var ClockForTesting | null
-     */
-    private $clock;
-
-    /**
-     * @var EventDispatcher | null
-     */
-    private $eventDispatcher;
-
-    /**
-     * @var EventSubscriberSpy | null
-     */
-    private $eventSubscriberSpy;
-
-    /**
-     * @var InMemoryUserRepository | null
-     */
-    private $userRepository;
-
-    /**
-     * @var InMemoryTrainingRepository | null
-     */
-    private $trainingRepository;
-
-    /**
-     * @var InMemoryTicketRepository
-     */
-    private $ticketRepository;
+    private ?ClockForTesting $clock;
+    private ?EventDispatcher $eventDispatcher;
+    private ?EventSubscriberSpy $eventSubscriberSpy;
+    private ?InMemoryUserRepository $userRepository;
+    private ?InMemoryTrainingRepository $trainingRepository;
+    private ?InMemoryTicketRepository $ticketRepository;
 
     private function clock(): ClockForTesting
     {

@@ -10,15 +10,8 @@ use DevPro\Domain\Model\User\UserRepository;
 
 final class CreateUser
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
+    private UserRepository $userRepository;
+    private EventDispatcher $eventDispatcher;
 
     public function __construct(
         UserRepository $userRepository,

@@ -10,15 +10,8 @@ final class User
 {
     use EventRecordingCapabilities;
 
-    /**
-     * @var UserId
-     */
-    private $userId;
-
-    /**
-     * @var string
-     */
-    private $name;
+    private UserId $userId;
+    private string $name;
 
     private function __construct(UserId $userId, string $name)
     {

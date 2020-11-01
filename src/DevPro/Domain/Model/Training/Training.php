@@ -12,25 +12,10 @@ final class Training
 {
     use EventRecordingCapabilities;
 
-    /**
-     * @var TrainingId
-     */
-    private $trainingId;
-
-    /**
-     * @var UserId
-     */
-    private $organizerId;
-
-    /**
-     * @var string
-     */
-    private $title;
-
-    /**
-     * @var DateTimeImmutable
-     */
-    private $scheduledDate;
+    private TrainingId $trainingId;
+    private UserId $organizerId;
+    private string $title;
+    private DateTimeImmutable $scheduledDate;
 
     private function __construct(
         TrainingId $trainingId,
