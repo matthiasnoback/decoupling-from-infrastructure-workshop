@@ -7,17 +7,17 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
 use DevPro\Domain\Model\User\UserId;
-use Test\Acceptance\Support\TestServiceContainer;
+use Test\Acceptance\Support\TestAbstractServiceContainer;
 
 final class FeatureContext implements Context
 {
     use ExpectException;
 
-    private TestServiceContainer $container;
+    private TestAbstractServiceContainer $container;
 
     public function __construct()
     {
-        $this->container = new TestServiceContainer();
+        $this->container = new TestAbstractServiceContainer();
     }
 
     /**

@@ -1,64 +1,49 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\Acceptance\Support;
+namespace DevPro\Infrastructure;
 
+use Assert\Assert;
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\Clock;
 use DevPro\Application\CreateUser;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
+use Test\Acceptance\Support\InMemoryTicketRepository;
+use Test\Acceptance\Support\InMemoryTrainingRepository;
+use Test\Acceptance\Support\InMemoryUserRepository;
 
-final class TestServiceContainer
+abstract class AbstractServiceContainer
 {
-    private ?ClockForTesting $clock;
     private ?EventDispatcher $eventDispatcher;
-    private ?EventSubscriberSpy $eventSubscriberSpy;
+
     private ?InMemoryUserRepository $userRepository;
     private ?InMemoryTrainingRepository $trainingRepository;
     private ?InMemoryTicketRepository $ticketRepository;
 
-    private function clock(): ClockForTesting
-    {
-        return $this->clock ?? $this->clock = new ClockForTesting();
-    }
+    abstract protected function clock(): Clock;
 
     public function eventDispatcher(): EventDispatcher
     {
         if ($this->eventDispatcher === null) {
+            /*
+             * We assign the event dispatcher to the property directly so event subscribers can have the event
+             * dispatcher as a dependency too.
+             */
             $this->eventDispatcher = new EventDispatcher();
 
-            $this->eventDispatcher->subscribeToAllEvents($this->eventSubscriberSpy());
+            $this->registerSubscribers($this->eventDispatcher);
 
-            $this->eventDispatcher->subscribeToAllEvents(
-                function (object $event): void {
-                    echo '- Event dispatched: ' . get_class($event) . "\n";
-                }
-            );
-
-            // Register your own subscribers here:
-            // $this->eventDispatcher->registerSubscriber(EventClass::class, [$this->service(), 'methodName']);
+            // Though in practice this won't happen, theoretically $this->eventDispatcher could have been set to null, so:
+            Assert::that($this->eventDispatcher)->isInstanceOf(EventDispatcher::class);
         }
 
         return $this->eventDispatcher;
     }
 
-    public function setCurrentDate(string $date): void
+    protected function registerSubscribers(EventDispatcher $eventDispatcher): void
     {
-        $this->clock()->setCurrentDate($date);
-    }
-
-    public function eventSubscriberSpy(): EventSubscriberSpy
-    {
-        return $this->eventSubscriberSpy ?? $this->eventSubscriberSpy = new EventSubscriberSpy();
-    }
-
-    /**
-     * @return array<object>
-     */
-    public function dispatchedEvents(): array
-    {
-        return $this->eventSubscriberSpy()->dispatchedEvents();
     }
 
     public function userRepository(): UserRepository
