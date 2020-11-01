@@ -10,19 +10,16 @@ use DevPro\Application\CreateUser;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
-use Test\Acceptance\Support\InMemoryTicketRepository;
-use Test\Acceptance\Support\InMemoryTrainingRepository;
-use Test\Acceptance\Support\InMemoryUserRepository;
 
-abstract class AbstractServiceContainer
+abstract class AbstractServiceContainer implements ServiceContainer
 {
     private ?EventDispatcher $eventDispatcher;
 
-    private ?InMemoryUserRepository $userRepository;
-    private ?InMemoryTrainingRepository $trainingRepository;
-    private ?InMemoryTicketRepository $ticketRepository;
-
     abstract protected function clock(): Clock;
+
+    public function boot(): void
+    {
+    }
 
     public function eventDispatcher(): EventDispatcher
     {
@@ -46,20 +43,11 @@ abstract class AbstractServiceContainer
     {
     }
 
-    public function userRepository(): UserRepository
-    {
-        return $this->userRepository ?? $this->userRepository = new InMemoryUserRepository();
-    }
+    abstract protected function userRepository(): UserRepository;
 
-    public function trainingRepository(): TrainingRepository
-    {
-        return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository();
-    }
+    abstract protected function trainingRepository(): TrainingRepository;
 
-    public function ticketRepository(): TicketRepository
-    {
-        return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
-    }
+    abstract protected function ticketRepository(): TicketRepository;
 
     public function createUser(): CreateUser
     {
