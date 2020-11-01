@@ -64,7 +64,7 @@ final class TrainingTest extends TestCase
         return 'Some title';
     }
 
-    private function someUserId()
+    private function someUserId(): UserId
     {
         return UserId::fromString('bb235de9-c15d-4bd8-9bc3-d31e4cc0e96f');
     }

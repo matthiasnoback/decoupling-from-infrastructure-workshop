@@ -2,15 +2,15 @@ version: '3'
 
 services:
     php:
-        image: php:7.2-alpine
+        build: docker/php/
+        image: matthiasnoback/decoupling-from-infrastructure-workshop-web
         volumes:
-            - ./:/opt/project:cached
-        working_dir: /opt/project
+            - ./:/app:cached
+        working_dir: /app
         user: ${HOST_UID}:${HOST_GID}
 
     composer:
-        image: composer:1.8
+        image: composer:latest
         volumes:
             - ./:/app:cached
-            - ~/.composer:/tmp:cached
         user: ${HOST_UID}:${HOST_GID}
