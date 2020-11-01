@@ -9,9 +9,11 @@
         "phpstan/phpstan": "^0.12.52",
         "phpstan/phpstan-beberlei-assert": "^0.12.3",
         "phpstan/phpstan-phpunit": "^0.12.16",
-        "behat/behat": "^3.5",
         "matthiasnoback/behat-expect-exception": "^0.3",
-        "phpunit/phpunit": "^9.4"
+        "phpunit/phpunit": "^9.4",
+        "behat/behat": "^3.8",
+        "behat/mink-extension": "^2.3",
+        "behat/mink-goutte-driver": "^1.2"
     },
     "require": {
         "php": "^7.4",
@@ -27,6 +29,7 @@
     "autoload-dev": {
         "psr-4": {
             "Test\\UseCases\\": "test/UseCases",
+            "Test\\EndToEnd\\": "test/EndToEnd",
             "": ["test/Unit", "test/Adapter"]
         }
     }

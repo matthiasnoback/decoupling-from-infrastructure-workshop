@@ -21,6 +21,8 @@ services:
         user: ${HOST_UID}:${HOST_GID}
         depends_on:
             - web
+        environment:
+            WEB_HOSTNAME: web
 
     composer:
         image: composer:latest
