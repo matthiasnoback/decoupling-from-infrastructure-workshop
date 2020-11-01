@@ -1,6 +1,6 @@
 default:
     suites:
-        acceptance:
-            paths: ["%paths.base%/test/Acceptance/features"]
+        use_cases:
+            paths: ["%paths.base%/test/UseCases/features"]
             contexts:
-                - Test\Acceptance\FeatureContext
+                - Test\UseCases\FeatureContext

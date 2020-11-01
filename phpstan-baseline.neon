@@ -3,5 +3,4 @@ parameters:
 		-
 			message: "#^Unable to resolve the template type T in call to method static method Doctrine\\\\DBAL\\\\DriverManager\\:\\:getConnection\\(\\)$#"
 			count: 1
-			path: src/DevPro/Infrastructure/DevelopmentAbstractServiceContainer.php
-
+			path: src/DevPro/Infrastructure/DevelopmentServiceContainer.php

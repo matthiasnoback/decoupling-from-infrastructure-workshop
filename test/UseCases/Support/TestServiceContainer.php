@@ -1,19 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\Acceptance\Support;
+namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Infrastructure\AbstractServiceContainer;
 
 final class TestServiceContainer extends AbstractServiceContainer
 {
-    private ?ClockForTesting $clock;
-    private ?EventSubscriberSpy $eventSubscriberSpy;
+    private ?ClockForTesting $clock = null;
+    private ?EventSubscriberSpy $eventSubscriberSpy = null;
 
-    private ?InMemoryUserRepository $userRepository;
-    private ?InMemoryTrainingRepository $trainingRepository;
-    private ?InMemoryTicketRepository $ticketRepository;
+    private ?InMemoryUserRepository $userRepository = null;
+    private ?InMemoryTrainingRepository $trainingRepository = null;
+    private ?InMemoryTicketRepository $ticketRepository = null;
 
     public function setCurrentDate(string $date): void
     {
@@ -31,6 +31,11 @@ final class TestServiceContainer extends AbstractServiceContainer
     public function dispatchedEvents(): array
     {
         return $this->eventSubscriberSpy()->dispatchedEvents();
+    }
+
+    protected function environment(): string
+    {
+        return 'test';
     }
 
     protected function registerSubscribers(EventDispatcher $eventDispatcher): void

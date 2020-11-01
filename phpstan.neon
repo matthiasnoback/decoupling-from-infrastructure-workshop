@@ -2,6 +2,7 @@ parameters:
     level: max
     paths:
         - src/
+        - public/
         - test/
     checkMissingIterableValueType: false
 includes:

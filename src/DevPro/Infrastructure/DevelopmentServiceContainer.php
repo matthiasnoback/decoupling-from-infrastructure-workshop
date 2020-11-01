@@ -4,23 +4,42 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure;
 
 use Assert\Assert;
+use BadMethodCallException;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
+use DevPro\Infrastructure\Database\SchemaManager;
+use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 
-final class DevelopmentAbstractServiceContainer extends AbstractServiceContainer
+/**
+ * Not final but also not abstract because we want to be able to override some methods, yet use this as the actual
+ * development service container.
+ */
+class DevelopmentServiceContainer extends AbstractServiceContainer
 {
     private string $projectRootDir;
-    private ?Connection $connection;
+    private ?Connection $connection = null;
+    private ?UserRepositoryUsingDbal $userRepository = null;
+    private string $varDir;
+
+    protected function environment(): string
+    {
+        return 'development';
+    }
 
     public function __construct(string $projectRootDir)
     {
         Assert::that($projectRootDir)->directory();
         $this->projectRootDir = $projectRootDir;
+
+        $this->varDir = $projectRootDir . '/var';
+        if (!is_dir($this->varDir)) {
+            mkdir($this->varDir);
+        }
     }
 
     public function boot(): void
@@ -49,7 +68,7 @@ final class DevelopmentAbstractServiceContainer extends AbstractServiceContainer
             $this->connection = DriverManager::getConnection(
                 [
                     'driver' => 'pdo_sqlite',
-                    'path' => $this->projectRootDir . '/var/app.sqlite'
+                    'path' => $this->varDir . '/' . $this->environment() . '.sqlite'
                 ]
             );
         }
@@ -64,16 +83,16 @@ final class DevelopmentAbstractServiceContainer extends AbstractServiceContainer
 
     protected function userRepository(): UserRepository
     {
-        throw new \BadMethodCallException('Not implemented yet');
+        return $this->userRepository ?? $this->userRepository = new UserRepositoryUsingDbal($this->connection());
     }
 
     protected function trainingRepository(): TrainingRepository
     {
-        throw new \BadMethodCallException('Not implemented yet');
+        throw new BadMethodCallException('Not implemented yet');
     }
 
     protected function ticketRepository(): TicketRepository
     {
-        throw new \BadMethodCallException('Not implemented yet');
+        throw new BadMethodCallException('Not implemented yet');
     }
 }

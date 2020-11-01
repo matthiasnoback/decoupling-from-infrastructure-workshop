@@ -1,13 +1,26 @@
 version: '3'
 
 services:
+    web:
+        build: docker/web/
+        image: matthiasnoback/decoupling-from-infrastructure-workshop-web
+        volumes:
+            - ./:/app
+        ports:
+            - 8080:8080
+        expose:
+            - 8080
+        user: ${HOST_UID}:${HOST_GID}
+
     php:
         build: docker/php/
-        image: matthiasnoback/decoupling-from-infrastructure-workshop-web
+        image: matthiasnoback/decoupling-from-infrastructure-workshop-php
         volumes:
             - ./:/app:cached
         working_dir: /app
         user: ${HOST_UID}:${HOST_GID}
+        depends_on:
+            - web
 
     composer:
         image: composer:latest

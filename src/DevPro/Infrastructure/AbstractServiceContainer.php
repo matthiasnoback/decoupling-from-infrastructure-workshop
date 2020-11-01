@@ -13,9 +13,11 @@ use DevPro\Domain\Model\User\UserRepository;
 
 abstract class AbstractServiceContainer implements ServiceContainer
 {
-    private ?EventDispatcher $eventDispatcher;
+    private ?EventDispatcher $eventDispatcher = null;
 
     abstract protected function clock(): Clock;
+
+    abstract protected function environment(): string;
 
     public function boot(): void
     {

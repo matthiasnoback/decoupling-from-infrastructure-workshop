@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\Acceptance\Support;
+namespace Test\UseCases\Support;
 
 use DevPro\Domain\Model\Training\Training;
 use DevPro\Domain\Model\Training\TrainingId;

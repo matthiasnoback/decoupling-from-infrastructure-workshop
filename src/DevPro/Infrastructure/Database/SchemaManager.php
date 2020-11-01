@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace DevPro\Infrastructure;
+namespace DevPro\Infrastructure\Database;
 
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Schema;
@@ -34,6 +34,11 @@ final class SchemaManager
     private function provideSchema(): Schema
     {
         $schema = new Schema();
+
+        $users = $schema->createTable('users');
+        $users->addColumn('id', 'string');
+        $users->addColumn('name', 'string');
+        $users->setPrimaryKey(['id']);
 
         // Here you can add your own tables to the schema
 

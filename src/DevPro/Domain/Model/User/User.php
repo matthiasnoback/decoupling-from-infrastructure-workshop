@@ -13,21 +13,42 @@ final class User
     private UserId $userId;
     private string $name;
 
-    private function __construct(UserId $userId, string $name)
+    private function __construct()
     {
-        Assert::that($name)->notEmpty('The name of a user should not be empty');
-
-        $this->userId = $userId;
-        $this->name = $name;
     }
 
     public static function create(UserId $userId, string $name): self
     {
-        return new self($userId, $name);
+        $instance = new self();
+
+        Assert::that($name)->notEmpty('The name of a user should not be empty');
+
+        $instance->userId = $userId;
+        $instance->name = $name;
+
+        return $instance;
     }
 
     public function userId(): UserId
     {
         return $this->userId;
+    }
+
+    public function getDatabaseRecordData(): array
+    {
+        return [
+            'id' => $this->userId->asString(),
+            'name' => $this->name
+        ];
+    }
+
+    public static function fromDatabaseRecord(array $data): self
+    {
+        $instance = new self();
+
+        $instance->userId = UserId::fromString($data['id']);
+        $instance->name = $data['name'];
+
+        return $instance;
     }
 }
