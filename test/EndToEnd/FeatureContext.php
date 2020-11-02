@@ -27,6 +27,14 @@ final class FeatureContext extends MinkContext
         }
     }
 
+    /**
+     * @BeforeScenario
+     */
+    public function setEndToEndTestingEnvironment(): void
+    {
+        $this->getSession()->setCookie('environment', 'end_to_end');
+    }
+
     private function findOrFail(string $cssLocator): NodeElement
     {
         $element = $this->getSession()->getPage()->find('css', $cssLocator);

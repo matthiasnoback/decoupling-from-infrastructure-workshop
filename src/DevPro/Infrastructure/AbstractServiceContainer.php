@@ -18,9 +18,19 @@ abstract class AbstractServiceContainer implements ServiceContainer
 {
     private ?EventDispatcher $eventDispatcher = null;
 
+    private string $environment;
+
     abstract protected function clock(): Clock;
 
-    abstract protected function environment(): string;
+    public function __construct(string $environment)
+    {
+        $this->environment = $environment;
+    }
+
+    protected function environment(): string
+    {
+        return $this->environment;
+    }
 
     public function boot(): void
     {
