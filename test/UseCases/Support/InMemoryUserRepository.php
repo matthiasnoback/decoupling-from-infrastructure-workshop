@@ -30,17 +30,6 @@ final class InMemoryUserRepository implements UserRepository
         return $this->entities[$id->asString()];
     }
 
-    public function getUserByName(string $name): User
-    {
-        foreach ($this->entities as $entity) {
-            if ($entity->name() === $name) {
-                return $entity;
-            }
-        }
-
-        throw new RuntimeException(sprintf('Could not find User with name "%s"', $name));
-    }
-
     public function nextIdentity(): UserId
     {
         return UserId::fromString(Uuid::uuid4()->toString());

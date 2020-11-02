@@ -46,26 +46,6 @@ final class UserRepositoryUsingDbal implements UserRepository
         return User::fromDatabaseRecord($record);
     }
 
-    public function getUserByName(string $name): User
-    {
-        $result = $this->connection->executeQuery(
-            'SELECT * FROM users WHERE name = ?',
-            [
-                $name
-            ]
-        );
-        Assert::that($result)->isInstanceOf(Result::class);
-
-        $record = $result->fetchAssociative();
-        if ($record === false) {
-            throw new RuntimeException(
-                sprintf('Could not find user with name "%s"', $name)
-            );
-        }
-
-        return User::fromDatabaseRecord($record);
-    }
-
     public function nextIdentity(): UserId
     {
         return UserId::fromString(Uuid::uuid4()->toString());

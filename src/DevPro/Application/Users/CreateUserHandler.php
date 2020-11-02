@@ -26,7 +26,7 @@ final class CreateUserHandler
     {
         $user = User::createNormalUser(
             $this->userRepository->nextIdentity(),
-            $command->name()
+            $command->username()
         );
 
         $this->userRepository->save($user);

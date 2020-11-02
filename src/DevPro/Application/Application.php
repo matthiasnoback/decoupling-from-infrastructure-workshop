@@ -17,9 +17,9 @@ final class Application implements ApplicationInterface
         $this->container = $container;
     }
 
-    public function createUser(string $name): UserId
+    public function createUser(string $username): UserId
     {
-        return $this->container->createUser()->handle(new CreateUser($name));
+        return $this->container->createUser()->handle(new CreateUser($username));
     }
 
     public function createOrganizer(): UserId

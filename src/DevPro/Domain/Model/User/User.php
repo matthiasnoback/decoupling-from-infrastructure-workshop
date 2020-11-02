@@ -11,21 +11,21 @@ final class User
     use EventRecordingCapabilities;
 
     private UserId $userId;
-    private string $name;
+    private string $username;
     private bool $isOrganizer;
 
     private function __construct()
     {
     }
 
-    public static function createNormalUser(UserId $userId, string $name): self
+    public static function createNormalUser(UserId $userId, string $username): self
     {
         $instance = new self();
 
-        Assert::that($name)->notEmpty('The name of a user should not be empty');
+        Assert::that($username)->notEmpty('The name of a user should not be empty');
 
         $instance->userId = $userId;
-        $instance->name = $name;
+        $instance->username = $username;
         $instance->isOrganizer = false;
 
         return $instance;
@@ -36,7 +36,7 @@ final class User
         $instance = new self();
 
         $instance->userId = $userId;
-        $instance->name = 'Organizer';
+        $instance->username = 'Organizer';
         $instance->isOrganizer = true;
 
         return $instance;
@@ -51,7 +51,7 @@ final class User
     {
         return [
             'id' => $this->userId->asString(),
-            'name' => $this->name,
+            'username' => $this->username,
             'isOrganizer' => $this->isOrganizer
         ];
     }
@@ -61,7 +61,7 @@ final class User
         $instance = new self();
 
         $instance->userId = UserId::fromString($data['id']);
-        $instance->name = $data['name'];
+        $instance->username = $data['username'];
         $instance->isOrganizer = (bool)$data['isOrganizer'];
 
         return $instance;

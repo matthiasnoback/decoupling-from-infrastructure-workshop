@@ -37,7 +37,7 @@ final class SchemaManager
 
         $users = $schema->createTable('users');
         $users->addColumn('id', 'string');
-        $users->addColumn('name', 'string');
+        $users->addColumn('username', 'string');
         $users->addColumn('isOrganizer', 'boolean');
         $users->setPrimaryKey(['id']);
 

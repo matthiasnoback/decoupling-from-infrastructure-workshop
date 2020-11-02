@@ -6,8 +6,8 @@ include __DIR__ . '/header.php';
 ?>
     <form action="/registerUser" method="post">
         <div>
-            <label for="name">Your name</label>
-            <input name="name" id="name" type="text">
+            <label for="username">Username</label>
+            <input name="username" id="username" type="text">
         </div>
         <div>
             <button type="submit">Submit</button>

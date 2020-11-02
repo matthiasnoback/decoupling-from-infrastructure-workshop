@@ -7,9 +7,11 @@ use Assert\Assert;
 use BadMethodCallException;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
+use DevPro\Application\Users\GetSecurityUser;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
+use DevPro\Infrastructure\Database\GetSecurityUserUsingDbal;
 use DevPro\Infrastructure\Database\SchemaManager;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
 use DevPro\Infrastructure\Web\Controllers;
@@ -25,6 +27,7 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
     private string $varDirectory;
     private ?Connection $connection = null;
     private ?UserRepositoryUsingDbal $userRepository = null;
+    private ?GetSecurityUserUsingDbal $getSecurityUser = null;
 
     protected function environment(): string
     {
@@ -46,7 +49,7 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
 
     public function controllers(): Controllers
     {
-        return new Controllers($this->application(), $this->userRepository());
+        return new Controllers($this->application(), $this->getSecurityUser());
     }
 
     protected function clock(): Clock
@@ -94,5 +97,10 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
     protected function ticketRepository(): TicketRepository
     {
         throw new BadMethodCallException('Not implemented yet');
+    }
+
+    public function getSecurityUser(): GetSecurityUser
+    {
+        return $this->getSecurityUser ?? $this->getSecurityUser = new GetSecurityUserUsingDbal($this->connection());
     }
 }

@@ -7,7 +7,7 @@ use DevPro\Domain\Model\User\UserId;
 
 interface ApplicationInterface
 {
-    public function createUser(string $name): UserId;
+    public function createUser(string $username): UserId;
 
     public function createOrganizer(): UserId;
 }

@@ -4,35 +4,40 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Web;
 
 use DevPro\Application\ApplicationInterface;
-use DevPro\Domain\Model\User\UserRepository;
+use DevPro\Application\Users\GetSecurityUser;
 use RuntimeException;
 
 final class Controllers
 {
     private ApplicationInterface $application;
-    private UserRepository $userRepository;
+    private GetSecurityUser $getSecurityUser;
 
     public function bootstrap(): void
     {
         session_start();
     }
 
-    public function __construct(ApplicationInterface $application, UserRepository $userRepository)
+    public function __construct(ApplicationInterface $application, GetSecurityUser $getSecurityUser)
     {
         $this->application = $application;
-        $this->userRepository = $userRepository;
+        $this->getSecurityUser = $getSecurityUser;
     }
 
     public function indexController(): void
     {
-        header('Content-Type: text/plain');
-        echo 'Hello, ' . ($_SESSION['logged_in_user'] ?? 'world') . '!';
+        if (isset($_SESSION['logged_in_user'])) {
+            $username = $_SESSION['logged_in_user']->username();
+        } else {
+            $username = 'world';
+        }
+
+        include __DIR__ . '/View/index.php';
     }
 
     public function registerUserController(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->application->createUser($_POST['name'] ?? '');
+            $this->application->createUser($_POST['username'] ?? '');
 
             header('Location: /');
             exit;
@@ -47,14 +52,13 @@ final class Controllers
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                $user = $this->userRepository->getUserByName($_POST['username'] ?? '');
-                $_SESSION['logged_in_user'] = $user->userId()->asString();
+                $securityUser = $this->getSecurityUser->byUsername($_POST['username'] ?? '');
+                $_SESSION['logged_in_user'] = $securityUser;
+                header('Location: /');
+                exit;
             } catch (RuntimeException $exception) {
                 $error = 'Invalid username';
             }
-
-            header('Location: /');
-            exit;
         }
 
         include __DIR__ . '/View/login.php';

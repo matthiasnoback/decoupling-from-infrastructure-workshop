@@ -5,15 +5,15 @@ namespace DevPro\Application\Users;
 
 final class CreateUser
 {
-    private string $name;
+    private string $username;
 
-    public function __construct(string $name)
+    public function __construct(string $username)
     {
-        $this->name = $name;
+        $this->username = $username;
     }
 
-    public function name(): string
+    public function username(): string
     {
-        return $this->name;
+        return $this->username;
     }
 }
