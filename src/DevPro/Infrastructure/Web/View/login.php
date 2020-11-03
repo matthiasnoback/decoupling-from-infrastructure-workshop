@@ -1,23 +1,18 @@
 <?php
 declare(strict_types=1);
 
-/** @var string|null $error */
+include __DIR__ . '/_header.php';
 
-include __DIR__ . '/header.php';
-
-if ($error !== null) {
-    ?><p><strong><?php echo $error; ?></strong></p><?php
-}
 ?>
+    <h1>Login</h1>
     <form action="/login" method="post">
-        <div>
-            <label for="username">Username</label>
-            <input name="username" id="username" type="text">
+        <div class="form-group<?php if (isset($formErrors['username'])) { ?> has-error<?php } ?>">
+            <label class="control-label" for="username">Username</label>
+            <input class="form-control" name="username" id="username" type="text">
+            <?php if (isset($formErrors['username'])) { ?><span class="help-block"><?php echo escape($formErrors['username']); ?></span><?php } ?>
         </div>
-        <div>
-            <button type="submit">Submit</button>
-        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 <?php
 
-include __DIR__ . '/footer.php';
+include __DIR__ . '/_footer.php';

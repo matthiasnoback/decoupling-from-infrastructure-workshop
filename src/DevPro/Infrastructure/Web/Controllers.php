@@ -5,62 +5,69 @@ namespace DevPro\Infrastructure\Web;
 
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Users\GetSecurityUser;
+use DevPro\Infrastructure\Framework\TemplateRenderer;
+use DevPro\Infrastructure\Session;
 use RuntimeException;
 
 final class Controllers
 {
     private ApplicationInterface $application;
     private GetSecurityUser $getSecurityUser;
+    private Session $session;
+    private TemplateRenderer $templateRenderer;
 
-    public function bootstrap(): void
-    {
-        session_start();
-    }
-
-    public function __construct(ApplicationInterface $application, GetSecurityUser $getSecurityUser)
-    {
+    public function __construct(
+        ApplicationInterface $application,
+        GetSecurityUser $getSecurityUser,
+        Session $session,
+        TemplateRenderer $templateRenderer
+    ) {
         $this->application = $application;
         $this->getSecurityUser = $getSecurityUser;
+        $this->session = $session;
+        $this->templateRenderer = $templateRenderer;
     }
 
     public function indexController(): void
     {
-        if (isset($_SESSION['logged_in_user'])) {
-            $username = $_SESSION['logged_in_user']->username();
+        if ($this->session->get('logged_in_user')) {
+            $username = $this->session->get('logged_in_user')->username();
         } else {
             $username = 'world';
         }
 
-        include __DIR__ . '/View/index.php';
+        echo $this->templateRenderer->render(__DIR__ . '/View/index.php', ['username' => $username]);
     }
 
     public function registerUserController(): void
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $this->application->createUser($_POST['username'] ?? '');
+            $this->session->addSuccessFlash('Registration was successful');
 
             header('Location: /');
             exit;
         }
 
-        include __DIR__ . '/View/register_user.php';
+        echo $this->templateRenderer->render(__DIR__ . '/View/register_user.php', []);
     }
 
     public function loginController(): void
     {
-        $error = null;
+        $formErrors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $securityUser = $this->getSecurityUser->byUsername($_POST['username'] ?? '');
-                $_SESSION['logged_in_user'] = $securityUser;
+                $this->session->set('logged_in_user', $securityUser);
+                $this->session->addSuccessFlash('You have successfully logged in');
                 header('Location: /');
                 exit;
             } catch (RuntimeException $exception) {
-                $error = 'Invalid username';
+                $formErrors['username'] = 'Invalid username';
             }
         }
 
-        include __DIR__ . '/View/login.php';
+        echo $this->templateRenderer->render(__DIR__ . '/View/login.php', ['formErrors' => $formErrors]);
     }
 }

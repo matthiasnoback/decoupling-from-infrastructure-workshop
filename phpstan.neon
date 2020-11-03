@@ -5,6 +5,8 @@ parameters:
         - public/
         - test/
     checkMissingIterableValueType: false
+    excludes_analyse:
+        - src/DevPro/Infrastructure/Web/View
 includes:
     - vendor/phpstan/phpstan-beberlei-assert/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon

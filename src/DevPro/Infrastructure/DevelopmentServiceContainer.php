@@ -14,7 +14,9 @@ use DevPro\Domain\Model\User\UserRepository;
 use DevPro\Infrastructure\Database\GetSecurityUserUsingDbal;
 use DevPro\Infrastructure\Database\SchemaManager;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
+use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Web\Controllers;
+use DevPro\Infrastructure\Web\WebApplication;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 
@@ -28,6 +30,7 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
     private ?Connection $connection = null;
     private ?UserRepositoryUsingDbal $userRepository = null;
     private ?GetSecurityUserUsingDbal $getSecurityUser = null;
+    private ?Session $session = null;
 
     public function __construct(string $varDirectory, string $environment)
     {
@@ -44,9 +47,14 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
         $this->schemaManager()->updateSchema();
     }
 
-    public function controllers(): Controllers
+    private function controllers(): Controllers
     {
-        return new Controllers($this->application(), $this->getSecurityUser());
+        return new Controllers(
+            $this->application(),
+            $this->getSecurityUser(),
+            $this->session(),
+            $this->templateRenderer()
+        );
     }
 
     protected function clock(): Clock
@@ -99,5 +107,30 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
     public function getSecurityUser(): GetSecurityUser
     {
         return $this->getSecurityUser ?? $this->getSecurityUser = new GetSecurityUserUsingDbal($this->connection());
+    }
+
+    private function templateRenderer(): TemplateRenderer
+    {
+        return new TemplateRenderer($this->globalTemplateVariables());
+    }
+
+    /**
+     * @return array<string,mixed>
+     */
+    private function globalTemplateVariables(): array
+    {
+        return [
+            'session' => $this->session()
+        ];
+    }
+
+    private function session(): Session
+    {
+        return $this->session ?? $this->session = new Session();
+    }
+
+    public function webApplication(): WebApplication
+    {
+        return WebApplication::createFromGlobalsWithControllers($this->controllers());
     }
 }
