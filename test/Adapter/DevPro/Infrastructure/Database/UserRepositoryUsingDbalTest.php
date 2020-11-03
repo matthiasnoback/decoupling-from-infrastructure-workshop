@@ -5,18 +5,18 @@ namespace DevPro\Infrastructure\Database;
 
 use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserRepository;
-use DevPro\Infrastructure\AdapterTestServiceContainer;
+use DevPro\Infrastructure\OutputAdapterTestServiceContainer;
 use PHPUnit\Framework\TestCase;
 
 final class UserRepositoryUsingDbalTest extends TestCase
 {
-    private AdapterTestServiceContainer $container;
+    private OutputAdapterTestServiceContainer $container;
 
     private UserRepository $repository;
 
     protected function setUp(): void
     {
-        $this->container = new AdapterTestServiceContainer();
+        $this->container = new OutputAdapterTestServiceContainer();
         $this->container->boot();
 
         $this->repository = $this->container->userRepository();

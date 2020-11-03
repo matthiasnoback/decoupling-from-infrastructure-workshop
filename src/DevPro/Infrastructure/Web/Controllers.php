@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Web;
 
 use DevPro\Application\ApplicationInterface;
+use DevPro\Application\Users\CreateUser;
 use DevPro\Application\Users\GetSecurityUser;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Session;
@@ -41,15 +42,32 @@ final class Controllers
 
     public function registerUserController(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->application->createUser($_POST['username'] ?? '');
-            $this->session->addSuccessFlash('Registration was successful');
+        $formErrors = [];
+        $formData = ['username' => ''];
 
-            header('Location: /');
-            exit;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $formData = array_merge($formData, $_POST);
+
+            if ($formData['username'] === '') {
+                $formErrors['username'] = 'Username should not be empty';
+            }
+
+            if (empty($formErrors)) {
+                $this->application->createUser(new CreateUser($_POST['username']));
+                $this->session->addSuccessFlash('Registration was successful');
+
+                header('Location: /');
+                exit;
+            }
         }
 
-        echo $this->templateRenderer->render(__DIR__ . '/View/register_user.php', []);
+        echo $this->templateRenderer->render(
+            __DIR__ . '/View/register_user.php',
+            [
+                'formErrors' => $formErrors,
+                'formData' => $formData
+            ]
+        );
     }
 
     public function loginController(): void

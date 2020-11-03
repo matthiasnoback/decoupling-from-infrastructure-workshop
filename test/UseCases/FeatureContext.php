@@ -6,6 +6,8 @@ namespace Test\UseCases;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
+use DevPro\Application\Users\CreateOrganizer;
+use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\User\UserId;
 use Test\UseCases\Support\TestServiceContainer;
 
@@ -46,11 +48,11 @@ final class FeatureContext implements Context
 
     private function theOrganizer(): UserId
     {
-        return $this->container->application()->createOrganizer();
+        return $this->container->application()->createOrganizer(new CreateOrganizer());
     }
 
     private function aUser(): UserId
     {
-        return $this->container->application()->createUser('A user');
+        return $this->container->application()->createUser(new CreateUser('A user'));
     }
 }

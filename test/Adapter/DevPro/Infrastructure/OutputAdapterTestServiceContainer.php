@@ -5,7 +5,7 @@ namespace DevPro\Infrastructure;
 
 use DevPro\Domain\Model\User\UserRepository;
 
-final class AdapterTestServiceContainer extends DevelopmentServiceContainer
+final class OutputAdapterTestServiceContainer extends DevelopmentServiceContainer
 {
     public function __construct()
     {

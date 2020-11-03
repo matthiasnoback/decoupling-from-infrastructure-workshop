@@ -24,20 +24,38 @@ final class ControllersTest extends TestCase
 
     /**
      * @test
+     * @see Controllers::registerUserController()
      */
-    public function it_shows_a_form_error_if_the_username_is_invalid_register_user(): void
+    public function it_shows_a_form_error_if_the_username_is_invalid(): void
     {
-        $this->session->visit($this->baseUrl . '/login');
+        $this->session->visit($this->baseUrl . '/registerUser');
 
         $page = $this->session->getPage();
-        $page->fillField('username', 'Invalid');
+        $page->fillField('username', '');
         $page->pressButton('Submit');
 
-        $this->assertSession()->pageTextContains('Invalid username');
+        $this->assertSession()->pageTextContains('Username should not be empty');
+    }
+
+    /**
+     * @test
+     * @see Controllers::registerUserController()
+     */
+    public function it_calls_the_application_service_(): void
+    {
+        $this->session->visit($this->baseUrl . '/registerUser');
+
+        $page = $this->session->getPage();
+        $page->fillField('username', '');
+        $page->pressButton('Submit');
+
+        $this->assertSession()->pageTextContains('Username should not be empty');
     }
 
     private function assertSession(): WebAssert
     {
+        $this->addToAssertionCount(1);
+
         return new WebAssert($this->session);
     }
 }

@@ -17,13 +17,13 @@ final class Application implements ApplicationInterface
         $this->container = $container;
     }
 
-    public function createUser(string $username): UserId
+    public function createUser(CreateUser $command): UserId
     {
-        return $this->container->createUser()->handle(new CreateUser($username));
+        return $this->container->createUser()->handle($command);
     }
 
-    public function createOrganizer(): UserId
+    public function createOrganizer(CreateOrganizer $command): UserId
     {
-        return $this->container->createOrganizer()->handle(new CreateOrganizer());
+        return $this->container->createOrganizer()->handle($command);
     }
 }

@@ -54,7 +54,6 @@ final class WebApplication
                 ob_end_clean();
 
                 http_response_code(500);
-                header('Content-Type: plain/text');
 
                 throw $throwable;
             }
