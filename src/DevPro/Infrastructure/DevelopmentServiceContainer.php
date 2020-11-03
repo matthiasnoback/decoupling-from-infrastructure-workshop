@@ -29,15 +29,12 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
     private ?UserRepositoryUsingDbal $userRepository = null;
     private ?GetSecurityUserUsingDbal $getSecurityUser = null;
 
-    protected function environment(): string
-    {
-        return 'development';
-    }
-
-    public function __construct(string $varDirectory)
+    public function __construct(string $varDirectory, string $environment)
     {
         Assert::that($varDirectory)->directory();
         $this->varDirectory = $varDirectory;
+
+        parent::__construct($environment);
     }
 
     public function boot(): void

@@ -15,6 +15,11 @@ final class TestServiceContainer extends AbstractServiceContainer
     private ?InMemoryTrainingRepository $trainingRepository = null;
     private ?InMemoryTicketRepository $ticketRepository = null;
 
+    public function __construct()
+    {
+        parent::__construct( 'test');
+    }
+
     public function setCurrentDate(string $date): void
     {
         $this->clock()->setCurrentDate($date);
@@ -31,11 +36,6 @@ final class TestServiceContainer extends AbstractServiceContainer
     public function dispatchedEvents(): array
     {
         return $this->eventSubscriberSpy()->dispatchedEvents();
-    }
-
-    protected function environment(): string
-    {
-        return 'test';
     }
 
     protected function registerSubscribers(EventDispatcher $eventDispatcher): void
