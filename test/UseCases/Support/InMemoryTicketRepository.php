@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\Acceptance\Support;
+namespace Test\UseCases\Support;
 
 use DevPro\Domain\Model\Ticket\Ticket;
 use DevPro\Domain\Model\Ticket\TicketId;
@@ -12,9 +12,9 @@ use RuntimeException;
 final class InMemoryTicketRepository implements TicketRepository
 {
     /**
-     * @var array & Ticket[]
+     * @var array<Ticket> & Ticket[]
      */
-    private $entities = [];
+    private array $entities = [];
 
     public function save(Ticket $entity): void
     {

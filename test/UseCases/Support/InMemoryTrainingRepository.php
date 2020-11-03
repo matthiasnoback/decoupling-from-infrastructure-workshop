@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\Acceptance\Support;
+namespace Test\UseCases\Support;
 
 use DevPro\Domain\Model\Training\Training;
 use DevPro\Domain\Model\Training\TrainingId;
@@ -12,9 +12,9 @@ use RuntimeException;
 final class InMemoryTrainingRepository implements TrainingRepository
 {
     /**
-     * @var array & Training[]
+     * @var array<Training> & Training[]
      */
-    private $entities = [];
+    private array $entities = [];
 
     public function save(Training $entity): void
     {

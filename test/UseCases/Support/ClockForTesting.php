@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\Acceptance\Support;
+namespace Test\UseCases\Support;
 
 use Assert\Assert;
 use DateTimeImmutable;
@@ -10,12 +10,9 @@ use LogicException;
 
 final class ClockForTesting implements Clock
 {
-    private const DATE_FORMAT = 'd-m-Y';
+    public const DATE_FORMAT = 'd-m-Y';
 
-    /**
-     * @var DateTimeImmutable | null
-     */
-    private $dateTime;
+    private ?DateTimeImmutable $dateTime;
 
     public function setCurrentDate(string $date): void
     {

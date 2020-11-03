@@ -1,24 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace DevPro\Application;
+namespace DevPro\Application\Users;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserId;
 use DevPro\Domain\Model\User\UserRepository;
 
-final class CreateUser
+final class CreateUserHandler
 {
-    /**
-     * @var UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
+    private UserRepository $userRepository;
+    private EventDispatcher $eventDispatcher;
 
     public function __construct(
         UserRepository $userRepository,
@@ -28,11 +22,11 @@ final class CreateUser
         $this->eventDispatcher = $eventDispatcher;
     }
 
-    public function create(string $name): UserId
+    public function handle(CreateUser $command): UserId
     {
-        $user = User::create(
+        $user = User::createNormalUser(
             $this->userRepository->nextIdentity(),
-            $name
+            $command->username()
         );
 
         $this->userRepository->save($user);

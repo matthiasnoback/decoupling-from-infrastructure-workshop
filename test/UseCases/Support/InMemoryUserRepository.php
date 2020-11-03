@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\Acceptance\Support;
+namespace Test\UseCases\Support;
 
 use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserId;
@@ -12,9 +12,9 @@ use RuntimeException;
 final class InMemoryUserRepository implements UserRepository
 {
     /**
-     * @var array & User[]
+     * @var array<User> & User[]
      */
-    private $entities = [];
+    private array $entities = [];
 
     public function save(User $entity): void
     {

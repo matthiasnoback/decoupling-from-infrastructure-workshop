@@ -1,7 +1,9 @@
 Feature: Registration
 
-  Scenario: A scheduled training shows up in Upcoming trainings
+  Background:
     Given today is "01-01-2020"
+
+  Scenario: A scheduled training shows up in Upcoming trainings
     When the organizer schedules a new training called "Decoupling from infrastructure" for "24-01-2020"
     Then it shows up on the list of upcoming trainings
 

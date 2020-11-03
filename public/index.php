@@ -1,5 +1,12 @@
 <?php
 declare(strict_types=1);
 
-header('Content-Type: text/plain');
-echo 'Hello, world!';
+use Common\Web\ControllerResolver;
+use DevPro\Infrastructure\DevelopmentServiceContainer;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$container = new DevelopmentServiceContainer(__DIR__ . '/../var');
+$container->boot();
+
+ControllerResolver::resolve($_SERVER, $_GET, $container->controllers())();

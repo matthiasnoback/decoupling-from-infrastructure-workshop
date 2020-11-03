@@ -10,31 +10,60 @@ final class User
 {
     use EventRecordingCapabilities;
 
-    /**
-     * @var UserId
-     */
-    private $userId;
+    private UserId $userId;
+    private string $username;
+    private bool $isOrganizer;
 
-    /**
-     * @var string
-     */
-    private $name;
-
-    private function __construct(UserId $userId, string $name)
+    private function __construct()
     {
-        Assert::that($name)->notEmpty('The name of a user should not be empty');
-
-        $this->userId = $userId;
-        $this->name = $name;
     }
 
-    public static function create(UserId $userId, string $name): self
+    public static function createNormalUser(UserId $userId, string $username): self
     {
-        return new self($userId, $name);
+        $instance = new self();
+
+        Assert::that($username)->notEmpty('The name of a user should not be empty');
+
+        $instance->userId = $userId;
+        $instance->username = $username;
+        $instance->isOrganizer = false;
+
+        return $instance;
+    }
+
+    public static function createOrganizer(UserId $userId): self
+    {
+        $instance = new self();
+
+        $instance->userId = $userId;
+        $instance->username = 'Organizer';
+        $instance->isOrganizer = true;
+
+        return $instance;
     }
 
     public function userId(): UserId
     {
         return $this->userId;
+    }
+
+    public function getDatabaseRecordData(): array
+    {
+        return [
+            'id' => $this->userId->asString(),
+            'username' => $this->username,
+            'isOrganizer' => $this->isOrganizer
+        ];
+    }
+
+    public static function fromDatabaseRecord(array $data): self
+    {
+        $instance = new self();
+
+        $instance->userId = UserId::fromString($data['id']);
+        $instance->username = $data['username'];
+        $instance->isOrganizer = (bool)$data['isOrganizer'];
+
+        return $instance;
     }
 }

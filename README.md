@@ -36,12 +36,12 @@
 
 - Clone this repository and `cd` into it.
 - Run `docker-compose pull`.
-- Run `bin/composer.sh install --prefer-dist` to install the project's dependencies.
+- Run `bin/composer install --prefer-dist` to install the project's dependencies.
 
 ### Usage
 
-- Run `bin/composer.sh` to use Composer (e.g. `bin/composer.sh require --dev symfony/var-dumper`).
-- Run `bin/run_tests.sh` to run the tests.
+- Run `bin/composer` to use Composer (e.g. `bin/composer require --dev symfony/var-dumper`).
+- Run `bin/run_tests` to run the tests.
 
 ## Sharing patches
 

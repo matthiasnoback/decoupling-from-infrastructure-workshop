@@ -11,20 +11,9 @@ final class Ticket
 {
     use EventRecordingCapabilities;
 
-    /**
-     * @var TicketId
-     */
-    private $ticketId;
-
-    /**
-     * @var UserId
-     */
-    private $userId;
-
-    /**
-     * @var TrainingId
-     */
-    private $trainingId;
+    private TicketId $ticketId;
+    private UserId $userId;
+    private TrainingId $trainingId;
 
     private function __construct(
         TicketId $ticketId,

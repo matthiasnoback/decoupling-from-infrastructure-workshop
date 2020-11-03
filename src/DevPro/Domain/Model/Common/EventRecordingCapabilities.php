@@ -8,7 +8,7 @@ trait EventRecordingCapabilities
     /**
      * @var array & object[]
      */
-    private $events = [];
+    private array $events = [];
 
     protected function recordThat(object $event): void
     {

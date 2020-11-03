@@ -1,22 +1,19 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\Acceptance;
+namespace Test\UseCases;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
 use DevPro\Domain\Model\User\UserId;
-use Test\Acceptance\Support\TestServiceContainer;
+use Test\UseCases\Support\TestServiceContainer;
 
 final class FeatureContext implements Context
 {
     use ExpectException;
 
-    /**
-     * @var TestServiceContainer
-     */
-    private $container;
+    private TestServiceContainer $container;
 
     public function __construct()
     {
@@ -49,11 +46,11 @@ final class FeatureContext implements Context
 
     private function theOrganizer(): UserId
     {
-        return $this->container->createUser()->create('The organizer');
+        return $this->container->application()->createOrganizer();
     }
 
     private function aUser(): UserId
     {
-        return $this->container->createUser()->create('A user');
+        return $this->container->application()->createUser('A user');
     }
 }

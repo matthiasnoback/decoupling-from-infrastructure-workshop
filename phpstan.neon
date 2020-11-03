@@ -2,8 +2,10 @@ parameters:
     level: max
     paths:
         - src/
+        - public/
         - test/
     checkMissingIterableValueType: false
 includes:
     - vendor/phpstan/phpstan-beberlei-assert/extension.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
+    - phpstan-baseline.neon

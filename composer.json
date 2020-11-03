@@ -6,20 +6,20 @@
         }
     ],
     "require-dev": {
-        "symfony/var-dumper": "^4.2",
         "phpstan/phpstan": "^0.12.52",
         "phpstan/phpstan-beberlei-assert": "^0.12.3",
         "phpstan/phpstan-phpunit": "^0.12.16",
-        "behat/behat": "^3.5",
-        "phpunit/phpunit": "^8.5",
-        "matthiasnoback/behat-expect-exception": "^0.3"
+        "matthiasnoback/behat-expect-exception": "^0.3",
+        "phpunit/phpunit": "^9.4",
+        "behat/behat": "^3.8",
+        "behat/mink-extension": "^2.3",
+        "behat/mink-goutte-driver": "^1.2"
     },
     "require": {
-        "php": ">=7.2",
-        "beberlei/assert": "^2.9",
-        "ramsey/uuid": "^3.8",
+        "php": "^7.4",
         "roave/security-advisories": "dev-master",
-        "matthiasnoback/php-workshop-tools": "^0.31.0"
+        "doctrine/dbal": "^2.12",
+        "matthiasnoback/php-workshop-tools": "^0.34.0"
     },
     "autoload": {
         "psr-4": {
@@ -28,11 +28,9 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Test\\Acceptance\\": "test/Acceptance",
-            "": ["test/Unit"]
-        },
-        "files": [
-            "vendor/phpunit/phpunit/src/Framework/Assert/Functions.php"
-        ]
+            "Test\\UseCases\\": "test/UseCases",
+            "Test\\EndToEnd\\": "test/EndToEnd",
+            "": ["test/Unit", "test/Adapter"]
+        }
     }
 }
