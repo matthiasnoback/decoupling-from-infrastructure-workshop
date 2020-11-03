@@ -25,6 +25,8 @@ abstract class AbstractServiceContainer implements ServiceContainer
     public function __construct(string $environment)
     {
         $this->environment = $environment;
+
+        $this->boot();
     }
 
     protected function environment(): string

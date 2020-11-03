@@ -19,6 +19,8 @@ use DevPro\Infrastructure\Web\Controllers;
 use DevPro\Infrastructure\Web\WebApplication;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use Test\Adapter\DevPro\Infrastructure\InputAdapterTestServiceContainer;
+use Test\EndToEnd\EndToEndTestServiceContainer;
 
 /**
  * Not final but also not abstract because we want to be able to override some methods, yet use this as the actual
@@ -26,7 +28,7 @@ use Doctrine\DBAL\DriverManager;
  */
 class DevelopmentServiceContainer extends AbstractServiceContainer
 {
-    private string $varDirectory;
+    protected string $varDirectory;
     private ?Connection $connection = null;
     private ?UserRepositoryUsingDbal $userRepository = null;
     private ?GetSecurityUserUsingDbal $getSecurityUser = null;
@@ -38,6 +40,17 @@ class DevelopmentServiceContainer extends AbstractServiceContainer
         $this->varDirectory = $varDirectory;
 
         parent::__construct($environment);
+    }
+
+    public static function createForEnvironment(string $varDirectory, string $environment): self
+    {
+        if ($environment === 'input_adapter_test') {
+            return new InputAdapterTestServiceContainer();
+        } elseif ($environment === 'end_to_end') {
+            return new EndToEndTestServiceContainer();
+        }
+
+        return new self($varDirectory, $environment);
     }
 
     public function boot(): void

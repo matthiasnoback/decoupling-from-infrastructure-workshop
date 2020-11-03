@@ -7,8 +7,7 @@ use Symfony\Component\ErrorHandler\Debug;
 require __DIR__ . '/../vendor/autoload.php';
 
 $environment = $_COOKIE['environment'] ?? 'development';
-$container = new DevelopmentServiceContainer(__DIR__ . '/../var', $environment);
-$container->boot();
+$container = DevelopmentServiceContainer::createForEnvironment(__DIR__ . '/../var', $environment);
 
 if ($environment === 'development') {
     Debug::enable();

@@ -1,25 +1,22 @@
 <?php
 declare(strict_types=1);
 
-namespace DevPro\Infrastructure\Database;
+namespace Test\Adapter\DevPro\Infrastructure\Database;
 
 use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserRepository;
-use DevPro\Infrastructure\OutputAdapterTestServiceContainer;
+use Test\Adapter\DevPro\Infrastructure\OutputAdapterTestServiceContainer;
 use PHPUnit\Framework\TestCase;
 
 final class UserRepositoryUsingDbalTest extends TestCase
 {
-    private OutputAdapterTestServiceContainer $container;
-
     private UserRepository $repository;
 
     protected function setUp(): void
     {
-        $this->container = new OutputAdapterTestServiceContainer();
-        $this->container->boot();
+        $container = new OutputAdapterTestServiceContainer();
 
-        $this->repository = $this->container->userRepository();
+        $this->repository = $container->userRepository();
     }
 
     /**

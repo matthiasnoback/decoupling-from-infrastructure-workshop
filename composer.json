@@ -30,7 +30,8 @@
         "psr-4": {
             "Test\\UseCases\\": "test/UseCases",
             "Test\\EndToEnd\\": "test/EndToEnd",
-            "": ["test/Unit", "test/Adapter"]
+            "Test\\Adapter\\": "test/Adapter",
+            "": "test/Unit"
         },
         "files": ["src/DevPro/Infrastructure/Framework/functions.php"]
     }
