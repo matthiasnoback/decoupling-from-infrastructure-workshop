@@ -9,17 +9,17 @@ use BehatExpectException\ExpectException;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\User\UserId;
-use Test\UseCases\Support\TestServiceContainer;
+use Test\UseCases\Support\UseCaseTestServiceContainer;
 
 final class FeatureContext implements Context
 {
     use ExpectException;
 
-    private TestServiceContainer $container;
+    private UseCaseTestServiceContainer $container;
 
     public function __construct()
     {
-        $this->container = new TestServiceContainer();
+        $this->container = UseCaseTestServiceContainer::create();
     }
 
     /**

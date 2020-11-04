@@ -17,21 +17,20 @@ use DevPro\Domain\Model\User\UserRepository;
 abstract class AbstractServiceContainer implements ServiceContainer
 {
     private ?EventDispatcher $eventDispatcher = null;
-
-    private string $environment;
+    protected ContainerConfiguration $containerConfiguration;
 
     abstract protected function clock(): Clock;
 
-    public function __construct(string $environment)
+    public function __construct(ContainerConfiguration $containerConfiguration)
     {
-        $this->environment = $environment;
+        $this->containerConfiguration = $containerConfiguration;
 
         $this->boot();
     }
 
     protected function environment(): string
     {
-        return $this->environment;
+        return $this->containerConfiguration->environment();
     }
 
     public function boot(): void

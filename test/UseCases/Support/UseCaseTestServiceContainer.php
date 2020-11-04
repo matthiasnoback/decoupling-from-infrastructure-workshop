@@ -5,8 +5,9 @@ namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Infrastructure\AbstractServiceContainer;
+use DevPro\Infrastructure\ContainerConfiguration;
 
-final class TestServiceContainer extends AbstractServiceContainer
+final class UseCaseTestServiceContainer extends AbstractServiceContainer
 {
     private ?ClockForTesting $clock = null;
     private ?EventSubscriberSpy $eventSubscriberSpy = null;
@@ -15,9 +16,9 @@ final class TestServiceContainer extends AbstractServiceContainer
     private ?InMemoryTrainingRepository $trainingRepository = null;
     private ?InMemoryTicketRepository $ticketRepository = null;
 
-    public function __construct()
+    public static function create(): self
     {
-        parent::__construct( 'test');
+        return new self(ContainerConfiguration::createForUseCaseTesting());
     }
 
     public function setCurrentDate(string $date): void

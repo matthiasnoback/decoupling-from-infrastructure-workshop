@@ -5,6 +5,7 @@ namespace Test\Adapter\DevPro\Infrastructure\Database;
 
 use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserRepository;
+use DevPro\Infrastructure\ContainerConfiguration;
 use Test\Adapter\DevPro\Infrastructure\OutputAdapterTestServiceContainer;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +15,7 @@ final class UserRepositoryUsingDbalTest extends TestCase
 
     protected function setUp(): void
     {
-        $container = new OutputAdapterTestServiceContainer();
+        $container = new OutputAdapterTestServiceContainer(ContainerConfiguration::createForOutputAdapterTesting());
 
         $this->repository = $container->userRepository();
     }

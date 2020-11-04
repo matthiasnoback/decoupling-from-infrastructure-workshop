@@ -3,6 +3,7 @@
 namespace DevPro\Domain\Model\Training;
 
 use DateTimeImmutable;
+use DevPro\Domain\Model\Common\Country;
 use DevPro\Domain\Model\User\UserId;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
@@ -16,13 +17,14 @@ final class TrainingTest extends TestCase
     {
         $trainingId = $this->someTrainingId();
         $organizerId = $this->someUserId();
+        $country = $this->aCountry();
         $title = $this->someTitle();
         $scheduledDate = $this->someDate();
 
-        $training = Training::schedule($trainingId, $organizerId, $title, $scheduledDate);
+        $training = Training::schedule($trainingId, $organizerId, $country, $title, $scheduledDate);
 
         self::assertEquals(
-            [new TrainingWasScheduled($trainingId, $title, $scheduledDate)],
+            [new TrainingWasScheduled($trainingId, $organizerId, $country, $title, $scheduledDate)],
             $training->releaseEvents()
         );
     }
@@ -38,6 +40,7 @@ final class TrainingTest extends TestCase
         Training::schedule(
             $this->someTrainingId(),
             $this->someUserId(),
+            $this->aCountry(),
             $emptyTitle = '',
             $this->someDate()
         );
@@ -61,5 +64,10 @@ final class TrainingTest extends TestCase
     private function someUserId(): UserId
     {
         return UserId::fromString('bb235de9-c15d-4bd8-9bc3-d31e4cc0e96f');
+    }
+
+    private function aCountry(): Country
+    {
+        return Country::fromString('NL');
     }
 }

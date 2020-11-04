@@ -5,6 +5,7 @@ namespace DevPro\Domain\Model\Training;
 
 use Assert\Assert;
 use DateTimeImmutable;
+use DevPro\Domain\Model\Common\Country;
 use DevPro\Domain\Model\Common\EventRecordingCapabilities;
 use DevPro\Domain\Model\User\UserId;
 
@@ -16,35 +17,32 @@ final class Training
     private UserId $organizerId;
     private string $title;
     private DateTimeImmutable $scheduledDate;
+    private Country $country;
 
-    private function __construct(
-        TrainingId $trainingId,
-        UserId $organizerId,
-        string $title,
-        DateTimeImmutable $scheduledDate
-    ) {
-        Assert::that($title)->notEmpty('Title should not be empty');
-
-        $this->trainingId = $trainingId;
-        $this->organizerId = $organizerId;
-        $this->title = $title;
-        $this->scheduledDate = $scheduledDate;
+    private function __construct()
+    {
     }
 
     public static function schedule(
         TrainingId $trainingId,
         UserId $organizerId,
+        Country $country,
         string $title,
         DateTimeImmutable $scheduledDate
     ): self {
-        $training = new self(
-            $trainingId,
-            $organizerId,
-            $title,
-            $scheduledDate
-        );
+        Assert::that($title)->notEmpty('Title should not be empty');
 
-        $training->recordThat(new TrainingWasScheduled($trainingId, $title, $scheduledDate));
+        $training = new self();
+
+        $training->trainingId = $trainingId;
+        $training->organizerId = $organizerId;
+        $training->country = $country;
+        $training->title = $title;
+        $training->scheduledDate = $scheduledDate;
+
+        $training->recordThat(
+            new TrainingWasScheduled($trainingId, $organizerId, $country, $title, $scheduledDate)
+        );
 
         return $training;
     }

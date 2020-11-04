@@ -4,15 +4,10 @@ declare(strict_types=1);
 namespace Test\Adapter\DevPro\Infrastructure;
 
 use DevPro\Application\ApplicationInterface;
-use DevPro\Infrastructure\DevelopmentServiceContainer;
+use DevPro\Infrastructure\AbstractDevelopmentServiceContainer;
 
-final class InputAdapterTestServiceContainer extends DevelopmentServiceContainer
+final class InputAdapterTestServiceContainer extends AbstractDevelopmentServiceContainer
 {
-    public function __construct()
-    {
-        parent::__construct(sys_get_temp_dir(), 'input_adapter_test');
-    }
-
     public function application(): ApplicationInterface
     {
         return new ApplicationSpy();
