@@ -2,25 +2,6 @@
 
 [![Build Status](https://travis-ci.org/matthiasnoback/decoupling-from-infrastructure-workshop.svg?branch=master)](https://travis-ci.org/matthiasnoback/decoupling-from-infrastructure-workshop)
 
-## Option 1: Use with locally installed PHP
-
-### Requirements
-
-- PHP (>= 7.4)
-- Composer
-
-### Getting started
-
-- Clone this repository and `cd` into it.
-- Run `composer install --prefer-dist` to install the project's dependencies.
-
-### Usage
-
-- Start the web server: `php -S 0.0.0.0:8080 -t public/`
-- Run `./run_tests.sh` to run the tests.
-
-## Option 2: Use with Docker
-
 ### Requirements
 
 - [Docker Engine](https://docs.docker.com/engine/installation/)
@@ -36,6 +17,7 @@
     ~~~
 
 - Clone this repository and `cd` into it.
+- Copy `.env.dist` to `.env` (set the API key to `undefined` for now)
 - Run `docker-compose pull`.
 - Run `bin/composer install --prefer-dist` to install the project's dependencies.
 

@@ -9,11 +9,13 @@ final class AbstractApiClient
 {
     private ClientInterface $client;
     private string $baseUrl;
+    private string $apiKey;
 
-    public function __construct(ClientInterface $client, string $baseUrl)
+    public function __construct(ClientInterface $client, string $baseUrl, string $apiKey)
     {
         $this->client = $client;
         $this->baseUrl = $baseUrl;
+        $this->apiKey = $apiKey;
     }
 
     /**
@@ -21,13 +23,11 @@ final class AbstractApiClient
      */
     public function getHolidays(int $year, int $month, int $day, string $countryCode): array
     {
-        $apiKey = '700a8df4a4424836b1988b854993a434';
-
         $response = $this->client->request(
             'GET',
             $this->baseUrl . '?' . http_build_query(
                 [
-                    'api_key' => $apiKey,
+                    'api_key' => $this->apiKey,
                     'country' => $countryCode,
                     'year' => $year,
                     'month' => $month,

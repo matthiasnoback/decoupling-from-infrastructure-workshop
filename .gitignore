@@ -2,3 +2,4 @@
 /vendor/
 /.phpunit.result.cache
 /var/*
+/.env

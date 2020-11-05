@@ -155,7 +155,8 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
                     'http_errors' => false
                 ]
             ),
-            $this->abstractApiBaseUrl()
+            $this->abstractApiBaseUrl(),
+            $this->containerConfiguration->abstractApiApiKey()
         );
     }
 

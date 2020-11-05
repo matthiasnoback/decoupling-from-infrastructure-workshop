@@ -15,7 +15,9 @@ final class UserRepositoryUsingDbalTest extends TestCase
 
     protected function setUp(): void
     {
-        $container = new OutputAdapterTestServiceContainer(ContainerConfiguration::createForOutputAdapterTesting());
+        $container = new OutputAdapterTestServiceContainer(
+            ContainerConfiguration::createForOutputAdapterTesting(getenv())
+        );
 
         $this->repository = $container->userRepository();
     }

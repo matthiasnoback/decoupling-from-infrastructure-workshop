@@ -28,7 +28,7 @@ final class ContainerConfiguration
                 'not needed'
             );
         } else if ($environment === 'output_adapter_test') {
-            return self::createForOutputAdapterTesting();
+            return self::createForOutputAdapterTesting($envVariables);
         } elseif ($environment === 'end_to_end_test') {
             return new self(
                 'end_to_end_test',
@@ -40,16 +40,16 @@ final class ContainerConfiguration
         return new self(
             $environment,
             $projectRootDir . '/var',
-            $envVariables['ABSTRACT_API_API_KEY'] ?? 'undefined'
+            self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
         );
     }
 
-    public static function createForOutputAdapterTesting(array $envVariables = []): self
+    public static function createForOutputAdapterTesting(array $envVariables): self
     {
         return new self(
             'output_adapter_test',
             sys_get_temp_dir(),
-            $envVariables['ABSTRACT_API_API_KEY'] ?? null
+            self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
         );
     }
 
