@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d6cc4df874242bb8ad0894c6299395a",
+    "content-hash": "93c32415cb9549893d98f9196a0ba7d7",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -3903,6 +3903,56 @@
                 "source": "https://github.com/matthiasnoback/behat-expect-exception/tree/master"
             },
             "time": "2020-01-23T17:27:41+00:00"
+        },
+        {
+            "name": "matthiasnoback/phpunit-asynchronicity",
+            "version": "v2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/matthiasnoback/phpunit-asynchronicity.git",
+                "reference": "d0e9f5f0ada71bad347fd565ae27a99ff93ed528"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/matthiasnoback/phpunit-asynchronicity/zipball/d0e9f5f0ada71bad347fd565ae27a99ff93ed528",
+                "reference": "d0e9f5f0ada71bad347fd565ae27a99ff93ed528",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.3",
+                "phpunit/phpunit": "^9.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^0.9.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Asynchronicity\\": "src/Asynchronicity/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matthias Noback",
+                    "email": "matthiasnoback@gmail.com",
+                    "homepage": "https://matthiasnoback.nl"
+                }
+            ],
+            "description": "Library for asserting things that happen asynchronously with PHPUnit",
+            "keywords": [
+                "assertion",
+                "asynchronicity",
+                "phpunit"
+            ],
+            "support": {
+                "issues": "https://github.com/matthiasnoback/phpunit-asynchronicity/issues",
+                "source": "https://github.com/matthiasnoback/phpunit-asynchronicity/tree/master"
+            },
+            "time": "2020-09-04T14:27:34+00:00"
         },
         {
             "name": "myclabs/deep-copy",

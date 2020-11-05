@@ -55,16 +55,16 @@ final class AbstractApiClient
             $decodedData = [];
         }
 
-        // @TODO deal with errors {"error":{"message":"Free plan is limited to 1 request per second. Please wait or upgrade to remove this restriction.","code":"too_many_requests","details":null}}
-
         return array_map(
             function (array $holidayData) use ($responseBody): string {
                 if (!isset($holidayData['name'])) {
-                    throw CouldNotGetHolidays::because('Expected key "name" was not defined, response body: ' . $responseBody);
+                    throw CouldNotGetHolidays::because(
+                        'Expected key "name" was not defined, response body: ' . $responseBody);
                 }
 
                 return $holidayData['name'];
             },
-            $decodedData);
+            $decodedData
+        );
     }
 }
