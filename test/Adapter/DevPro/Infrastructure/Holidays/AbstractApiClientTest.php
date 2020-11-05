@@ -18,7 +18,9 @@ final class AbstractApiClientTest extends TestCase
 
     protected function setUp(): void
     {
-        $container = new OutputAdapterTestServiceContainer(ContainerConfiguration::createForOutputAdapterTesting());
+        $container = new OutputAdapterTestServiceContainer(
+            ContainerConfiguration::createForOutputAdapterTesting()
+        );
 
         $this->client = $container->abstractApiClient();
     }
@@ -43,18 +45,20 @@ final class AbstractApiClientTest extends TestCase
      */
     public function it_can_deal_with_errors(): void
     {
-        self::assertEventually(function () {
-            try {
-                $this->client->getHolidays(
-                    2020,
-                    12,
-                    25,
-                    'AA' // not a real country
-                );
-            } catch (CouldNotGetHolidays $exception) {
-                self::assertStringContainsString('validation_error', $exception->getMessage());
+        self::assertEventually(
+            function () {
+                try {
+                    $this->client->getHolidays(
+                        2020,
+                        12,
+                        25,
+                        'AA' // not a real country
+                    );
+                } catch (CouldNotGetHolidays $exception) {
+                    self::assertStringContainsString('validation_error', $exception->getMessage());
+                }
             }
-        });
+        );
     }
 
     /**

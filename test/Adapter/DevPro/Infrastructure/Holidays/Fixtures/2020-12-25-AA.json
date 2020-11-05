@@ -1,0 +1,11 @@
+{
+    "error": {
+        "message": "A validation error occurred.",
+        "code": "validation_error",
+        "details": {
+            "country": [
+                "AA is not a valid choice."
+            ]
+        }
+    }
+}

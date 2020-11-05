@@ -8,10 +8,12 @@ use GuzzleHttp\ClientInterface;
 final class AbstractApiClient
 {
     private ClientInterface $client;
+    private string $baseUrl;
 
-    public function __construct(ClientInterface $client)
+    public function __construct(ClientInterface $client, string $baseUrl)
     {
         $this->client = $client;
+        $this->baseUrl = $baseUrl;
     }
 
     /**
@@ -23,7 +25,7 @@ final class AbstractApiClient
 
         $response = $this->client->request(
             'GET',
-            'https://holidays.abstractapi.com/v1/?' . http_build_query(
+            $this->baseUrl . '?' . http_build_query(
                 [
                     'api_key' => $apiKey,
                     'country' => $countryCode,
@@ -46,8 +48,8 @@ final class AbstractApiClient
             );
         }
 
-        if ($decodedData === null) {
-            $decodedData = [];
+        if (!is_array($decodedData)) {
+            throw CouldNotGetHolidays::because(sprintf('AbstractApi did not return an array: %s', $responseBody));
         }
 
         return array_map(

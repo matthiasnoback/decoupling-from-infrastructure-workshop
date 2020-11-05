@@ -20,8 +20,8 @@ use DevPro\Infrastructure\Web\WebApplication;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
 use GuzzleHttp\Client;
-use Http\Discovery\HttpClientDiscovery;
-use Http\Discovery\Psr17FactoryDiscovery;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
 use Test\Adapter\DevPro\Infrastructure\InputAdapterTestServiceContainer;
 use Test\Adapter\DevPro\Infrastructure\OutputAdapterTestServiceContainer;
 use Test\EndToEnd\EndToEndTestServiceContainer;
@@ -146,12 +146,26 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
 
     protected function abstractApiClient(): AbstractApiClient
     {
+        $handlerStack = HandlerStack::create($this->guzzleHttpHandler());
+
         return new AbstractApiClient(
             new Client(
                 [
+                    'handler' => $handlerStack,
                     'http_errors' => false
                 ]
-            )
+            ),
+            $this->abstractApiBaseUrl()
         );
+    }
+
+    protected function guzzleHttpHandler(): callable
+    {
+        return new CurlHandler();
+    }
+
+    protected function abstractApiBaseUrl(): string
+    {
+        return 'https://holidays.abstractapi.com/v1/';
     }
 }
