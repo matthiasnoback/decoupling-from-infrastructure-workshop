@@ -16,6 +16,7 @@
 
 ### Usage
 
+- Start the web server: `php -S 0.0.0.0:8080 -t public/`
 - Run `./run_tests.sh` to run the tests.
 
 ## Option 2: Use with Docker
