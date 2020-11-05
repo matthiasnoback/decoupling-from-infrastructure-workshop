@@ -3,18 +3,15 @@ declare(strict_types=1);
 
 namespace DevPro\Infrastructure\Holidays;
 
-use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestFactoryInterface;
+use GuzzleHttp\ClientInterface;
 
 final class AbstractApiClient
 {
     private ClientInterface $client;
-    private RequestFactoryInterface $requestFactory;
 
-    public function __construct(ClientInterface $client, RequestFactoryInterface $requestFactory)
+    public function __construct(ClientInterface $client)
     {
         $this->client = $client;
-        $this->requestFactory = $requestFactory;
     }
 
     /**
@@ -24,18 +21,16 @@ final class AbstractApiClient
     {
         $apiKey = '700a8df4a4424836b1988b854993a434';
 
-        $response = $this->client->sendRequest(
-            $this->requestFactory->createRequest(
-                'GET',
-                'https://holidays.abstractapi.com/v1/?' . http_build_query(
-                    [
-                        'api_key' => $apiKey,
-                        'country' => $countryCode,
-                        'year' => $year,
-                        'month' => $month,
-                        'day' => $day
-                    ]
-                )
+        $response = $this->client->request(
+            'GET',
+            'https://holidays.abstractapi.com/v1/?' . http_build_query(
+                [
+                    'api_key' => $apiKey,
+                    'country' => $countryCode,
+                    'year' => $year,
+                    'month' => $month,
+                    'day' => $day
+                ]
             )
         );
 

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace DevPro\Application\Users;
 
-use DevPro\Domain\Model\User\UserId;
-
 final class SecurityUser
 {
     private string $id;

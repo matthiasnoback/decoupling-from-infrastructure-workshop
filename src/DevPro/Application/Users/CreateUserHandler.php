@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace DevPro\Application\Users;
 
 use Common\EventDispatcher\EventDispatcher;
-use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\User\User;
 use DevPro\Domain\Model\User\UserId;
 use DevPro\Domain\Model\User\UserRepository;

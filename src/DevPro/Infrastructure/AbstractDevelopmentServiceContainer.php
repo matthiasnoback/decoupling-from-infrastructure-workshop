@@ -19,6 +19,7 @@ use DevPro\Infrastructure\Web\Controllers;
 use DevPro\Infrastructure\Web\WebApplication;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use GuzzleHttp\Client;
 use Http\Discovery\HttpClientDiscovery;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Test\Adapter\DevPro\Infrastructure\InputAdapterTestServiceContainer;
@@ -146,8 +147,11 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
     protected function abstractApiClient(): AbstractApiClient
     {
         return new AbstractApiClient(
-            HttpClientDiscovery::find(),
-            Psr17FactoryDiscovery::findRequestFactory()
+            new Client(
+                [
+                    'http_errors' => false
+                ]
+            )
         );
     }
 }

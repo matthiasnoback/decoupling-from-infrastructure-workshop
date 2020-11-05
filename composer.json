@@ -22,14 +22,8 @@
         "doctrine/dbal": "^2.12",
         "matthiasnoback/php-workshop-tools": "^0.34.0",
         "symfony/intl": "^5.1",
-        "psr/http-message": "^1.0",
-        "php-http/client-implementation": "^1.0",
-        "php-http/httplug": "^2.0",
-        "php-http/message-factory": "^1.0",
-        "php-http/discovery": "^1.0",
         "ext-json": "*",
-        "php-http/message": "^1.8",
-        "php-http/guzzle6-adapter": "^2.0"
+        "guzzlehttp/guzzle": "^6.0"
     },
     "autoload": {
         "psr-4": {
