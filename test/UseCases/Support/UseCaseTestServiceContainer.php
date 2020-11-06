@@ -50,9 +50,9 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
 
         $eventDispatcher->subscribeToAllEvents(
             function (object $event): void {
-                echo '- Event dispatched: ' . method_exists($event, '__toString')
+                echo '- Event dispatched: ' . (method_exists($event, '__toString')
                     ? (string)$event
-                    : get_class($event) . "\n";
+                    : get_class($event) . "\n");
             }
         );
     }
