@@ -5,12 +5,10 @@ namespace Test\Adapter\DevPro\Infrastructure\Web;
 
 use Behat\Mink\Driver\Goutte\Client;
 use Behat\Mink\Driver\GoutteDriver;
-use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\Mink\WebAssert;
 use DevPro\Application\ScheduleTraining;
 use DevPro\Application\Users\CreateUser;
-use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Test\Adapter\DevPro\Infrastructure\ApplicationSpy;
 use Test\Adapter\DevPro\Infrastructure\HardCodedGetSecurityUser;

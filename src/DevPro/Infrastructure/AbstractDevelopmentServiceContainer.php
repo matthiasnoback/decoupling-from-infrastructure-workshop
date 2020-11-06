@@ -13,6 +13,7 @@ use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
 use DevPro\Infrastructure\Database\GetSecurityUserUsingDbal;
 use DevPro\Infrastructure\Database\SchemaManager;
+use DevPro\Infrastructure\Database\TrainingRepositoryUsingDbal;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Holidays\AbstractApiClient;
@@ -107,7 +108,7 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
 
     protected function trainingRepository(): TrainingRepository
     {
-        throw new BadMethodCallException('Not implemented yet');
+        return new TrainingRepositoryUsingDbal($this->connection());
     }
 
     protected function ticketRepository(): TicketRepository

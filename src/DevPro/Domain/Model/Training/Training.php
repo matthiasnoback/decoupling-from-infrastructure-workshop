@@ -47,8 +47,34 @@ final class Training
         return $training;
     }
 
+    public static function fromDatabaseRecord(array $record): self
+    {
+        $training = new self();
+
+        $training->trainingId = TrainingId::fromString($record['id']);
+        $training->organizerId = UserId::fromString($record['organizerId']);
+        $training->country = Country::fromString($record['country']);
+        $training->title = $record['title'];
+        $scheduledDate = DateTimeImmutable::createFromFormat('Y-m-d', $record['scheduledDate']);
+        Assert::that($scheduledDate)->isInstanceOf(DateTimeImmutable::class);
+        $training->scheduledDate = $scheduledDate;
+
+        return $training;
+    }
+
     public function trainingId(): TrainingId
     {
         return $this->trainingId;
+    }
+
+    public function getDatabaseRecordData(): array
+    {
+        return [
+            'id' => $this->trainingId->asString(),
+            'organizerId' => $this->organizerId->asString(),
+            'country' => $this->country->asString(),
+            'title' => $this->title,
+            'scheduledDate' => $this->scheduledDate->format('Y-m-d')
+        ];
     }
 }
