@@ -6,6 +6,7 @@ namespace Test\UseCases;
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
+use DevPro\Application\ScheduleTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\User\UserId;
@@ -35,7 +36,14 @@ final class FeatureContext implements Context
      */
     public function theOrganizerSchedulesANewTrainingCalledFor(string $title, string $date): void
     {
-        throw new PendingException();
+        $this->container->application()->scheduleTraining(
+            new ScheduleTraining(
+                $this->theOrganizer()->asString(),
+                $title,
+                $date,
+                'NL' // the country is irrelevant for this test
+            )
+        );
     }
 
     /**
