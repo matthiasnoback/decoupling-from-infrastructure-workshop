@@ -11,6 +11,7 @@ use DevPro\Application\Users\GetSecurityUser;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
+use DevPro\Domain\Service\NationalHolidays;
 use DevPro\Infrastructure\Database\GetSecurityUserUsingDbal;
 use DevPro\Infrastructure\Database\SchemaManager;
 use DevPro\Infrastructure\Database\TrainingRepositoryUsingDbal;
@@ -27,6 +28,7 @@ use GuzzleHttp\HandlerStack;
 use Test\Adapter\DevPro\Infrastructure\InputAdapterTestServiceContainer;
 use Test\Adapter\DevPro\Infrastructure\OutputAdapterTestServiceContainer;
 use Test\EndToEnd\EndToEndTestServiceContainer;
+use Test\UseCases\Support\FakeNationalHolidays;
 
 /**
  * Not final but also not abstract because we want to be able to override some methods, yet use this as the actual
@@ -175,5 +177,10 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
     protected function abstractApiBaseUrl(): string
     {
         return 'https://holidays.abstractapi.com/v1/';
+    }
+
+    protected function nationalHolidays(): NationalHolidays
+    {
+        return new FakeNationalHolidays();
     }
 }
