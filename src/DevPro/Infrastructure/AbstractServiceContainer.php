@@ -8,6 +8,7 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
+use DevPro\Application\ListUpcomingTrainings;
 use DevPro\Application\ScheduleTrainingHandler;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUserHandler;
@@ -89,4 +90,6 @@ abstract class AbstractServiceContainer implements ServiceContainer
             $this->eventDispatcher()
         );
     }
+
+    abstract public function listUpcomingTrainings(): ListUpcomingTrainings;
 }

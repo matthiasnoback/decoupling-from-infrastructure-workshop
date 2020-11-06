@@ -17,6 +17,7 @@ final class FeatureContext implements Context
     use ExpectException;
 
     private UseCaseTestServiceContainer $container;
+    private ?string $expectedTitle = null;
 
     public function __construct()
     {
@@ -36,6 +37,8 @@ final class FeatureContext implements Context
      */
     public function theOrganizerSchedulesANewTrainingCalledFor(string $title, string $date): void
     {
+        $this->expectedTitle = $title;
+
         $this->container->application()->scheduleTraining(
             new ScheduleTraining(
                 $this->theOrganizer()->asString(),
@@ -51,7 +54,13 @@ final class FeatureContext implements Context
      */
     public function itShowsUpOnTheListOfUpcomingTrainings(): void
     {
-        throw new PendingException();
+        foreach ($this->container->application()->listUpcomingTrainings() as $upcomingTraining) {
+            if ($upcomingTraining->title() === $this->expectedTitle) {
+                return;
+            }
+        }
+
+        throw new \RuntimeException('There is no upcoming training with the title ' . $this->expectedTitle);
     }
 
     private function theOrganizer(): UserId

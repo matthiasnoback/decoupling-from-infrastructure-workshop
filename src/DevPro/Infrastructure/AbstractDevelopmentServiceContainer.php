@@ -6,6 +6,7 @@ namespace DevPro\Infrastructure;
 use BadMethodCallException;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
+use DevPro\Application\ListUpcomingTrainings;
 use DevPro\Application\Users\GetSecurityUser;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
@@ -110,6 +111,11 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
     }
 
     protected function ticketRepository(): TicketRepository
+    {
+        throw new BadMethodCallException('Not implemented yet');
+    }
+
+    public function listUpcomingTrainings(): ListUpcomingTrainings
     {
         throw new BadMethodCallException('Not implemented yet');
     }

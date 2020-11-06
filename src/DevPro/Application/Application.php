@@ -32,4 +32,9 @@ final class Application implements ApplicationInterface
     {
         return $this->container->scheduleTraining()->handle($command);
     }
+
+    public function listUpcomingTrainings(): array
+    {
+        return $this->container->listUpcomingTrainings()->listAll();
+    }
 }

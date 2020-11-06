@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Domain\Model\Training\TrainingWasScheduled;
 use DevPro\Infrastructure\AbstractServiceContainer;
 use DevPro\Infrastructure\ContainerConfiguration;
 
@@ -15,6 +16,7 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     private ?InMemoryUserRepository $userRepository = null;
     private ?InMemoryTrainingRepository $trainingRepository = null;
     private ?InMemoryTicketRepository $ticketRepository = null;
+    private ?InMemoryListUpcomingTrainings $listUpcomingTrainings = null;
 
     public static function create(): self
     {
@@ -55,6 +57,11 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
                     : get_class($event) . "\n");
             }
         );
+
+        $eventDispatcher->registerSubscriber(
+            TrainingWasScheduled::class,
+            [$this->listUpcomingTrainings(), 'whenTrainingWasScheduled']
+        );
     }
 
     protected function clock(): ClockForTesting
@@ -80,5 +87,10 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     public function ticketRepository(): InMemoryTicketRepository
     {
         return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
+    }
+
+    public function listUpcomingTrainings(): InMemoryListUpcomingTrainings
+    {
+        return $this->listUpcomingTrainings ?? $this->listUpcomingTrainings = new InMemoryListUpcomingTrainings();
     }
 }
