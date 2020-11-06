@@ -5,11 +5,15 @@ namespace Test\Adapter\DevPro\Infrastructure\Web;
 
 use Behat\Mink\Driver\Goutte\Client;
 use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\Mink\WebAssert;
+use DevPro\Application\ScheduleTraining;
 use DevPro\Application\Users\CreateUser;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Test\Adapter\DevPro\Infrastructure\ApplicationSpy;
+use Test\Adapter\DevPro\Infrastructure\HardCodedGetSecurityUser;
 
 final class ControllersTest extends TestCase
 {
@@ -65,6 +69,43 @@ final class ControllersTest extends TestCase
         $this->assertSession()->pageTextContains('Registration was successful');
     }
 
+    /**
+     * @test
+     * @see Controllers::registerUserController()
+     */
+    public function it_calls_the_application_to_schedule_a_training(): void
+    {
+        $this->session->visit($this->baseUrl . '/login');
+        $page = $this->session->getPage();
+        $page->fillField('username', 'Organizer');
+        $page->pressButton('Submit');
+
+        $this->assertResponseWasSuccessful();
+
+        $this->session->visit($this->baseUrl . '/scheduleTraining');
+
+        $page = $this->session->getPage();
+        $page->fillField('title', 'Nice one');
+        $page->fillField('scheduled_date', '01-02-2021');
+        $page->fillField('country', 'NL');
+        $page->pressButton('Submit');
+
+        $this->assertResponseWasSuccessful();
+
+        $this->assertThatCommandWasProcessed(
+            new ScheduleTraining(
+                HardCodedGetSecurityUser::ORGANIZER_ID,
+                'Nice one',
+                '01-02-2021',
+                'NL'
+            )
+        );
+
+        $this->followRedirect();
+
+        $this->assertSession()->pageTextContains('You have successfully scheduled a training');
+    }
+
     private function assertSession(): WebAssert
     {
         // A trick to let PHPUnit know we're making an assertion here
@@ -104,6 +145,12 @@ final class ControllersTest extends TestCase
     {
         $statusCode = $this->session->getStatusCode();
 
-        self::assertTrue($statusCode >= 200 && $statusCode < 400);
+        if ($statusCode >= 200 && $statusCode < 400) {
+            return;
+        }
+
+        $this->printPage();
+
+        $this->fail('The response was unsuccessful');
     }
 }

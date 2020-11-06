@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Web;
 
 use DevPro\Application\ApplicationInterface;
+use DevPro\Application\ScheduleTraining;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Application\Users\GetSecurityUser;
+use DevPro\Application\Users\SecurityUser;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Session;
 use RuntimeException;
@@ -87,5 +89,43 @@ final class Controllers
         }
 
         echo $this->templateRenderer->render(__DIR__ . '/View/login.php', ['formErrors' => $formErrors]);
+    }
+
+    public function scheduleTrainingController(): void
+    {
+        $formErrors = [];
+        $formData = ['title' => '', 'scheduled_date' => '', 'country' => ''];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $formData = array_merge($formData, $_POST);
+            $this->application->scheduleTraining(
+                new ScheduleTraining(
+                    $this->getLoggedInUser()->id(),
+                    $formData['title'],
+                    $formData['scheduled_date'],
+                    $formData['country']
+                )
+            );
+
+            $this->session->addSuccessFlash('You have successfully scheduled a training');
+            header('Location: /');
+            exit;
+        }
+
+        echo $this->templateRenderer->render(
+            __DIR__ . '/View/schedule_training.php',
+            ['formErrors' => $formErrors, 'formData' => $formData]
+        );
+    }
+
+    private function getLoggedInUser(): SecurityUser
+    {
+        $loggedInUser = $this->session->get('logged_in_user');
+
+        if (!$loggedInUser instanceof SecurityUser) {
+            throw new RuntimeException('There is no logged in user');
+        }
+
+        return $loggedInUser;
     }
 }
