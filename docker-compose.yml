@@ -22,6 +22,7 @@ services:
         user: ${HOST_UID}:${HOST_GID}
         depends_on:
             - web
+            - fake_abstractapi
         environment:
             WEB_HOSTNAME: web
         env_file:
