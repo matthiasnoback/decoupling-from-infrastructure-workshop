@@ -6,6 +6,7 @@ namespace DevPro\Infrastructure\Web;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Application\Users\GetSecurityUser;
+use DevPro\Application\Users\SecurityUser;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Session;
 use RuntimeException;
@@ -87,5 +88,16 @@ final class Controllers
         }
 
         echo $this->templateRenderer->render(__DIR__ . '/View/login.php', ['formErrors' => $formErrors]);
+    }
+
+    private function getLoggedInUser(): SecurityUser
+    {
+        $loggedInUser = $this->session->get('logged_in_user');
+
+        if (!$loggedInUser instanceof SecurityUser) {
+            throw new RuntimeException('There is no logged in user');
+        }
+
+        return $loggedInUser;
     }
 }
