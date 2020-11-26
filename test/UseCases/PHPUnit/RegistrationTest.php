@@ -3,18 +3,13 @@ declare(strict_types=1);
 
 namespace Test\UseCases\PHPUnit;
 
-use PHPUnit\Framework\TestCase;
-use Test\UseCases\Support\UseCaseTestServiceContainer;
-
-final class RegistrationTest extends TestCase
+final class RegistrationTest extends UseCaseTestCase
 {
-    private UseCaseTestServiceContainer $container;
-
-    protected function setUp(): void
+    /**
+     * @before
+     */
+    protected function givenTodayIs(): void
     {
-        $this->container = UseCaseTestServiceContainer::create();
-
-        // Given today is "01-01-2020"
         $this->container->setCurrentDate('01-01-2020');
     }
 
