@@ -18,4 +18,9 @@ final class OutputAdapterTestServiceContainer extends AbstractDevelopmentService
     {
         return parent::abstractApiClient();
     }
+
+    protected function abstractApiBaseUrl(): string
+    {
+        return 'http://fake_abstractapi:8080';
+    }
 }

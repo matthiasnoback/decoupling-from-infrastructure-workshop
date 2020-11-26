@@ -18,6 +18,7 @@ use DevPro\Infrastructure\Database\TrainingRepositoryUsingDbal;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Holidays\AbstractApiClient;
+use DevPro\Infrastructure\Holidays\NationalHolidaysUsingAbstractApi;
 use DevPro\Infrastructure\Web\Controllers;
 use DevPro\Infrastructure\Web\WebApplication;
 use Doctrine\DBAL\Connection;
@@ -28,7 +29,6 @@ use GuzzleHttp\HandlerStack;
 use Test\Adapter\DevPro\Infrastructure\InputAdapterTestServiceContainer;
 use Test\Adapter\DevPro\Infrastructure\OutputAdapterTestServiceContainer;
 use Test\EndToEnd\EndToEndTestServiceContainer;
-use Test\UseCases\Support\FakeNationalHolidays;
 
 /**
  * Not final but also not abstract because we want to be able to override some methods, yet use this as the actual
@@ -181,6 +181,6 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
 
     protected function nationalHolidays(): NationalHolidays
     {
-        return new FakeNationalHolidays();
+        return new NationalHolidaysUsingAbstractApi($this->abstractApiClient());
     }
 }
