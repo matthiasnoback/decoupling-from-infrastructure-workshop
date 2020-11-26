@@ -13,14 +13,14 @@ final class TrainingWasScheduled
     private UserId $organizerId;
     private Country $country;
     private string $title;
-    private DateTimeImmutable $scheduledDate;
+    private ScheduledDate $scheduledDate;
 
     public function __construct(
         TrainingId $trainingId,
         UserId $organizerId,
         Country $country,
         string $title,
-        DateTimeImmutable $scheduledDate
+        ScheduledDate $scheduledDate
     ) {
         $this->trainingId = $trainingId;
         $this->organizerId = $organizerId;
@@ -49,7 +49,7 @@ final class TrainingWasScheduled
         return $this->title;
     }
 
-    public function scheduledDate(): DateTimeImmutable
+    public function scheduledDate(): ScheduledDate
     {
         return $this->scheduledDate;
     }

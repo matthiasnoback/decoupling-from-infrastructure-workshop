@@ -2,7 +2,6 @@
 
 namespace DevPro\Domain\Model\Training;
 
-use DateTimeImmutable;
 use DevPro\Domain\Model\Common\Country;
 use DevPro\Domain\Model\User\UserId;
 use InvalidArgumentException;
@@ -51,9 +50,9 @@ final class TrainingTest extends TestCase
         return TrainingId::fromString('eaa631d0-3760-43f5-a8cf-f239aadfe4aa');
     }
 
-    private function someDate(): DateTimeImmutable
+    private function someDate(): ScheduledDate
     {
-        return new DateTimeImmutable();
+        return ScheduledDate::fromString('2020-11-26 14:26');
     }
 
     private function someTitle(): string

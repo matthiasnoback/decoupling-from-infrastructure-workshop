@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace DevPro\Domain\Model\Training;
 
 use Assert\Assert;
-use DateTimeImmutable;
 use DevPro\Domain\Model\Common\Country;
 use DevPro\Domain\Model\Common\EventRecordingCapabilities;
 use DevPro\Domain\Model\User\UserId;
@@ -16,7 +15,7 @@ final class Training
     private TrainingId $trainingId;
     private UserId $organizerId;
     private string $title;
-    private DateTimeImmutable $scheduledDate;
+    private ScheduledDate $scheduledDate;
     private Country $country;
 
     private function __construct()
@@ -28,7 +27,7 @@ final class Training
         UserId $organizerId,
         Country $country,
         string $title,
-        DateTimeImmutable $scheduledDate
+        ScheduledDate $scheduledDate
     ): self {
         Assert::that($title)->notEmpty('Title should not be empty');
 
