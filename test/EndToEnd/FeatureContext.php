@@ -19,17 +19,6 @@ final class FeatureContext extends MinkContext
     /**
      * @BeforeScenario
      */
-    public function deleteDatabase(): void
-    {
-        $dbFile = $this->varDirectory . '/development.sqlite';
-        if (is_file($dbFile)) {
-            unlink($dbFile);
-        }
-    }
-
-    /**
-     * @BeforeScenario
-     */
     public function setEndToEndTestingEnvironment(): void
     {
         $this->getSession()->setCookie('environment', 'end_to_end');
