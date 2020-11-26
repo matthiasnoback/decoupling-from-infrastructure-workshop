@@ -4,6 +4,7 @@ services:
     - docker
 
 install:
+    - cp .env.dist .env
     - docker-compose pull
     - bin/composer install --prefer-dist
 
