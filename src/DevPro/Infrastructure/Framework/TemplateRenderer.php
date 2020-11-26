@@ -26,6 +26,12 @@ final class TemplateRenderer
 
         $allVariables = array_merge($this->globalVariables, $templateVariables);
 
+        if (isset($allVariables['formErrors'])
+            && is_array($allVariables['formErrors'])
+            && count($allVariables['formErrors']) > 0) {
+            header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
+        }
+
         extract($allVariables);
 
         include $templateFile;
