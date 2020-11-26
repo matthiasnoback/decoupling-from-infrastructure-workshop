@@ -16,7 +16,7 @@ use Test\Adapter\DevPro\Infrastructure\ApplicationSpy;
 final class ControllersTest extends TestCase
 {
     private string $baseUrl;
-    private Session $session;
+    private Session $browserSession;
     private Client $client;
 
     protected function setUp(): void
@@ -25,11 +25,11 @@ final class ControllersTest extends TestCase
 
         $this->client = new Client();
         $driver = new GoutteDriver($this->client);
-        $this->session = new Session($driver);
-        $this->session->start();
+        $this->browserSession = new Session($driver);
+        $this->browserSession->start();
 
         $this->client->followRedirects(false);
-        $this->session->setCookie('environment', 'input_adapter_test');
+        $this->browserSession->setCookie('environment', 'input_adapter_test');
     }
 
     /**
@@ -38,13 +38,13 @@ final class ControllersTest extends TestCase
      */
     public function it_shows_a_form_error_if_the_username_is_invalid(): void
     {
-        $this->session->visit($this->baseUrl . '/registerUser');
+        $this->browserSession->visit($this->baseUrl . '/registerUser');
 
-        $page = $this->session->getPage();
+        $page = $this->browserSession->getPage();
         $page->fillField('username', '');
         $page->pressButton('Submit');
 
-        $this->assertSession()->pageTextContains('Username should not be empty');
+        $this->assertBrowserSession()->pageTextContains('Username should not be empty');
     }
 
     /**
@@ -53,9 +53,9 @@ final class ControllersTest extends TestCase
      */
     public function it_calls_the_application_to_register_a_user(): void
     {
-        $this->session->visit($this->baseUrl . '/registerUser');
+        $this->browserSession->visit($this->baseUrl . '/registerUser');
 
-        $page = $this->session->getPage();
+        $page = $this->browserSession->getPage();
         $page->fillField('username', 'Matthias');
         $page->pressButton('Submit');
 
@@ -64,15 +64,15 @@ final class ControllersTest extends TestCase
 
         $this->followRedirect();
 
-        $this->assertSession()->pageTextContains('Registration was successful');
+        $this->assertBrowserSession()->pageTextContains('Registration was successful');
     }
 
-    private function assertSession(): WebAssert
+    private function assertBrowserSession(): WebAssert
     {
         // A trick to let PHPUnit know we're making an assertion here
         $this->addToAssertionCount(1);
 
-        return new WebAssert($this->session);
+        return new WebAssert($this->browserSession);
     }
 
     /**
@@ -80,7 +80,7 @@ final class ControllersTest extends TestCase
      */
     private function printPage(): void
     {
-        echo $this->session->getPage()->getContent();
+        echo $this->browserSession->getPage()->getContent();
     }
 
     private function followRedirect(): void
@@ -90,7 +90,7 @@ final class ControllersTest extends TestCase
 
     private function assertThatCommandWasProcessed(object $expectedCommand): void
     {
-        $serializedCommand = $this->session->getResponseHeader(ApplicationSpy::COMMAND_SENT_HEADER);
+        $serializedCommand = $this->browserSession->getResponseHeader(ApplicationSpy::COMMAND_SENT_HEADER);
 
         self::assertIsString($serializedCommand);
         self::assertNotEmpty(
@@ -104,7 +104,7 @@ final class ControllersTest extends TestCase
 
     private function assertResponseWasSuccessful(): void
     {
-        $statusCode = $this->session->getStatusCode();
+        $statusCode = $this->browserSession->getStatusCode();
 
         if ($statusCode >= 200 && $statusCode < 400) {
             // successful response
@@ -115,14 +115,14 @@ final class ControllersTest extends TestCase
             sprintf(
                 "Response was unsuccessful. Status code: %d. Response text:\n\n%s",
                 $statusCode,
-                $this->session->getPage()->getText()
+                $this->browserSession->getPage()->getText()
             )
         );
     }
 
     private function findOrFail(string $cssLocator): NodeElement
     {
-        $element = $this->session->getPage()->find('css', $cssLocator);
+        $element = $this->browserSession->getPage()->find('css', $cssLocator);
 
         Assert::assertInstanceOf(
             NodeElement::class,
