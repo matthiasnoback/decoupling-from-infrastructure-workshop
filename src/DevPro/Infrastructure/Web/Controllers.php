@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Web;
 
 use DevPro\Application\ApplicationInterface;
+use DevPro\Application\Users\CouldNotFindSecurityUser;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Application\Users\SecurityUsers;
 use DevPro\Application\Users\SecurityUser;
@@ -74,20 +75,35 @@ final class Controllers
     public function loginController(): void
     {
         $formErrors = [];
+        $formData = ['username' => ''];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            try {
-                $securityUser = $this->getSecurityUser->getByUsername($_POST['username'] ?? '');
-                $this->session->set('logged_in_user', $securityUser);
-                $this->session->addSuccessFlash('You have successfully logged in');
-                header('Location: /');
-                exit;
-            } catch (RuntimeException $exception) {
-                $formErrors['username'] = 'Invalid username';
+            $formData = array_merge($formData, $_POST);
+
+            if ($formData['username'] === '') {
+                $formErrors['username'] = 'Please provide your username';
+            }
+
+            if (empty($formErrors)) {
+                try {
+                    $securityUser = $this->getSecurityUser->getByUsername($_POST['username'] ?? '');
+                    $this->session->set('logged_in_user', $securityUser);
+                    $this->session->addSuccessFlash('You have successfully logged in');
+                    header('Location: /');
+                    exit;
+                } catch (CouldNotFindSecurityUser $exception) {
+                    $formErrors['username'] = 'Invalid username';
+                }
             }
         }
 
-        echo $this->templateRenderer->render(__DIR__ . '/View/login.php', ['formErrors' => $formErrors]);
+        echo $this->templateRenderer->render(
+            __DIR__ . '/View/login.php',
+            [
+                'formData' => $formData,
+                'formErrors' => $formErrors
+            ]
+        );
     }
 
     private function getLoggedInUser(): SecurityUser

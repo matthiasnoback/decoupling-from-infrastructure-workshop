@@ -31,9 +31,7 @@ final class SecurityUsersUsingDbal implements SecurityUsers
 
         $record = $result->fetchAssociative();
         if ($record === false) {
-            throw new CouldNotFindSecurityUser(
-                sprintf('Could not find security user with name "%s"', $name)
-            );
+            throw CouldNotFindSecurityUser::withUsername($name);
         }
 
         return new SecurityUser($record['id'], $record['username']);

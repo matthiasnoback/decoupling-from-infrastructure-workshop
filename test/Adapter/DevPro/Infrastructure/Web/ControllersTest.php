@@ -67,6 +67,27 @@ final class ControllersTest extends TestCase
         $this->assertBrowserSession()->pageTextContains('Registration was successful');
     }
 
+    /**
+     * @test
+     */
+    public function it_calls_the_application_to_schedule_a_training(): void
+    {
+        $this->logInAsOrganizer();
+
+        $this->markTestIncomplete('TODO Assignment 4');
+    }
+
+    private function logInAsOrganizer(): void
+    {
+        $this->browserSession->visit($this->baseUrl . '/login');
+        $this->assertResponseWasSuccessful();
+
+        $page = $this->browserSession->getPage();
+        $page->fillField('username', 'Organizer');
+        $page->pressButton('Submit');
+        $this->assertResponseWasSuccessful();
+    }
+
     private function assertBrowserSession(): WebAssert
     {
         // A trick to let PHPUnit know we're making an assertion here
@@ -104,8 +125,9 @@ final class ControllersTest extends TestCase
 
     private function assertResponseWasSuccessful(): void
     {
-        $statusCode = $this->browserSession->getStatusCode();
+        $this->addToAssertionCount(1);
 
+        $statusCode = $this->browserSession->getStatusCode();
         if ($statusCode >= 200 && $statusCode < 400) {
             // successful response
             return;

@@ -24,11 +24,9 @@ final class RegistrationTest extends TestCase
     public function aScheduledTrainingShowsUpInUpcomingTrainings(): void
     {
         // When the organizer schedules a new training called "Decoupling from infrastructure" for "24-01-2020"
-        $this->markTestIncomplete('To be implemented (Assignment 1)');
-
-
+        $this->markTestIncomplete('TODO Assignment 1');
 
         // Then it shows up on the list of upcoming trainings
-        $this->markTestIncomplete('To be implemented (Assignment 2)');
+        $this->markTestIncomplete('TODO Assignment 2');
     }
 }
