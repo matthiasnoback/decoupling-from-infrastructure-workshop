@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Database;
 
 use Assert\Assert;
-use DevPro\Application\Users\GetSecurityUser;
+use DevPro\Application\Users\SecurityUsers;
 use DevPro\Application\Users\SecurityUser;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result;
 use RuntimeException;
 
-final class GetSecurityUserUsingDbal implements GetSecurityUser
+final class SecurityUsersUsingDbal implements SecurityUsers
 {
     private Connection $connection;
 
@@ -19,7 +19,7 @@ final class GetSecurityUserUsingDbal implements GetSecurityUser
         $this->connection = $connection;
     }
 
-    public function byUsername(string $name): SecurityUser
+    public function getByUsername(string $name): SecurityUser
     {
         $result = $this->connection->executeQuery(
             'SELECT * FROM users WHERE username = ?',

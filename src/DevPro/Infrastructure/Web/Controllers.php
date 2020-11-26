@@ -5,7 +5,7 @@ namespace DevPro\Infrastructure\Web;
 
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Users\CreateUser;
-use DevPro\Application\Users\GetSecurityUser;
+use DevPro\Application\Users\SecurityUsers;
 use DevPro\Application\Users\SecurityUser;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Session;
@@ -14,13 +14,13 @@ use RuntimeException;
 final class Controllers
 {
     private ApplicationInterface $application;
-    private GetSecurityUser $getSecurityUser;
+    private SecurityUsers $getSecurityUser;
     private Session $session;
     private TemplateRenderer $templateRenderer;
 
     public function __construct(
         ApplicationInterface $application,
-        GetSecurityUser $getSecurityUser,
+        SecurityUsers $getSecurityUser,
         Session $session,
         TemplateRenderer $templateRenderer
     ) {
@@ -77,7 +77,7 @@ final class Controllers
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
-                $securityUser = $this->getSecurityUser->byUsername($_POST['username'] ?? '');
+                $securityUser = $this->getSecurityUser->getByUsername($_POST['username'] ?? '');
                 $this->session->set('logged_in_user', $securityUser);
                 $this->session->addSuccessFlash('You have successfully logged in');
                 header('Location: /');

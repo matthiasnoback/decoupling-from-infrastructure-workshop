@@ -12,5 +12,8 @@
     <testsuite name="adapter">
       <directory>./test/Adapter</directory>
     </testsuite>
+    <testsuite name="use_cases">
+      <directory>./test/UseCases/PHPUnit</directory>
+    </testsuite>
   </testsuites>
 </phpunit>

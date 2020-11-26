@@ -6,11 +6,11 @@ namespace DevPro\Infrastructure;
 use BadMethodCallException;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
-use DevPro\Application\Users\GetSecurityUser;
+use DevPro\Application\Users\SecurityUsers;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
-use DevPro\Infrastructure\Database\GetSecurityUserUsingDbal;
+use DevPro\Infrastructure\Database\SecurityUsersUsingDbal;
 use DevPro\Infrastructure\Database\SchemaManager;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
@@ -59,7 +59,7 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
     {
         return new Controllers(
             $this->application(),
-            $this->getSecurityUser(),
+            $this->securityUsers(),
             $this->session(),
             $this->templateRenderer()
         );
@@ -112,9 +112,9 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
         throw new BadMethodCallException('Not implemented yet');
     }
 
-    public function getSecurityUser(): GetSecurityUser
+    protected function securityUsers(): SecurityUsers
     {
-        return new GetSecurityUserUsingDbal($this->connection());
+        return new SecurityUsersUsingDbal($this->connection());
     }
 
     private function templateRenderer(): TemplateRenderer
