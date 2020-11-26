@@ -106,7 +106,18 @@ final class ControllersTest extends TestCase
     {
         $statusCode = $this->session->getStatusCode();
 
-        self::assertTrue($statusCode >= 200 && $statusCode < 400);
+        if ($statusCode >= 200 && $statusCode < 400) {
+            // successful response
+            return;
+        }
+
+        $this->fail(
+            sprintf(
+                "Response was unsuccessful. Status code: %d. Response text:\n\n%s",
+                $statusCode,
+                $this->session->getPage()->getText()
+            )
+        );
     }
 
     private function findOrFail(string $cssLocator): NodeElement
