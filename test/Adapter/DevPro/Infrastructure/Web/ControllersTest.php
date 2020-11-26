@@ -5,9 +5,11 @@ namespace Test\Adapter\DevPro\Infrastructure\Web;
 
 use Behat\Mink\Driver\Goutte\Client;
 use Behat\Mink\Driver\GoutteDriver;
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\Mink\WebAssert;
 use DevPro\Application\Users\CreateUser;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Test\Adapter\DevPro\Infrastructure\ApplicationSpy;
 
@@ -105,5 +107,18 @@ final class ControllersTest extends TestCase
         $statusCode = $this->session->getStatusCode();
 
         self::assertTrue($statusCode >= 200 && $statusCode < 400);
+    }
+
+    private function findOrFail(string $cssLocator): NodeElement
+    {
+        $element = $this->session->getPage()->find('css', $cssLocator);
+
+        Assert::assertInstanceOf(
+            NodeElement::class,
+            $element,
+            'Expected to find element with CSS selector: ' . $cssLocator
+        );
+
+        return $element;
     }
 }
