@@ -41,6 +41,14 @@ final class SchemaManager
         $users->addColumn('isOrganizer', 'boolean');
         $users->setPrimaryKey(['id']);
 
+        $trainings = $schema->createTable('trainings');
+        $trainings->addColumn('id', 'string');
+        $trainings->addColumn('organizerId', 'string');
+        $trainings->addColumn('title', 'string');
+        $trainings->addColumn('scheduledDate', 'string');
+        $trainings->addColumn('country', 'string');
+        $trainings->setPrimaryKey(['id']);
+
         // Here you can add your own tables to the schema
 
         return $schema;

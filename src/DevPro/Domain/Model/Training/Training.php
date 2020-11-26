@@ -50,4 +50,28 @@ final class Training
     {
         return $this->trainingId;
     }
+
+    public static function fromDatabaseRecord(array $record): self
+    {
+        $training = new self();
+
+        $training->trainingId = TrainingId::fromString($record['id']);
+        $training->organizerId = UserId::fromString($record['organizerId']);
+        $training->country = Country::fromString($record['country']);
+        $training->title = $record['title'];
+        $training->scheduledDate = ScheduledDate::fromString($record['scheduledDate']);
+
+        return $training;
+    }
+
+    public function getDatabaseRecordData(): array
+    {
+        return [
+            'id' => $this->trainingId->asString(),
+            'organizerId' => $this->organizerId->asString(),
+            'country' => $this->country->asString(),
+            'title' => $this->title,
+            'scheduledDate' => $this->scheduledDate->asString()
+        ];
+    }
 }
