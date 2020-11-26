@@ -48,13 +48,7 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
 
         $eventDispatcher->subscribeToAllEvents($this->eventSubscriberSpy());
 
-        $eventDispatcher->subscribeToAllEvents(
-            function (object $event): void {
-                echo '- Event dispatched: ' . method_exists($event, '__toString')
-                    ? (string)$event
-                    : get_class($event) . "\n";
-            }
-        );
+        $eventDispatcher->subscribeToAllEvents($this->eventPrinter());
     }
 
     protected function clock(): ClockForTesting
@@ -65,6 +59,17 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     private function eventSubscriberSpy(): EventSubscriberSpy
     {
         return $this->eventSubscriberSpy ?? $this->eventSubscriberSpy = new EventSubscriberSpy();
+    }
+
+    private function eventPrinter(): callable
+    {
+        return function (object $event): void {
+            $eventAsString = method_exists($event, '__toString')
+                ? (string)$event
+                : get_class($event);
+
+            echo '- Event dispatched: ' . $eventAsString . "\n";
+        };
     }
 
     public function userRepository(): InMemoryUserRepository
