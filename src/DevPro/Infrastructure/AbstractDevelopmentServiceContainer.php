@@ -33,8 +33,6 @@ use Test\EndToEnd\EndToEndTestServiceContainer;
 abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContainer
 {
     private ?Connection $connection = null;
-    private ?UserRepositoryUsingDbal $userRepository = null;
-    private ?GetSecurityUserUsingDbal $getSecurityUser = null;
     private ?Session $session = null;
 
     public function boot(): void
@@ -101,7 +99,7 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
 
     protected function userRepository(): UserRepository
     {
-        return $this->userRepository ?? $this->userRepository = new UserRepositoryUsingDbal($this->connection());
+        return new UserRepositoryUsingDbal($this->connection());
     }
 
     protected function trainingRepository(): TrainingRepository
@@ -116,7 +114,7 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
 
     public function getSecurityUser(): GetSecurityUser
     {
-        return $this->getSecurityUser ?? $this->getSecurityUser = new GetSecurityUserUsingDbal($this->connection());
+        return new GetSecurityUserUsingDbal($this->connection());
     }
 
     private function templateRenderer(): TemplateRenderer
