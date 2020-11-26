@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Database;
 
 use Assert\Assert;
+use DevPro\Application\Users\CouldNotFindSecurityUser;
 use DevPro\Application\Users\SecurityUsers;
 use DevPro\Application\Users\SecurityUser;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result;
-use RuntimeException;
 
 final class SecurityUsersUsingDbal implements SecurityUsers
 {
@@ -31,8 +31,8 @@ final class SecurityUsersUsingDbal implements SecurityUsers
 
         $record = $result->fetchAssociative();
         if ($record === false) {
-            throw new RuntimeException(
-                sprintf('Could not find user with name "%s"', $name)
+            throw new CouldNotFindSecurityUser(
+                sprintf('Could not find security user with name "%s"', $name)
             );
         }
 
