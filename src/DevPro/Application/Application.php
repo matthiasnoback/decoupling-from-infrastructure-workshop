@@ -19,11 +19,11 @@ final class Application implements ApplicationInterface
 
     public function createUser(CreateUser $command): UserId
     {
-        return $this->container->createUser()->handle($command);
+        return $this->container->createUserHandler()->handle($command);
     }
 
     public function createOrganizer(CreateOrganizer $command): UserId
     {
-        return $this->container->createOrganizer()->handle($command);
+        return $this->container->createOrganizerHandler()->handle($command);
     }
 }

@@ -70,12 +70,12 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     abstract protected function ticketRepository(): TicketRepository;
 
-    public function createUser(): CreateUserHandler
+    public function createUserHandler(): CreateUserHandler
     {
         return new CreateUserHandler($this->userRepository(), $this->eventDispatcher());
     }
 
-    public function createOrganizer(): CreateOrganizerHandler
+    public function createOrganizerHandler(): CreateOrganizerHandler
     {
         return new CreateOrganizerHandler($this->userRepository(), $this->eventDispatcher());
     }
