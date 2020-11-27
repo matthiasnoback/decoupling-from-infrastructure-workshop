@@ -17,6 +17,7 @@ use DevPro\Infrastructure\Database\TrainingRepositoryUsingDbal;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Holidays\AbstractApiClient;
+use DevPro\Infrastructure\Holidays\NationalHolidaysUsingAbstractApi;
 use DevPro\Infrastructure\Web\Controllers;
 use DevPro\Infrastructure\Web\WebApplication;
 use Doctrine\DBAL\Connection;
@@ -177,6 +178,8 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
 
     protected function nationalHolidays(): NationalHolidays
     {
-        throw new BadMethodCallException('Not implemented');
+        return new NationalHolidaysUsingAbstractApi(
+            $this->abstractApiClient()
+        );
     }
 }
