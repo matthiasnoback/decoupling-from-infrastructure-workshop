@@ -9,10 +9,10 @@ use DevPro\Application\Clock;
 use DevPro\Application\UpcomingTrainings\UpcomingTrainings;
 use DevPro\Application\Users\SecurityUsers;
 use DevPro\Domain\Model\Ticket\TicketRepository;
-use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
 use DevPro\Infrastructure\Database\SecurityUsersUsingDbal;
 use DevPro\Infrastructure\Database\SchemaManager;
+use DevPro\Infrastructure\Database\TrainingRepositoryUsingDbal;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Holidays\AbstractApiClient;
@@ -103,9 +103,9 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
         return new UserRepositoryUsingDbal($this->connection());
     }
 
-    protected function trainingRepository(): TrainingRepository
+    protected function trainingRepository(): TrainingRepositoryUsingDbal
     {
-        throw new BadMethodCallException('Not implemented yet');
+        return new TrainingRepositoryUsingDbal($this->connection());
     }
 
     protected function ticketRepository(): TicketRepository
