@@ -8,6 +8,7 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
+use DevPro\Application\ScheduleTraining\ScheduleTrainingHandler;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUserHandler;
 use DevPro\Domain\Model\Ticket\TicketRepository;
@@ -78,5 +79,10 @@ abstract class AbstractServiceContainer implements ServiceContainer
     public function createOrganizerHandler(): CreateOrganizerHandler
     {
         return new CreateOrganizerHandler($this->userRepository(), $this->eventDispatcher());
+    }
+
+    public function scheduleTrainingHandler(): ScheduleTrainingHandler
+    {
+        return new ScheduleTrainingHandler($this->trainingRepository(), $this->eventDispatcher());
     }
 }

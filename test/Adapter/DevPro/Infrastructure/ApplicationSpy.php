@@ -5,8 +5,10 @@ namespace Test\Adapter\DevPro\Infrastructure;
 
 use BadMethodCallException;
 use DevPro\Application\ApplicationInterface;
+use DevPro\Application\ScheduleTraining\ScheduleTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
+use DevPro\Domain\Model\Training\TrainingId;
 use DevPro\Domain\Model\User\UserId;
 
 final class ApplicationSpy implements ApplicationInterface
@@ -25,6 +27,11 @@ final class ApplicationSpy implements ApplicationInterface
     }
 
     public function createOrganizer(CreateOrganizer $command): UserId
+    {
+        throw new BadMethodCallException('Not implemented');
+    }
+
+    public function scheduleTraining(ScheduleTraining $command): TrainingId
     {
         throw new BadMethodCallException('Not implemented');
     }
