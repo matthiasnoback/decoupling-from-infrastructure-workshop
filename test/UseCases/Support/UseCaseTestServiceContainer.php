@@ -98,7 +98,7 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
         return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
     }
 
-    private function upcomingTrainings(): UpcomingTrainingsInMemory
+    public function upcomingTrainings(): UpcomingTrainingsInMemory
     {
         return $this->upcomingTrainings ?? $this->upcomingTrainings = new UpcomingTrainingsInMemory();
     }

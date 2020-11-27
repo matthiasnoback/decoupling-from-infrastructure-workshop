@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace Test\UseCases;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use BehatExpectException\ExpectException;
 use DevPro\Application\ScheduleTraining\ScheduleTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\User\UserId;
+use PHPUnit\Framework\Assert;
 use Test\UseCases\Support\UseCaseTestServiceContainer;
 
 final class FeatureContext implements Context
@@ -17,6 +17,7 @@ final class FeatureContext implements Context
     use ExpectException;
 
     private UseCaseTestServiceContainer $container;
+    private ?string $titleOfScheduledTraining = null;
 
     public function __construct()
     {
@@ -36,6 +37,8 @@ final class FeatureContext implements Context
      */
     public function theOrganizerSchedulesANewTrainingCalledFor(string $title, string $date): void
     {
+        $this->titleOfScheduledTraining = $title;
+
         $this->container->application()->scheduleTraining(
             new ScheduleTraining(
                 $this->theOrganizer()->asString(),
@@ -51,7 +54,16 @@ final class FeatureContext implements Context
      */
     public function itShowsUpOnTheListOfUpcomingTrainings(): void
     {
-        throw new PendingException();
+        $expectedTitle = $this->titleOfScheduledTraining;
+        Assert::assertNotNull($expectedTitle);
+
+        foreach ($this->container->application()->findAllUpcomingTrainings() as $upcomingTraining) {
+            if ($upcomingTraining->title() === $expectedTitle) {
+                return;
+            }
+        }
+
+        throw new \RuntimeException(sprintf('Expected to find an upcoming training with title "%s"', $expectedTitle));
     }
 
     private function theOrganizer(): UserId

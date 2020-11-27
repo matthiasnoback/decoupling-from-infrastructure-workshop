@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace Test\UseCases\PHPUnit;
 
 use DevPro\Application\ScheduleTraining\ScheduleTraining;
+use DevPro\Application\UpcomingTrainings\UpcomingTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\User\UserId;
+use PHPUnit\Framework\Assert;
 
 final class RegistrationTest extends UseCaseTestCase
 {
@@ -24,17 +26,24 @@ final class RegistrationTest extends UseCaseTestCase
     public function aScheduledTrainingShowsUpInUpcomingTrainings(): void
     {
         // When the organizer schedules a new training called "Decoupling from infrastructure" for "2020-01-24 09:30"
+        $title = 'Decoupling from infrastructure';
+
         $this->container->application()->scheduleTraining(
             new ScheduleTraining(
                 $this->theOrganizer()->asString(),
-                'Decoupling from infrastructure',
+                $title,
                 '2020-01-24 09:30',
                 'NL' // irrelevant for the test
             )
         );
 
         // Then it shows up on the list of upcoming trainings
-        $this->markTestIncomplete('TODO Assignment 2');
+        $actualTitles = array_map(
+            fn(UpcomingTraining $upcomingTraining) => $upcomingTraining->title(),
+            $this->container->application()->findAllUpcomingTrainings()
+        );
+
+        self::assertContainsEquals($title, $actualTitles);
     }
 
     private function theOrganizer(): UserId

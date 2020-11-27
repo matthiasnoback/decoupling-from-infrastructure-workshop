@@ -33,4 +33,9 @@ final class Application implements ApplicationInterface
     {
         return $this->container->scheduleTrainingHandler()->handle($command);
     }
+
+    public function findAllUpcomingTrainings(): array
+    {
+        return $this->container->upcomingTrainings()->findAll();
+    }
 }
