@@ -4,7 +4,7 @@ services:
     - docker
 
 install:
-    - cp .env.dist .env
+    - 'echo "ABSTRACT_API_API_KEY=${ABSTRACT_API_API_KEY}" > .env'
     - docker-compose pull
     - bin/composer install --prefer-dist
 
