@@ -8,10 +8,12 @@ use Behat\Mink\Driver\GoutteDriver;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Session;
 use Behat\Mink\WebAssert;
+use DevPro\Application\ScheduleTraining\ScheduleTraining;
 use DevPro\Application\Users\CreateUser;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Test\Adapter\DevPro\Infrastructure\ApplicationSpy;
+use Test\Adapter\DevPro\Infrastructure\HardCodedSecurityUsers;
 
 final class ControllersTest extends TestCase
 {
@@ -74,7 +76,28 @@ final class ControllersTest extends TestCase
     {
         $this->logInAsOrganizer();
 
-        $this->markTestIncomplete('TODO Assignment 4');
+        $this->browserSession->visit($this->baseUrl . '/scheduleTraining');
+
+        $page = $this->browserSession->getPage();
+        $page->fillField('title', 'Nice one');
+        $page->fillField('scheduled_date', '2021-02-01 09:30');
+        $page->fillField('country', 'NL');
+        $page->pressButton('Submit');
+
+        $this->assertResponseWasSuccessful();
+
+        $this->assertThatCommandWasProcessed(
+            new ScheduleTraining(
+                HardCodedSecurityUsers::ORGANIZER_ID,
+                'Nice one',
+                '2021-02-01 09:30',
+                'NL'
+            )
+        );
+
+        $this->followRedirect();
+
+        $this->assertBrowserSession()->pageTextContains('You have successfully scheduled a training');
     }
 
     private function logInAsOrganizer(): void
