@@ -6,6 +6,7 @@ namespace DevPro\Infrastructure;
 use BadMethodCallException;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
+use DevPro\Application\Holidays\NationalHolidays;
 use DevPro\Application\UpcomingTrainings\UpcomingTrainings;
 use DevPro\Application\Users\SecurityUsers;
 use DevPro\Domain\Model\Ticket\TicketRepository;
@@ -170,6 +171,11 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
     }
 
     public function upcomingTrainings(): UpcomingTrainings
+    {
+        throw new BadMethodCallException('Not implemented');
+    }
+
+    protected function nationalHolidays(): NationalHolidays
     {
         throw new BadMethodCallException('Not implemented');
     }

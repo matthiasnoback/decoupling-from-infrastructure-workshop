@@ -1,6 +1,5 @@
 Feature:
 
-  @ignore
   Scenario: the organizer tries to schedule a training on a national holiday
     Given "2020-12-25" is a national holiday in "NL"
     When the organizer tries to schedule a training on "2020-12-25" in "NL"

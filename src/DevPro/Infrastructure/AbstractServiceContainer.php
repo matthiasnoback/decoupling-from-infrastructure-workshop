@@ -8,6 +8,7 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
+use DevPro\Application\Holidays\NationalHolidays;
 use DevPro\Application\ScheduleTraining\ScheduleTrainingHandler;
 use DevPro\Application\UpcomingTrainings\UpcomingTrainings;
 use DevPro\Application\Users\CreateOrganizerHandler;
@@ -74,6 +75,8 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     abstract public function upcomingTrainings(): UpcomingTrainings;
 
+    abstract protected function nationalHolidays(): NationalHolidays;
+
     public function createUserHandler(): CreateUserHandler
     {
         return new CreateUserHandler($this->userRepository(), $this->eventDispatcher());
@@ -86,6 +89,10 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     public function scheduleTrainingHandler(): ScheduleTrainingHandler
     {
-        return new ScheduleTrainingHandler($this->trainingRepository(), $this->eventDispatcher());
+        return new ScheduleTrainingHandler(
+            $this->trainingRepository(),
+            $this->nationalHolidays(),
+            $this->eventDispatcher()
+        );
     }
 }

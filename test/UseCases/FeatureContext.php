@@ -8,6 +8,8 @@ use BehatExpectException\ExpectException;
 use DevPro\Application\ScheduleTraining\ScheduleTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
+use DevPro\Domain\Model\Common\Country;
+use DevPro\Domain\Model\Training\ScheduledDate;
 use DevPro\Domain\Model\User\UserId;
 use PHPUnit\Framework\Assert;
 use Test\UseCases\Support\UseCaseTestServiceContainer;
@@ -64,6 +66,46 @@ final class FeatureContext implements Context
         }
 
         throw new \RuntimeException(sprintf('Expected to find an upcoming training with title "%s"', $expectedTitle));
+    }
+
+    /**
+     * @Given :date" is a national holiday in :country
+     */
+    public function givenDateIsANationalHolidayInCountry(string $date, string $country): void
+    {
+        $this->container->nationalHolidays()->markAsNationalHoliday(
+            ScheduledDate::fromString($date . ' 09:30'),
+            Country::fromString($country)
+        );
+    }
+
+    /**
+     * @When the organizer tries to schedule a training on :date in :country
+     */
+    public function theOrganizerTriesToScheduleATrainingOnDateInCountry(string $date, string $country): void
+    {
+        $this->shouldFail(
+            function () use ($country, $date) {
+                $this->container->application()->scheduleTraining(
+                    new ScheduleTraining(
+                        $this->theOrganizer()->asString(),
+                        'A title',
+                        $date . ' 09:30',
+                        $country
+                    )
+                );
+            }
+        );
+    }
+
+    /**
+     * @Then they see a message :exceptionMessage
+     */
+    public function theySeeAMessage(string $message): void
+    {
+        Assert::assertNotNull($this->caughtException);
+
+        Assert::assertEquals($message, $this->caughtException->getMessage());
     }
 
     private function theOrganizer(): UserId
