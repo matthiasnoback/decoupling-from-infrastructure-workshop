@@ -36,6 +36,7 @@
             "Test\\UseCases\\": "test/UseCases",
             "Test\\EndToEnd\\": "test/EndToEnd",
             "Test\\Adapter\\": "test/Adapter",
+            "Test\\Common\\": "test/Common",
             "": "test/Unit"
         },
         "files": ["src/DevPro/Infrastructure/Framework/functions.php"]
