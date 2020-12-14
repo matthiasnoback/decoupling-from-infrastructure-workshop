@@ -72,17 +72,17 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
         };
     }
 
-    public function userRepository(): InMemoryUserRepository
+    protected function userRepository(): InMemoryUserRepository
     {
         return $this->userRepository ?? $this->userRepository = new InMemoryUserRepository();
     }
 
-    public function trainingRepository(): InMemoryTrainingRepository
+    protected function trainingRepository(): InMemoryTrainingRepository
     {
         return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository();
     }
 
-    public function ticketRepository(): InMemoryTicketRepository
+    protected function ticketRepository(): InMemoryTicketRepository
     {
         return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
     }
