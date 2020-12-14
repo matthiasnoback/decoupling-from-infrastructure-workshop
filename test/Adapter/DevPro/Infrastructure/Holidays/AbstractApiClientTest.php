@@ -15,14 +15,15 @@ final class AbstractApiClientTest extends TestCase
     use Asynchronicity;
 
     private AbstractApiClient $client;
+    private OutputAdapterTestServiceContainer $container;
 
     protected function setUp(): void
     {
-        $container = new OutputAdapterTestServiceContainer(
+        $this->container = new OutputAdapterTestServiceContainer(
             ContainerConfiguration::createForOutputAdapterTesting(getenv())
         );
 
-        $this->client = $container->abstractApiClient();
+        $this->client = $this->container->abstractApiClient();
     }
 
     /**
@@ -75,4 +76,19 @@ final class AbstractApiClientTest extends TestCase
             }
         );
     }
+
+// When using the MockHandler instead of the CurlHandler:
+
+//    private function queueResponse(string $fixtureFilePath): void
+//    {
+//        $this->container->guzzleHttpHandler()->append(
+//            new \GuzzleHttp\Psr7\Response(
+//                200,
+//                [
+//                    'Content-Type' => 'application/json'
+//                ],
+//                file_get_contents($fixtureFilePath)
+//            )
+//        );
+//    }
 }
