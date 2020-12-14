@@ -29,8 +29,10 @@ abstract class BrowserTest extends TestCase
         $this->browserSession->start();
 
         $this->client->followRedirects(false);
-        $this->browserSession->setCookie('environment', 'input_adapter_test');
+        $this->browserSession->setCookie('environment', $this->environment());
     }
+
+    abstract protected function environment(): string;
 
     protected function url(string $path): string
     {

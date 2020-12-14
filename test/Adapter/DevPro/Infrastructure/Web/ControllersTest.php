@@ -9,6 +9,11 @@ use Test\Common\BrowserTest;
 
 final class ControllersTest extends BrowserTest
 {
+    protected function environment(): string
+    {
+        return 'input_adapter_test';
+    }
+
     /**
      * @test
      * @see Controllers::registerUserController()

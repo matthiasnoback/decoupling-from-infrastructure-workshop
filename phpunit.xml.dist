@@ -15,5 +15,8 @@
     <testsuite name="use_cases">
       <directory>./test/UseCases/PHPUnit</directory>
     </testsuite>
+    <testsuite name="end_to_end">
+      <directory>./test/EndToEnd/PHPUnit</directory>
+    </testsuite>
   </testsuites>
 </phpunit>
