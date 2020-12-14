@@ -10,7 +10,7 @@ use LogicException;
 
 final class ClockForTesting implements Clock
 {
-    public const DATE_FORMAT = 'd-m-Y';
+    public const DATE_FORMAT = 'Y-m-d';
 
     private ?DateTimeImmutable $dateTime;
 

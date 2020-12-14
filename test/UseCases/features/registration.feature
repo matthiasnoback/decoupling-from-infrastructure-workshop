@@ -1,10 +1,10 @@
 Feature: Registration
 
   Background:
-    Given today is "01-01-2020"
+    Given today is "2020-01-01"
 
   Scenario: A scheduled training shows up in Upcoming trainings
-    When the organizer schedules a new training called "Decoupling from infrastructure" for "24-01-2020"
+    When the organizer schedules a new training called "Decoupling from infrastructure" for "2020-01-24 09:30"
     Then it shows up on the list of upcoming trainings
 
   @ignore
@@ -24,14 +24,14 @@ Feature: Registration
 
   @ignore
   Scenario: After the end-of-sales date you can't register for it anymore
-    Given a training has been scheduled for which sales ends on "15-01-2020"
-    When it's "15-01-2020"
+    Given a training has been scheduled for which sales ends on "2020-01-15"
+    When it's "2020-01-15"
     Then it's impossible to buy a ticket for this training
 
   @ignore
   Scenario: On the day of the training, it will no longer be an upcoming training
-    Given a training has been scheduled for "24-01-2020"
-    When it's "24-01-2020"
+    Given a training has been scheduled for "2020-01-24"
+    When it's "2020-01-24"
     Then it does not show up on the list of upcoming trainings anymore
 
   @ignore

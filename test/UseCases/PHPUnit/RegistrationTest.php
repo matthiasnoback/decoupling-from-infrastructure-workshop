@@ -13,7 +13,7 @@ final class RegistrationTest extends UseCaseTestCase
      */
     protected function givenTodayIs(): void
     {
-        $this->container->setCurrentDate('01-01-2020');
+        $this->container->setCurrentDate('2020-01-01');
     }
 
     /**
@@ -21,7 +21,7 @@ final class RegistrationTest extends UseCaseTestCase
      */
     public function aScheduledTrainingShowsUpInUpcomingTrainings(): void
     {
-        // When the organizer schedules a new training called "Decoupling from infrastructure" for "24-01-2020"
+        // When the organizer schedules a new training called "Decoupling from infrastructure" for "2020-01-24 09:30"
         $this->markTestIncomplete('TODO Assignment 1');
 
         // Then it shows up on the list of upcoming trainings
