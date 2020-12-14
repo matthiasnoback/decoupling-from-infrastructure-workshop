@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Test\UseCases\PHPUnit;
 
 use DevPro\Application\Users\CreateOrganizer;
-use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\User\UserId;
 
 final class RegistrationTest extends UseCaseTestCase
@@ -32,10 +31,5 @@ final class RegistrationTest extends UseCaseTestCase
     private function theOrganizer(): UserId
     {
         return $this->container->application()->createOrganizer(new CreateOrganizer());
-    }
-
-    private function aUser(): UserId
-    {
-        return $this->container->application()->createUser(new CreateUser('A user'));
     }
 }
