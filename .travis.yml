@@ -10,3 +10,4 @@ install:
 
 script:
     - bin/run_tests
+    - bin/run_tests behat

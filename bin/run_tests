@@ -2,4 +2,7 @@
 
 set -eu
 
-docker-compose run --rm php sh ./run_tests.sh
+# Pass "behat" as an extra command-line argument if you prefer using Behat over PHPUnit for use case tests and
+# end-to-end tests
+
+docker-compose run --rm php sh ./run_tests.sh "$@"
