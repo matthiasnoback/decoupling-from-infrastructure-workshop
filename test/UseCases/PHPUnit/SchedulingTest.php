@@ -12,7 +12,7 @@ final class SchedulingTest extends UseCaseTestCase
     {
         // Given "2020-12-25" is a national holiday in "NL"
 
-        // When the organizer tries to schedule a training on "2020-12-25" in "NL"
+        // When the organizer tries to schedule a training on this date in this country
 
         // Then they see a message "The date of the training is a national holiday"
 
@@ -25,7 +25,7 @@ final class SchedulingTest extends UseCaseTestCase
     public function theOrganizerSchedulesATrainingOnANormalDay(): void
     {
         // Given "2020-12-23" is not a national holiday in "NL"
-        // When the organizer tries to schedule a training on "2020-12-23" in "NL"
+        // When the organizer tries to schedule a training on this date in this country
         // Then this training will be scheduled
 
         $this->markTestIncomplete('TODO Assignment 7');
