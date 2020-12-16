@@ -6,6 +6,7 @@ namespace DevPro\Infrastructure;
 use BadMethodCallException;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
+use DevPro\Application\NationalHolidays;
 use DevPro\Application\Training\UpcomingTrainings;
 use DevPro\Application\Users\SecurityUsers;
 use DevPro\Domain\Model\Ticket\TicketRepository;
@@ -173,5 +174,10 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
     protected function abstractApiBaseUrl(): string
     {
         return 'https://holidays.abstractapi.com/v1/';
+    }
+
+    protected function nationalHolidays(): NationalHolidays
+    {
+        throw new BadMethodCallException('Not implemented');
     }
 }

@@ -8,8 +8,8 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
+use DevPro\Application\NationalHolidays;
 use DevPro\Application\Training\ScheduleTrainingHandler;
-use DevPro\Application\Training\UpcomingTraining;
 use DevPro\Application\Training\UpcomingTrainings;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUserHandler;
@@ -89,8 +89,11 @@ abstract class AbstractServiceContainer implements ServiceContainer
     {
         return new ScheduleTrainingHandler(
             $this->userRepository(),
+            $this->nationalHolidays(),
             $this->trainingRepository(),
             $this->eventDispatcher()
         );
     }
+
+    abstract protected function nationalHolidays(): NationalHolidays;
 }

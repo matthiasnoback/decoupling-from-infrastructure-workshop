@@ -17,6 +17,7 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     private ?InMemoryTrainingRepository $trainingRepository = null;
     private ?InMemoryTicketRepository $ticketRepository = null;
     private ?InMemoryUpcomingTrainings $upcomingTrainings = null;
+    private ?FakeNationalHolidays $nationalHolidays = null;
 
     public static function create(): self
     {
@@ -39,6 +40,11 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     public function dispatchedEvents(): array
     {
         return $this->eventSubscriberSpy()->dispatchedEvents();
+    }
+
+    public function nationalHolidays(): FakeNationalHolidays
+    {
+        return $this->nationalHolidays ?? $this->nationalHolidays = new FakeNationalHolidays();
     }
 
     protected function registerSubscribers(EventDispatcher $eventDispatcher): void
