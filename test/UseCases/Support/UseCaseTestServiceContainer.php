@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
-use DevPro\Application\Training\UpcomingTrainings;
+use DevPro\Domain\Model\Training\TrainingWasScheduled;
 use DevPro\Infrastructure\AbstractServiceContainer;
 use DevPro\Infrastructure\ContainerConfiguration;
 
@@ -45,6 +45,11 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     {
         // Register subscribers that should be available in every environment in the parent method
         parent::registerSubscribers($eventDispatcher);
+
+        $eventDispatcher->registerSubscriber(
+            TrainingWasScheduled::class,
+            [$this->upcomingTrainings(), 'whenTrainingWasScheduled']
+        );
 
         // Register additional event subscribers that are only meant to be notified in a testing environment:
 
@@ -89,7 +94,7 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
         return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
     }
 
-    public function upcomingTrainings(): UpcomingTrainings
+    public function upcomingTrainings(): InMemoryUpcomingTrainings
     {
         return $this->upcomingTrainings ?? $this->upcomingTrainings = new InMemoryUpcomingTrainings();
     }
