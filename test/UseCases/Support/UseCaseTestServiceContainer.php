@@ -96,6 +96,6 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
 
     public function upcomingTrainings(): InMemoryUpcomingTrainings
     {
-        return $this->upcomingTrainings ?? $this->upcomingTrainings = new InMemoryUpcomingTrainings();
+        return $this->upcomingTrainings ?? $this->upcomingTrainings = new InMemoryUpcomingTrainings($this->clock());
     }
 }
