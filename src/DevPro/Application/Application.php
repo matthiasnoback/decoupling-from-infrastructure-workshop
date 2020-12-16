@@ -32,6 +32,6 @@ final class Application implements ApplicationInterface
 
     public function scheduleTraining(ScheduleTraining $command): TrainingId
     {
-        throw new BadMethodCallException('Not implemented');
+        return $this->container->scheduleTrainingHandler()->handle($command);
     }
 }
