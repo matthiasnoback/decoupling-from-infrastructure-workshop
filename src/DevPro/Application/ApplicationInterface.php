@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DevPro\Application;
 
 use DevPro\Application\Training\ScheduleTraining;
+use DevPro\Application\Training\UpcomingTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\Training\TrainingId;
@@ -16,4 +17,9 @@ interface ApplicationInterface
     public function createOrganizer(CreateOrganizer $command): UserId;
 
     public function scheduleTraining(ScheduleTraining $command): TrainingId;
+
+    /**
+     * @return array<UpcomingTraining> & UpcomingTraining[]
+     */
+    public function findAllUpcomingTrainings(): array;
 }

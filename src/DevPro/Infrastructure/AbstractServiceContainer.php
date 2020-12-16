@@ -9,6 +9,8 @@ use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
 use DevPro\Application\Training\ScheduleTrainingHandler;
+use DevPro\Application\Training\UpcomingTraining;
+use DevPro\Application\Training\UpcomingTrainings;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUserHandler;
 use DevPro\Domain\Model\Ticket\TicketRepository;
@@ -70,6 +72,8 @@ abstract class AbstractServiceContainer implements ServiceContainer
     abstract protected function trainingRepository(): TrainingRepository;
 
     abstract protected function ticketRepository(): TicketRepository;
+
+    abstract public function upcomingTrainings(): UpcomingTrainings;
 
     public function createUserHandler(): CreateUserHandler
     {

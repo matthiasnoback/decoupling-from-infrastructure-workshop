@@ -5,6 +5,7 @@ namespace DevPro\Application;
 
 use BadMethodCallException;
 use DevPro\Application\Training\ScheduleTraining;
+use DevPro\Application\Training\UpcomingTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\Training\TrainingId;
@@ -33,5 +34,10 @@ final class Application implements ApplicationInterface
     public function scheduleTraining(ScheduleTraining $command): TrainingId
     {
         return $this->container->scheduleTrainingHandler()->handle($command);
+    }
+
+    public function findAllUpcomingTrainings(): array
+    {
+        return $this->container->upcomingTrainings()->findAll();
     }
 }
