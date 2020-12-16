@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Web;
 
 use DevPro\Application\ApplicationInterface;
+use DevPro\Application\Trainings\ScheduleTraining;
 use DevPro\Application\Users\CouldNotFindSecurityUser;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Application\Users\SecurityUsers;
@@ -74,7 +75,35 @@ final class Controllers
 
     public function scheduleTrainingController(): void
     {
-        // TODO assignment 7
+        $formErrors = [];
+        $formData = ['country' => '', 'title' => '', 'scheduled_date' => ''];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $formData = array_merge($formData, $_POST);
+
+            if (empty($formErrors)) {
+                $this->application->scheduleTraining(
+                    new ScheduleTraining(
+                        $this->getLoggedInUser()->id(),
+                        $formData['country'],
+                        $formData['title'],
+                        $formData['scheduled_date']
+                    )
+                );
+                $this->session->addSuccessFlash('You have scheduled a new training');
+
+                header('Location: /');
+                exit;
+            }
+        }
+
+        echo $this->templateRenderer->render(
+            __DIR__ . '/View/schedule_training.php',
+            [
+                'formErrors' => $formErrors,
+                'formData' => $formData
+            ]
+        );
     }
 
     public function loginController(): void
