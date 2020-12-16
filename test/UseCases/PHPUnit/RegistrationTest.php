@@ -22,10 +22,10 @@ final class RegistrationTest extends UseCaseTestCase
     public function aScheduledTrainingShowsUpInUpcomingTrainings(): void
     {
         // When the organizer schedules a new training called "Decoupling from infrastructure" for "2020-01-24 09:30"
-        $this->markTestIncomplete('TODO Assignment 1');
+        $this->markTestIncomplete('TODO Assignment 3');
 
         // Then it shows up on the list of upcoming trainings
-        $this->markTestIncomplete('TODO Assignment 2');
+        $this->markTestIncomplete('TODO Assignment 5');
     }
 
     private function theOrganizer(): UserId
