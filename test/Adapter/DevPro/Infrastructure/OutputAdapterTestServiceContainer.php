@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\Adapter\DevPro\Infrastructure;
 
 use DevPro\Application\Users\SecurityUsers;
+use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
 use DevPro\Infrastructure\AbstractDevelopmentServiceContainer;
 use DevPro\Infrastructure\Holidays\AbstractApiClient;
@@ -17,6 +18,11 @@ final class OutputAdapterTestServiceContainer extends AbstractDevelopmentService
     public function userRepository(): UserRepository
     {
         return parent::userRepository();
+    }
+
+    public function trainingRepository(): TrainingRepository
+    {
+        return parent::trainingRepository();
     }
 
     public function securityUsers(): SecurityUsers
