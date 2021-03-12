@@ -11,6 +11,7 @@ use DevPro\Application\Users\SecurityUsers;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
+use DevPro\Domain\Service\NationalHolidays;
 use DevPro\Infrastructure\Database\SecurityUsersUsingDbal;
 use DevPro\Infrastructure\Database\SchemaManager;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
@@ -170,6 +171,11 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
     }
 
     public function upcomingTrainings(): UpcomingTrainings
+    {
+        throw new BadMethodCallException('Not implemented yet');
+    }
+
+    protected function nationalHolidays(): NationalHolidays
     {
         throw new BadMethodCallException('Not implemented yet');
     }

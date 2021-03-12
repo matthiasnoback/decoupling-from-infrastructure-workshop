@@ -15,6 +15,7 @@ use DevPro\Application\Users\CreateUserHandler;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
+use DevPro\Domain\Service\NationalHolidays;
 
 abstract class AbstractServiceContainer implements ServiceContainer
 {
@@ -92,4 +93,6 @@ abstract class AbstractServiceContainer implements ServiceContainer
     }
 
     abstract public function upcomingTrainings(): UpcomingTrainings;
+
+    abstract protected function nationalHolidays(): NationalHolidays;
 }

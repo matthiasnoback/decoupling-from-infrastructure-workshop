@@ -11,6 +11,10 @@ final class SchedulingTest extends UseCaseTestCase
     public function theOrganizerTriesToScheduleATrainingOnANationalHoliday(): void
     {
         // Given "2020-12-25" is a national holiday in "NL"
+        $this->container->nationalHolidays()->markAsNationalHoliday(
+            'NL',
+            '2020-12-25'
+        );
 
         // When the organizer tries to schedule a training on this date in this country
 

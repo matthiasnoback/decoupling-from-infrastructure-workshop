@@ -5,6 +5,7 @@ namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Domain\Model\Training\TrainingWasScheduled;
+use DevPro\Domain\Service\NationalHolidays;
 use DevPro\Infrastructure\AbstractServiceContainer;
 use DevPro\Infrastructure\ContainerConfiguration;
 
@@ -17,6 +18,7 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     private ?InMemoryTrainingRepository $trainingRepository = null;
     private ?InMemoryTicketRepository $ticketRepository = null;
     private ?UpcomingTrainingsInMemory $upcomingTrainings = null;
+    private ?NationalHolidaysFake $nationalHolidays = null;
 
     public static function create(): self
     {
@@ -97,5 +99,10 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     public function upcomingTrainings(): UpcomingTrainingsInMemory
     {
         return $this->upcomingTrainings ?? $this->upcomingTrainings = new UpcomingTrainingsInMemory();
+    }
+
+    public function nationalHolidays(): NationalHolidaysFake
+    {
+        return $this->nationalHolidays ?? $this->nationalHolidays = new NationalHolidaysFake();
     }
 }
