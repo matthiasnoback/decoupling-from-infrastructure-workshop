@@ -72,6 +72,11 @@ final class Controllers
         );
     }
 
+    public function scheduleTrainingController(): void
+    {
+        // TODO assignment 7
+    }
+
     public function loginController(): void
     {
         $formErrors = [];
