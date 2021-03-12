@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace DevPro\Application;
 
-use BadMethodCallException;
 use DevPro\Application\Trainings\ScheduleTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
@@ -32,6 +31,6 @@ final class Application implements ApplicationInterface
 
     public function scheduleTraining(ScheduleTraining $command): TrainingId
     {
-        throw new BadMethodCallException('Not implemented yet');
+        return $this->container->scheduleTrainingHandler()->handle($command);
     }
 }
