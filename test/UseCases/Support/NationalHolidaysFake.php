@@ -16,7 +16,7 @@ final class NationalHolidaysFake implements NationalHolidays
 
     public function isNationalHoliday(Country $country, ScheduledDate $scheduledDate): bool
     {
-        return $this->holidays[$country->asString()][$scheduledDate->asString()] ?? false;
+        return $this->holidays[$country->asString()][$scheduledDate->toDateTimeImmutable()->format('Y-m-d')] ?? false;
     }
 
     public function markAsNationalHoliday(string $country, string $date): void

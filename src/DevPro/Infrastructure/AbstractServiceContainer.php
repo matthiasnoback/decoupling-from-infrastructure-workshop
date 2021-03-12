@@ -88,6 +88,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
         return new ScheduleTrainingHandler(
             $this->trainingRepository(),
             $this->userRepository(),
+            $this->nationalHolidays(),
             $this->eventDispatcher()
         );
     }
