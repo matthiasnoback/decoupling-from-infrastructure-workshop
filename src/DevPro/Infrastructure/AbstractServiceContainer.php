@@ -9,6 +9,7 @@ use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
 use DevPro\Application\Trainings\ScheduleTrainingHandler;
+use DevPro\Application\Trainings\UpcomingTrainings;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUserHandler;
 use DevPro\Domain\Model\Ticket\TicketRepository;
@@ -89,4 +90,6 @@ abstract class AbstractServiceContainer implements ServiceContainer
             $this->eventDispatcher()
         );
     }
+
+    abstract public function upcomingTrainings(): UpcomingTrainings;
 }

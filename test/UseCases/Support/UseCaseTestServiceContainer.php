@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Application\Trainings\UpcomingTrainings;
 use DevPro\Infrastructure\AbstractServiceContainer;
 use DevPro\Infrastructure\ContainerConfiguration;
 
@@ -15,6 +16,7 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     private ?InMemoryUserRepository $userRepository = null;
     private ?InMemoryTrainingRepository $trainingRepository = null;
     private ?InMemoryTicketRepository $ticketRepository = null;
+    private ?UpcomingTrainingsInMemory $upcomingTrainings = null;
 
     public static function create(): self
     {
@@ -85,5 +87,10 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     protected function ticketRepository(): InMemoryTicketRepository
     {
         return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
+    }
+
+    public function upcomingTrainings(): UpcomingTrainings
+    {
+        return $this->upcomingTrainings ?? $this->upcomingTrainings = new UpcomingTrainingsInMemory();
     }
 }
