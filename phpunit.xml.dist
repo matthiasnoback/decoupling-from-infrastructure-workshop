@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="./bootstrap.php" colors="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="./bootstrap.php" colors="true" cacheResult="false">
   <coverage>
     <include>
       <directory>src/</directory>
@@ -13,10 +13,10 @@
       <directory>./test/Adapter</directory>
     </testsuite>
     <testsuite name="use_cases">
-      <directory>./test/UseCases/PHPUnit</directory>
+      <directory>./test/UseCases</directory>
     </testsuite>
     <testsuite name="end_to_end">
-      <directory>./test/EndToEnd/PHPUnit</directory>
+      <directory>./test/EndToEnd</directory>
     </testsuite>
   </testsuites>
 </phpunit>

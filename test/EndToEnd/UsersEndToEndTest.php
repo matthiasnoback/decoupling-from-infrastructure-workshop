@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace EndToEnd\PHPUnit;
+namespace Test\EndToEnd;
 
 use Test\Common\BrowserTest;
 

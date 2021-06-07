@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace Test\UseCases\PHPUnit;
+namespace Test\UseCases;
 
 use PHPUnit\Framework\TestCase;
 use Test\UseCases\Support\UseCaseTestServiceContainer;
 
-abstract class UseCaseTestCase extends TestCase
+abstract class AbstractUseCaseTestCase extends TestCase
 {
     protected UseCaseTestServiceContainer $container;
 
