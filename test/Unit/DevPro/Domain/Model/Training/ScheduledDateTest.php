@@ -44,4 +44,16 @@ final class ScheduledDateTest extends TestCase
             $scheduledDate->toDateTimeImmutable()
         );
     }
+
+    /**
+     * @test
+     */
+    public function it_extracts_year_month_and_day(): void
+    {
+        $scheduledDate = ScheduledDate::fromDateTime(new DateTimeImmutable('2017-02-01 20:00'));
+
+        $this->assertSame(2017, $scheduledDate->year());
+        $this->assertSame(2, $scheduledDate->month());
+        $this->assertSame(1, $scheduledDate->day());
+    }
 }
