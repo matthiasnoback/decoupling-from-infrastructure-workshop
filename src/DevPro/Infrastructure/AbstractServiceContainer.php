@@ -39,10 +39,13 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     public function application(): ApplicationInterface
     {
-        return new Application($this);
+        return new Application(
+            $this->createUserHandler(),
+            $this->createOrganizerHandler()
+        );
     }
 
-    public function eventDispatcher(): EventDispatcher
+    private function eventDispatcher(): EventDispatcher
     {
         if ($this->eventDispatcher === null) {
             /*
@@ -70,12 +73,12 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     abstract protected function ticketRepository(): TicketRepository;
 
-    public function createUserHandler(): CreateUserHandler
+    private function createUserHandler(): CreateUserHandler
     {
         return new CreateUserHandler($this->userRepository(), $this->eventDispatcher());
     }
 
-    public function createOrganizerHandler(): CreateOrganizerHandler
+    private function createOrganizerHandler(): CreateOrganizerHandler
     {
         return new CreateOrganizerHandler($this->userRepository(), $this->eventDispatcher());
     }
