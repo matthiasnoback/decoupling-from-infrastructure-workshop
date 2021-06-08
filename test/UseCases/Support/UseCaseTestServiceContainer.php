@@ -12,10 +12,6 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     private ?ClockForTesting $clock = null;
     private ?EventSubscriberSpy $eventSubscriberSpy = null;
 
-    private ?InMemoryUserRepository $userRepository = null;
-    private ?InMemoryTrainingRepository $trainingRepository = null;
-    private ?InMemoryTicketRepository $ticketRepository = null;
-
     public static function create(): self
     {
         return new self(ContainerConfiguration::createForUseCaseTesting());
@@ -65,20 +61,5 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
 
             echo '- Event dispatched: ' . $eventAsString . "\n";
         };
-    }
-
-    protected function userRepository(): InMemoryUserRepository
-    {
-        return $this->userRepository ?? $this->userRepository = new InMemoryUserRepository();
-    }
-
-    protected function trainingRepository(): InMemoryTrainingRepository
-    {
-        return $this->trainingRepository ?? $this->trainingRepository = new InMemoryTrainingRepository();
-    }
-
-    protected function ticketRepository(): InMemoryTicketRepository
-    {
-        return $this->ticketRepository ?? $this->ticketRepository = new InMemoryTicketRepository();
     }
 }
