@@ -4,18 +4,26 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure;
 
 use Assert\Assert;
+use BadMethodCallException;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUserHandler;
+use DevPro\Application\Users\SecurityUsers;
 use DevPro\Domain\Model\Ticket\TicketRepository;
 use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
+use DevPro\Infrastructure\Database\SchemaManager;
+use DevPro\Infrastructure\Database\SecurityUsersUsingDbal;
+use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 
 abstract class AbstractServiceContainer implements ServiceContainer
 {
+    private ?Connection $connection = null;
     private ?EventDispatcher $eventDispatcher = null;
     protected ContainerConfiguration $containerConfiguration;
 
@@ -35,6 +43,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     public function boot(): void
     {
+        $this->schemaManager()->updateSchema();
     }
 
     public function application(): ApplicationInterface
@@ -67,11 +76,44 @@ abstract class AbstractServiceContainer implements ServiceContainer
     {
     }
 
-    abstract protected function userRepository(): UserRepository;
+    private function connection(): Connection
+    {
+        if (!$this->connection instanceof Connection) {
+            $this->connection = DriverManager::getConnection(
+                [
+                    'driver' => 'pdo_sqlite',
+                    'path' => $this->containerConfiguration->varDirectory() . '/' . $this->environment() . '.sqlite'
+                ]
+            );
+        }
 
-    abstract protected function trainingRepository(): TrainingRepository;
+        return $this->connection;
+    }
 
-    abstract protected function ticketRepository(): TicketRepository;
+    private function schemaManager(): SchemaManager
+    {
+        return new SchemaManager($this->connection());
+    }
+
+    protected function userRepository(): UserRepository
+    {
+        return new UserRepositoryUsingDbal($this->connection());
+    }
+
+    protected function trainingRepository(): TrainingRepository
+    {
+        throw new BadMethodCallException('Not implemented yet');
+    }
+
+    protected function ticketRepository(): TicketRepository
+    {
+        throw new BadMethodCallException('Not implemented yet');
+    }
+
+    protected function securityUsers(): SecurityUsers
+    {
+        return new SecurityUsersUsingDbal($this->connection());
+    }
 
     private function createUserHandler(): CreateUserHandler
     {

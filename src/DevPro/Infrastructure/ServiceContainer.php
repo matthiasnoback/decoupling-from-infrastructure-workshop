@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace DevPro\Infrastructure;
 
+use DevPro\Application\ApplicationInterface;
+
 interface ServiceContainer
 {
-    public function boot(): void;
+    public function application(): ApplicationInterface;
 }

@@ -3,22 +3,12 @@ declare(strict_types=1);
 
 namespace DevPro\Infrastructure;
 
-use BadMethodCallException;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
-use DevPro\Application\Users\SecurityUsers;
-use DevPro\Domain\Model\Ticket\TicketRepository;
-use DevPro\Domain\Model\Training\TrainingRepository;
-use DevPro\Domain\Model\User\UserRepository;
-use DevPro\Infrastructure\Database\SecurityUsersUsingDbal;
-use DevPro\Infrastructure\Database\SchemaManager;
-use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Holidays\AbstractApiClient;
 use DevPro\Infrastructure\Web\Controllers;
 use DevPro\Infrastructure\Web\WebApplication;
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\CurlHandler;
 use GuzzleHttp\HandlerStack;
@@ -32,15 +22,7 @@ use Test\EndToEnd\EndToEndTestServiceContainer;
  */
 abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContainer
 {
-    private ?Connection $connection = null;
     private ?Session $session = null;
-
-    public function boot(): void
-    {
-        parent::boot();
-
-        $this->schemaManager()->updateSchema();
-    }
 
     public static function create(ContainerConfiguration $containerConfiguration): self
     {
@@ -76,45 +58,6 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
         parent::registerSubscribers($eventDispatcher);
 
         // Register additional event subscribers that are only meant to be notified in a development environment:
-    }
-
-    private function connection(): Connection
-    {
-        if (!$this->connection instanceof Connection) {
-            $this->connection = DriverManager::getConnection(
-                [
-                    'driver' => 'pdo_sqlite',
-                    'path' => $this->containerConfiguration->varDirectory() . '/' . $this->environment() . '.sqlite'
-                ]
-            );
-        }
-
-        return $this->connection;
-    }
-
-    private function schemaManager(): SchemaManager
-    {
-        return new SchemaManager($this->connection());
-    }
-
-    protected function userRepository(): UserRepository
-    {
-        return new UserRepositoryUsingDbal($this->connection());
-    }
-
-    protected function trainingRepository(): TrainingRepository
-    {
-        throw new BadMethodCallException('Not implemented yet');
-    }
-
-    protected function ticketRepository(): TicketRepository
-    {
-        throw new BadMethodCallException('Not implemented yet');
-    }
-
-    protected function securityUsers(): SecurityUsers
-    {
-        return new SecurityUsersUsingDbal($this->connection());
     }
 
     private function templateRenderer(): TemplateRenderer

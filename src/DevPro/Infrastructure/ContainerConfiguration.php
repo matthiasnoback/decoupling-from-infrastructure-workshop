@@ -57,7 +57,7 @@ final class ContainerConfiguration
     {
         return new self(
             'use_case_test',
-            null,
+            sys_get_temp_dir(),
             null
         );
     }
