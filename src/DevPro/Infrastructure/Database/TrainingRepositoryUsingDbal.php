@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Database;
 
 use Assert\Assert;
+use DevPro\Application\UpcomingTraining;
+use DevPro\Application\UpcomingTrainings;
 use DevPro\Domain\Model\Training\Training;
 use DevPro\Domain\Model\Training\TrainingId;
 use DevPro\Domain\Model\Training\TrainingRepository;
@@ -12,7 +14,7 @@ use Doctrine\DBAL\Driver\Result;
 use Ramsey\Uuid\Uuid;
 use RuntimeException;
 
-final class TrainingRepositoryUsingDbal implements TrainingRepository
+final class TrainingRepositoryUsingDbal implements TrainingRepository, UpcomingTrainings
 {
     private Connection $connection;
 
@@ -44,6 +46,19 @@ final class TrainingRepositoryUsingDbal implements TrainingRepository
         }
 
         return Training::fromDatabaseRecord($record);
+    }
+
+    public function findAllUpcomingTrainings(): array
+    {
+        $result = $this->connection->executeQuery('SELECT * FROM trainings');
+        Assert::that($result)->isInstanceOf(Result::class);
+
+        $records = $result->fetchAllAssociative();
+
+        return array_map(
+            fn (array $record) => UpcomingTraining::fromDatabaseRecord($record),
+            $records
+        );
     }
 
     public function nextIdentity(): TrainingId

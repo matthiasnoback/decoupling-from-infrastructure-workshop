@@ -12,6 +12,14 @@ final class UpcomingTraining
         $this->title = $title;
     }
 
+    /**
+     * @param array<string,string> $record
+     */
+    public static function fromDatabaseRecord(array $record): self
+    {
+        return new self($record['title']);
+    }
+
     public function title(): string
     {
         return $this->title;

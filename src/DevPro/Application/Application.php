@@ -19,17 +19,20 @@ final class Application implements ApplicationInterface
     private CreateOrganizerHandler $createOrganizerHandler;
     private TrainingRepository $trainingRepository;
     private EventDispatcher $eventDispatcher;
+    private UpcomingTrainings $upcomingTrainings;
 
     public function __construct(
         CreateUserHandler $createUserHandler,
         CreateOrganizerHandler $createOrganizerHandler,
         TrainingRepository $trainingRepository,
-        EventDispatcher $eventDispatcher
+        EventDispatcher $eventDispatcher,
+        UpcomingTrainings $upcomingTrainings
     ) {
         $this->createUserHandler = $createUserHandler;
         $this->createOrganizerHandler = $createOrganizerHandler;
         $this->trainingRepository = $trainingRepository;
         $this->eventDispatcher = $eventDispatcher;
+        $this->upcomingTrainings = $upcomingTrainings;
     }
 
     public function createUser(CreateUser $command): UserId
@@ -44,7 +47,7 @@ final class Application implements ApplicationInterface
 
     public function findAllUpcomingTrainings(): array
     {
-        return [];
+        return $this->upcomingTrainings->findAllUpcomingTrainings();
     }
 
     public function scheduleTraining(ScheduleTraining $command): TrainingId

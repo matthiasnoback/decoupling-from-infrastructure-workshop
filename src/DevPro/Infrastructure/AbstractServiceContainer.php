@@ -53,7 +53,8 @@ abstract class AbstractServiceContainer implements ServiceContainer
             $this->createUserHandler(),
             $this->createOrganizerHandler(),
             $this->trainingRepository(),
-            $this->eventDispatcher()
+            $this->eventDispatcher(),
+            $this->trainingRepository()
         );
     }
 
@@ -103,7 +104,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
         return new UserRepositoryUsingDbal($this->connection());
     }
 
-    protected function trainingRepository(): TrainingRepository
+    protected function trainingRepository(): TrainingRepositoryUsingDbal
     {
         return new TrainingRepositoryUsingDbal($this->connection());
     }
