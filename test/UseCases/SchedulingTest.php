@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\UseCases;
 
 use DevPro\Application\ScheduleTraining;
+use DevPro\Application\UpcomingTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Domain\Model\User\UserId;
 
@@ -20,17 +21,22 @@ final class SchedulingTest extends AbstractUseCaseTestCase
     public function aScheduledTrainingShowsUpInUpcomingTrainings(): void
     {
         // When the organizer schedules a new training called "Decoupling from infrastructure" for "2020-01-24 09:30"
+        $title = 'Decoupling from infrastructure';
         $this->container->application()->scheduleTraining(
             new ScheduleTraining(
                 $this->theOrganizer()->asString(),
                 'NL',
-                'Decoupling from infrastructure',
+                $title,
                 '2020-01-24 09:30'
             )
         );
 
         // Then it shows up on the list of upcoming trainings
-        $this->markTestIncomplete('TODO Assignment 5');
+        $upcomingTrainingTitles = array_map(
+            fn (UpcomingTraining $upcomingTraining) => $upcomingTraining->title(),
+            $this->container->application()->findAllUpcomingTrainings()
+        );
+        self::assertContains($title, $upcomingTrainingTitles);
     }
 
     /**
