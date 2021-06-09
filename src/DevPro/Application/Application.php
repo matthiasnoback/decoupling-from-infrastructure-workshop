@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace DevPro\Application;
 
+use BadMethodCallException;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Application\Users\CreateUserHandler;
+use DevPro\Domain\Model\Training\TrainingId;
 use DevPro\Domain\Model\User\UserId;
 
 final class Application implements ApplicationInterface
@@ -30,5 +32,10 @@ final class Application implements ApplicationInterface
     public function createOrganizer(CreateOrganizer $command): UserId
     {
         return $this->createOrganizerHandler->handle($command);
+    }
+
+    public function scheduleTraining(ScheduleTraining $command): TrainingId
+    {
+        throw new BadMethodCallException('Not implemented yet');
     }
 }
