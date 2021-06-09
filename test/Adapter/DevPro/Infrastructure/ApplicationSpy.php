@@ -6,6 +6,7 @@ namespace Test\Adapter\DevPro\Infrastructure;
 use BadMethodCallException;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\ScheduleTraining;
+use DevPro\Application\UpcomingTraining;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Domain\Model\Training\TrainingId;
@@ -40,7 +41,10 @@ final class ApplicationSpy implements ApplicationInterface
 
     public function findAllUpcomingTrainings(): array
     {
-        return [];
+        return [
+            new UpcomingTraining('Decoupling from infrastructure'),
+            new UpcomingTraining('Propel for advanced users'),
+        ];
     }
 
     private function recordThatCommandWasSent(object $command): void

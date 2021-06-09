@@ -106,7 +106,7 @@ final class Controllers
                 );
                 $this->session->addSuccessFlash('Training was scheduled');
 
-                header('Location: /');
+                header('Location: /upcomingTrainings');
                 exit;
             }
         }
@@ -116,6 +116,16 @@ final class Controllers
             [
                 'formErrors' => $formErrors,
                 'formData' => $formData
+            ]
+        );
+    }
+
+    public function upcomingTrainingsController(): void
+    {
+        echo $this->templateRenderer->render(
+            __DIR__ . '/View/upcoming_trainings.php',
+            [
+                'upcomingTrainings' => $this->application->findAllUpcomingTrainings()
             ]
         );
     }

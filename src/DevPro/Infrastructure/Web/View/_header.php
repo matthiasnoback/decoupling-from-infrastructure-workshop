@@ -13,6 +13,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="/login">Login</a></li>
             <li><a href="/registerUser">Register</a></li>
+            <li><a href="/upcomingTrainings">Upcoming trainings</a></li>
             <li><a href="/scheduleTraining">Schedule a training</a></li>
         </ul>
 
