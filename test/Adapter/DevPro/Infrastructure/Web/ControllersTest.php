@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace Test\Adapter\DevPro\Infrastructure\Web;
 
+use DevPro\Application\ScheduleTraining;
 use DevPro\Application\Users\CreateUser;
+use DevPro\Domain\Model\Training\TrainingWasScheduled;
 use Test\Adapter\DevPro\Infrastructure\ApplicationSpy;
+use Test\Adapter\DevPro\Infrastructure\HardCodedSecurityUsers;
 use Test\Common\BrowserTest;
 
 final class ControllersTest extends BrowserTest
@@ -57,7 +60,28 @@ final class ControllersTest extends BrowserTest
     {
         $this->logInAsOrganizer();
 
-        $this->markTestIncomplete('TODO Assignment 7');
+        $this->browserSession->visit($this->url('/scheduleTraining'));
+        $this->assertResponseWasSuccessful();
+
+        $page = $this->browserSession->getPage();
+        $page->fillField('title', 'Testing decoupled applications');
+        $page->fillField('country', 'NL');
+        $page->fillField('scheduled_date', '2021-06-09 09:30');
+        $page->pressButton('Submit');
+
+        $this->assertResponseWasSuccessful();
+        $this->assertThatCommandWasProcessed(
+            new ScheduleTraining(
+                HardCodedSecurityUsers::ORGANIZER_ID,
+                'NL',
+                'Testing decoupled applications',
+                '2021-06-09 09:30'
+            )
+        );
+
+        $this->followRedirect();
+
+        $this->assertBrowserSession()->pageTextContains('Training was scheduled');
     }
 
     private function logInAsOrganizer(): void

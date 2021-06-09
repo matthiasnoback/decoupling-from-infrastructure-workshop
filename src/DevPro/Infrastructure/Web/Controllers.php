@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Web;
 
 use DevPro\Application\ApplicationInterface;
+use DevPro\Application\ScheduleTraining;
 use DevPro\Application\Users\CouldNotFindSecurityUser;
 use DevPro\Application\Users\CreateUser;
 use DevPro\Application\Users\SecurityUsers;
@@ -74,7 +75,49 @@ final class Controllers
 
     public function scheduleTrainingController(): void
     {
-        // TODO assignment 7
+        $formErrors = [];
+        $formData = [
+            'country' => '',
+            'title' => '',
+            'scheduled_date' => ''
+        ];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $formData = array_merge($formData, $_POST);
+
+            if ($formData['title'] === '') {
+                $formErrors['title'] = 'Title should not be empty';
+            }
+            if ($formData['country'] === '') {
+                $formErrors['country'] = 'Country should not be empty';
+            }
+            if ($formData['scheduled_date'] === '') {
+                $formErrors['scheduled_date'] = 'Scheduled date should not be empty';
+            }
+
+            if (empty($formErrors)) {
+                $this->application->scheduleTraining(
+                    new ScheduleTraining(
+                        $this->getLoggedInUser()->id(),
+                        $formData['country'],
+                        $formData['title'],
+                        $formData['scheduled_date'],
+                    )
+                );
+                $this->session->addSuccessFlash('Training was scheduled');
+
+                header('Location: /');
+                exit;
+            }
+        }
+
+        echo $this->templateRenderer->render(
+            __DIR__ . '/View/schedule_training.php',
+            [
+                'formErrors' => $formErrors,
+                'formData' => $formData
+            ]
+        );
     }
 
     public function loginController(): void
