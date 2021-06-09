@@ -17,6 +17,7 @@ use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
 use DevPro\Infrastructure\Database\SchemaManager;
 use DevPro\Infrastructure\Database\SecurityUsersUsingDbal;
+use DevPro\Infrastructure\Database\TrainingRepositoryUsingDbal;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -50,7 +51,9 @@ abstract class AbstractServiceContainer implements ServiceContainer
     {
         return new Application(
             $this->createUserHandler(),
-            $this->createOrganizerHandler()
+            $this->createOrganizerHandler(),
+            $this->trainingRepository(),
+            $this->eventDispatcher()
         );
     }
 
@@ -102,7 +105,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     protected function trainingRepository(): TrainingRepository
     {
-        throw new BadMethodCallException('Not implemented yet');
+        return new TrainingRepositoryUsingDbal($this->connection());
     }
 
     protected function ticketRepository(): TicketRepository
