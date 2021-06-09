@@ -42,6 +42,11 @@ final class Application implements ApplicationInterface
         return $this->createOrganizerHandler->handle($command);
     }
 
+    public function findAllUpcomingTrainings(): array
+    {
+        return [];
+    }
+
     public function scheduleTraining(ScheduleTraining $command): TrainingId
     {
         $training = Training::schedule(

@@ -36,6 +36,11 @@ final class ApplicationSpy implements ApplicationInterface
         throw new BadMethodCallException('Not implemented yet');
     }
 
+    public function findAllUpcomingTrainings(): array
+    {
+        return [];
+    }
+
     private function recordThatCommandWasSent(object $command): void
     {
         header(self::COMMAND_SENT_HEADER . ': ' . base64_encode(serialize($command)));
