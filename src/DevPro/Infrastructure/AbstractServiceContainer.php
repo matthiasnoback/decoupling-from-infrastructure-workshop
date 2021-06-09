@@ -90,7 +90,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
         return $this->connection;
     }
 
-    private function schemaManager(): SchemaManager
+    protected function schemaManager(): SchemaManager
     {
         return new SchemaManager($this->connection());
     }

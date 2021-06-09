@@ -9,6 +9,13 @@ use DevPro\Infrastructure\AbstractDevelopmentServiceContainer;
 
 final class InputAdapterTestServiceContainer extends AbstractDevelopmentServiceContainer
 {
+    public function boot(): void
+    {
+        parent::boot();
+
+        $this->schemaManager()->truncateTables();
+    }
+
     public function application(): ApplicationInterface
     {
         return new ApplicationSpy();

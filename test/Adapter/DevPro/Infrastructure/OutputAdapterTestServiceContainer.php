@@ -14,6 +14,13 @@ final class OutputAdapterTestServiceContainer extends AbstractDevelopmentService
 
 //    private ?\GuzzleHttp\Handler\MockHandler $guzzleMockHandler = null;
 
+    public function boot(): void
+    {
+        parent::boot();
+
+        $this->schemaManager()->truncateTables();
+    }
+
     public function userRepository(): UserRepository
     {
         return parent::userRepository();

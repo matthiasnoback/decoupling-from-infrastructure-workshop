@@ -17,6 +17,13 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
         return new self(ContainerConfiguration::createForUseCaseTesting());
     }
 
+    public function boot(): void
+    {
+        parent::boot();
+
+        $this->schemaManager()->truncateTables();
+    }
+
     public function setCurrentDate(string $date): void
     {
         $this->clock()->setCurrentDate($date);
