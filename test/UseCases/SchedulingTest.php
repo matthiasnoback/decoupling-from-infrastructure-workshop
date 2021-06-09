@@ -42,6 +42,34 @@ final class SchedulingTest extends AbstractUseCaseTestCase
     /**
      * @test
      */
+    public function theScheduledDateOfTheTrainingIsInThePast(): void
+    {
+        // Given the organizer has scheduled a training on "2020-01-24 09:30"
+        $theTitle = 'The title';
+
+        $this->container->application()->scheduleTraining(
+            new ScheduleTraining(
+                $this->theOrganizer()->asString(),
+                $this->aCountry(),
+                $theTitle,
+                '2020-01-24 09:30'
+            )
+        );
+
+        // When today is "2020-02-01"
+        $this->container->setCurrentDate('2020-02-01');
+
+        // Then it no longer shows up on the list of upcoming trainings
+        $upcomingTrainingTitles = array_map(
+            fn (UpcomingTraining $upcomingTraining) => $upcomingTraining->title(),
+            $this->container->application()->findAllUpcomingTrainings()
+        );
+        self::assertNotContains($theTitle, $upcomingTrainingTitles);
+    }
+
+    /**
+     * @test
+     */
     public function theOrganizerTriesToScheduleATrainingOnANationalHoliday(): void
     {
         // Given "2020-12-25" is a national holiday in "NL"
@@ -68,5 +96,10 @@ final class SchedulingTest extends AbstractUseCaseTestCase
     private function theOrganizer(): UserId
     {
         return $this->container->application()->createOrganizer(new CreateOrganizer());
+    }
+
+    private function aCountry(): string
+    {
+        return 'NL';
     }
 }

@@ -106,7 +106,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     protected function trainingRepository(): TrainingRepositoryUsingDbal
     {
-        return new TrainingRepositoryUsingDbal($this->connection());
+        return new TrainingRepositoryUsingDbal($this->connection(), $this->clock());
     }
 
     protected function ticketRepository(): TicketRepository
