@@ -76,4 +76,9 @@ final class ScheduledDate
     {
         return (int)$this->toDateTimeImmutable()->format('d');
     }
+
+    public function asDateString(): string
+    {
+        return $this->toDateTimeImmutable()->format('Y-m-d');
+    }
 }

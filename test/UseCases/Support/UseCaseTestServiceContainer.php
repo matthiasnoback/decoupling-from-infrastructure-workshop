@@ -11,10 +11,16 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
 {
     private ?ClockForTesting $clock = null;
     private ?EventSubscriberSpy $eventSubscriberSpy = null;
+    private ?NationalHolidaysFake $nationalHolidays = null;
 
     public static function create(): self
     {
         return new self(ContainerConfiguration::createForUseCaseTesting());
+    }
+
+    public function nationalHolidays(): NationalHolidaysFake
+    {
+        return $this->nationalHolidays ?? $this->nationalHolidays = new NationalHolidaysFake();
     }
 
     public function boot(): void

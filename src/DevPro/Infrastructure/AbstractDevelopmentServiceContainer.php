@@ -5,8 +5,10 @@ namespace DevPro\Infrastructure;
 
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
+use DevPro\Application\NationalHolidays;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
 use DevPro\Infrastructure\Holidays\AbstractApiClient;
+use DevPro\Infrastructure\Holidays\NationalHolidaysUsingAbstractApiClient;
 use DevPro\Infrastructure\Web\Controllers;
 use DevPro\Infrastructure\Web\WebApplication;
 use GuzzleHttp\Client;
@@ -35,6 +37,11 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
         }
 
         return new DevelopmentServiceContainer($containerConfiguration);
+    }
+
+    protected function nationalHolidays(): NationalHolidays
+    {
+        return new NationalHolidaysUsingAbstractApiClient($this->abstractApiClient());
     }
 
     private function controllers(): Controllers

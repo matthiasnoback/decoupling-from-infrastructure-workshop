@@ -8,7 +8,7 @@ use RuntimeException;
 
 final class CouldNotScheduleTraining extends RuntimeException
 {
-    public function becauseTheDateIsANationalHolidayInThisCountry(ScheduledDate $date, Country $country): self
+    public static function becauseTheDateIsANationalHolidayInThisCountry(ScheduledDate $date, Country $country): self
     {
         return new self(
             sprintf(

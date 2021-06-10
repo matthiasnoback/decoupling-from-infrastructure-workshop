@@ -6,7 +6,10 @@ namespace Test\UseCases;
 use DevPro\Application\ScheduleTraining;
 use DevPro\Application\UpcomingTraining;
 use DevPro\Application\Users\CreateOrganizer;
+use DevPro\Domain\Model\Training\CouldNotScheduleTraining;
 use DevPro\Domain\Model\User\UserId;
+use Exception;
+use PHPUnit\Framework\AssertionFailedError;
 
 final class SchedulingTest extends AbstractUseCaseTestCase
 {
@@ -73,12 +76,32 @@ final class SchedulingTest extends AbstractUseCaseTestCase
     public function theOrganizerTriesToScheduleATrainingOnANationalHoliday(): void
     {
         // Given "2020-12-25" is a national holiday in "NL"
+        $date = '2020-12-25';
+        $country = 'NL';
+        $this->container->nationalHolidays()->markAsHoliday($date, $country);
 
         // When the organizer tries to schedule a training on this date in this country
-
-        // Then they see a message "The date of the training is a national holiday"
-
-        $this->markTestIncomplete('TODO Assignment 6');
+        try {
+            $this->container->application()->scheduleTraining(
+                new ScheduleTraining(
+                    $this->theOrganizer()->asString(),
+                    $country,
+                    $this->aTitle(),
+                    $date . ' 09:30'
+                )
+            );
+            $this->fail('Expected this to fail');
+        } catch (AssertionFailedError $exception) {
+            throw $exception;
+        }
+        catch (Exception $exception) {
+            self::assertInstanceOf(CouldNotScheduleTraining::class, $exception);
+            // Then they see a message "The date of the training is a national holiday"
+            self::assertStringContainsString(
+                'The date of the training is a national holiday',
+                $exception->getMessage()
+            );
+        }
     }
 
     /**
@@ -101,5 +124,10 @@ final class SchedulingTest extends AbstractUseCaseTestCase
     private function aCountry(): string
     {
         return 'NL';
+    }
+
+    private function aTitle(): string
+    {
+        return 'A title';
     }
 }

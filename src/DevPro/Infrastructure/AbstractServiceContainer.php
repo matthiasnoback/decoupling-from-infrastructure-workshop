@@ -9,11 +9,11 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
+use DevPro\Application\NationalHolidays;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUserHandler;
 use DevPro\Application\Users\SecurityUsers;
 use DevPro\Domain\Model\Ticket\TicketRepository;
-use DevPro\Domain\Model\Training\TrainingRepository;
 use DevPro\Domain\Model\User\UserRepository;
 use DevPro\Infrastructure\Database\SchemaManager;
 use DevPro\Infrastructure\Database\SecurityUsersUsingDbal;
@@ -54,9 +54,12 @@ abstract class AbstractServiceContainer implements ServiceContainer
             $this->createOrganizerHandler(),
             $this->trainingRepository(),
             $this->eventDispatcher(),
-            $this->trainingRepository()
+            $this->trainingRepository(),
+            $this->nationalHolidays()
         );
     }
+
+    abstract protected function nationalHolidays(): NationalHolidays;
 
     private function eventDispatcher(): EventDispatcher
     {
