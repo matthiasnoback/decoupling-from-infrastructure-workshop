@@ -41,4 +41,9 @@ final class Date
     {
         return $this->dateTimeImmutable->format(self::DATE_FORMAT);
     }
+
+    public function asDateTimeImmutable(): DateTimeImmutable
+    {
+        return $this->dateTimeImmutable;
+    }
 }

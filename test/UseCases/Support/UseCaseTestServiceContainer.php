@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
+use DevPro\Domain\Model\Common\Date;
 use DevPro\Infrastructure\AbstractServiceContainer;
 use DevPro\Infrastructure\ContainerConfiguration;
 
@@ -28,7 +29,7 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
      */
     public function setCurrentDate(string $date): void
     {
-        $this->clock()->setCurrentDate($date);
+        $this->clock()->setCurrentDate(Date::fromString($date));
     }
 
     protected function registerSubscribers(EventDispatcher $eventDispatcher): void

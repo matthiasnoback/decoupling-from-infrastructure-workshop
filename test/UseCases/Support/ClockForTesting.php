@@ -3,26 +3,18 @@ declare(strict_types=1);
 
 namespace Test\UseCases\Support;
 
-use Assert\Assert;
 use DateTimeImmutable;
 use DevPro\Application\Clock;
+use DevPro\Domain\Model\Common\Date;
 use LogicException;
 
 final class ClockForTesting implements Clock
 {
-    public const DATE_FORMAT = 'Y-m-d';
-
     private ?DateTimeImmutable $dateTime;
 
-    /**
-     * @param string $date Use the format YYYY-MM-DD
-     */
-    public function setCurrentDate(string $date): void
+    public function setCurrentDate(Date $date): void
     {
-        $dateTime = DateTimeImmutable::createFromFormat(self::DATE_FORMAT, $date);;
-        Assert::that($dateTime)->isInstanceOf(DateTimeImmutable::class);
-
-        $this->dateTime = $dateTime;
+        $this->dateTime = $date->asDateTimeImmutable();
     }
 
     public function currentTime(): DateTimeImmutable
