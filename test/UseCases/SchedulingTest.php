@@ -38,18 +38,6 @@ final class SchedulingTest extends AbstractUseCaseTestCase
         $this->markTestIncomplete('TODO');
     }
 
-    /**
-     * @test
-     */
-    public function theOrganizerSchedulesATrainingOnANormalDay(): void
-    {
-        // Given "2020-12-23" is not a national holiday in "NL"
-        // When the organizer tries to schedule a training on this date in this country
-        // Then this training will be scheduled
-
-        $this->markTestIncomplete('TODO');
-    }
-
     private function theOrganizer(): UserId
     {
         return $this->container->application()->createOrganizer(new CreateOrganizer());
