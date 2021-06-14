@@ -14,6 +14,9 @@ final class ClockForTesting implements Clock
 
     private ?DateTimeImmutable $dateTime;
 
+    /**
+     * @param string $date Use the format YYYY-MM-DD
+     */
     public function setCurrentDate(string $date): void
     {
         $dateTime = DateTimeImmutable::createFromFormat(self::DATE_FORMAT, $date);;

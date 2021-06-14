@@ -24,6 +24,9 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
         $this->schemaManager()->truncateTables();
     }
 
+    /**
+     * @param string $date Use the format YYYY-MM-DD
+     */
     public function setCurrentDate(string $date): void
     {
         $this->clock()->setCurrentDate($date);
