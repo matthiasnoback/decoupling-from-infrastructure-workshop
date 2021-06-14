@@ -19,8 +19,12 @@ use DevPro\Infrastructure\Database\SchemaManager;
 use DevPro\Infrastructure\Database\SecurityUsersUsingDbal;
 use DevPro\Infrastructure\Database\TrainingRepositoryUsingDbal;
 use DevPro\Infrastructure\Database\UserRepositoryUsingDbal;
+use DevPro\Infrastructure\Holidays\AbstractApiClient;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
+use GuzzleHttp\Client;
+use GuzzleHttp\Handler\CurlHandler;
+use GuzzleHttp\HandlerStack;
 
 abstract class AbstractServiceContainer implements ServiceContainer
 {
@@ -124,5 +128,31 @@ abstract class AbstractServiceContainer implements ServiceContainer
     private function createOrganizerHandler(): CreateOrganizerHandler
     {
         return new CreateOrganizerHandler($this->userRepository(), $this->eventDispatcher());
+    }
+
+    protected function abstractApiClient(): AbstractApiClient
+    {
+        $handlerStack = HandlerStack::create($this->guzzleHttpHandler());
+
+        return new AbstractApiClient(
+            new Client(
+                [
+                    'handler' => $handlerStack,
+                    'http_errors' => false
+                ]
+            ),
+            $this->abstractApiBaseUrl(),
+            $this->containerConfiguration->abstractApiApiKey()
+        );
+    }
+
+    protected function guzzleHttpHandler(): callable
+    {
+        return new CurlHandler();
+    }
+
+    protected function abstractApiBaseUrl(): string
+    {
+        return 'https://holidays.abstractapi.com/v1/';
     }
 }

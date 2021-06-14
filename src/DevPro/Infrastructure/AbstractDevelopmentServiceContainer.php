@@ -6,12 +6,8 @@ namespace DevPro\Infrastructure;
 use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Clock;
 use DevPro\Infrastructure\Framework\TemplateRenderer;
-use DevPro\Infrastructure\Holidays\AbstractApiClient;
 use DevPro\Infrastructure\Web\Controllers;
 use DevPro\Infrastructure\Web\WebApplication;
-use GuzzleHttp\Client;
-use GuzzleHttp\Handler\CurlHandler;
-use GuzzleHttp\HandlerStack;
 use Test\Adapter\DevPro\Infrastructure\InputAdapterTestServiceContainer;
 use Test\Adapter\DevPro\Infrastructure\OutputAdapterTestServiceContainer;
 use Test\EndToEnd\EndToEndTestServiceContainer;
@@ -83,31 +79,5 @@ abstract class AbstractDevelopmentServiceContainer extends AbstractServiceContai
     public function webApplication(): WebApplication
     {
         return WebApplication::createFromGlobalsWithControllers($this->controllers());
-    }
-
-    protected function abstractApiClient(): AbstractApiClient
-    {
-        $handlerStack = HandlerStack::create($this->guzzleHttpHandler());
-
-        return new AbstractApiClient(
-            new Client(
-                [
-                    'handler' => $handlerStack,
-                    'http_errors' => false
-                ]
-            ),
-            $this->abstractApiBaseUrl(),
-            $this->containerConfiguration->abstractApiApiKey()
-        );
-    }
-
-    protected function guzzleHttpHandler(): callable
-    {
-        return new CurlHandler();
-    }
-
-    protected function abstractApiBaseUrl(): string
-    {
-        return 'https://holidays.abstractapi.com/v1/';
     }
 }

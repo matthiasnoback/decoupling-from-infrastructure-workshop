@@ -35,6 +35,12 @@ final class ContainerConfiguration
                 sys_get_temp_dir(),
                 self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
             );
+        } elseif ($environment === 'use_case_test') {
+            return new self(
+                'use_case_test',
+                sys_get_temp_dir(),
+                self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
+            );
         }
 
         return new self(
@@ -55,10 +61,10 @@ final class ContainerConfiguration
 
     public static function createForUseCaseTesting(): self
     {
-        return new self(
+        return self::create(
             'use_case_test',
             sys_get_temp_dir(),
-            null
+            getenv()
         );
     }
 
