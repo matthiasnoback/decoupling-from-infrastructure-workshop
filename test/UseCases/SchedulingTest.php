@@ -19,10 +19,9 @@ final class SchedulingTest extends AbstractUseCaseTestCase
     public function aScheduledTrainingShowsUpInUpcomingTrainings(): void
     {
         // When the organizer schedules a new training called "Decoupling from infrastructure" for "2020-01-24 09:30"
-        $this->markTestIncomplete('TODO Assignment 3');
 
         // Then it shows up on the list of upcoming trainings
-        $this->markTestIncomplete('TODO Assignment 5');
+        $this->markTestIncomplete('TODO');
     }
 
     /**
@@ -36,7 +35,7 @@ final class SchedulingTest extends AbstractUseCaseTestCase
 
         // Then they see a message "The date of the training is a national holiday"
 
-        $this->markTestIncomplete('TODO Assignment 6');
+        $this->markTestIncomplete('TODO');
     }
 
     /**
@@ -48,7 +47,7 @@ final class SchedulingTest extends AbstractUseCaseTestCase
         // When the organizer tries to schedule a training on this date in this country
         // Then this training will be scheduled
 
-        $this->markTestIncomplete('TODO Assignment 7');
+        $this->markTestIncomplete('TODO');
     }
 
     private function theOrganizer(): UserId

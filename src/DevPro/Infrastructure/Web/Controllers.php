@@ -74,7 +74,7 @@ final class Controllers
 
     public function scheduleTrainingController(): void
     {
-        // TODO assignment 7
+        // TODO
     }
 
     public function loginController(): void

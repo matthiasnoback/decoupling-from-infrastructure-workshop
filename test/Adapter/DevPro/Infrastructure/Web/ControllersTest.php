@@ -57,7 +57,7 @@ final class ControllersTest extends BrowserTest
     {
         $this->logInAsOrganizer();
 
-        $this->markTestIncomplete('TODO Assignment 7');
+        $this->markTestIncomplete('TODO');
     }
 
     private function logInAsOrganizer(): void
