@@ -17,12 +17,12 @@ include __DIR__ . '/_header.php';
                 <span class="help-block"><?php echo escape( $formErrors['title']); ?></span>
             <?php } ?>
         </div>
-        <div class="form-group<?php if (isset($formErrors['scheduled_date'])) { ?> has-error<?php } ?>">
-            <label class="control-label" for="scheduled_date">Scheduled date</label>
-            <input class="form-control" name="scheduled_date" id="scheduled_date" type="text"
-                   value="<?php echo escape($formData['scheduled_date']); ?>">
-            <?php if (isset($formErrors['scheduled_date'])) { ?>
-                <span class="help-block"><?php echo escape( $formErrors['scheduled_date']); ?></span>
+        <div class="form-group<?php if (isset($formErrors['scheduledDate'])) { ?> has-error<?php } ?>">
+            <label class="control-label" for="scheduledDate">Scheduled date</label>
+            <input class="form-control" name="scheduledDate" id="scheduledDate" type="text"
+                   value="<?php echo escape($formData['scheduledDate']); ?>">
+            <?php if (isset($formErrors['scheduledDate'])) { ?>
+                <span class="help-block"><?php echo escape( $formErrors['scheduledDate']); ?></span>
             <?php } ?>
         </div>
         <div class="form-group<?php if (isset($formErrors['country'])) { ?> has-error<?php } ?>">
