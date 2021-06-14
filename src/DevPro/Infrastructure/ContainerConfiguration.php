@@ -9,10 +9,10 @@ use RuntimeException;
 final class ContainerConfiguration
 {
     private string $environment;
-    private ?string $varDirectory;
-    private ?string $abstractApiApiKey;
+    private string $varDirectory;
+    private string $abstractApiApiKey;
 
-    private function __construct(string $environment, ?string $varDirectory, ?string $abstractApiApiKey)
+    private function __construct(string $environment, string $varDirectory, string $abstractApiApiKey)
     {
         $this->environment = $environment;
         $this->varDirectory = $varDirectory;
@@ -21,37 +21,17 @@ final class ContainerConfiguration
 
     public static function create(string $environment, string $projectRootDir, array $envVariables = []): self
     {
-        if ($environment === 'input_adapter_test') {
-            return new self(
-                'input_adapter_test',
-                sys_get_temp_dir(),
-                'not needed'
-            );
-        } else if ($environment === 'output_adapter_test') {
-            return new self(
-                'output_adapter_test',
-                sys_get_temp_dir(),
-                self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
-            );
-        } elseif ($environment === 'end_to_end_test') {
-            return new self(
-                'end_to_end_test',
-                sys_get_temp_dir(),
-                self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
-            );
-        } elseif ($environment === 'use_case_test') {
-            return new self(
-                'use_case_test',
-                sys_get_temp_dir(),
-                self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
-            );
+        $varDir = $projectRootDir . '/var';
+
+        if (in_array(
+            $environment,
+            ['input_adapter_test', 'output_adapter_test', 'end_to_end_test', 'use_case_test'],
+            true
+        )) {
+            $varDir = sys_get_temp_dir();
         }
 
-        return new self(
-            $environment,
-            $projectRootDir . '/var',
-            self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
-        );
+        return new self($environment, $varDir, self::getEnv($envVariables, 'ABSTRACT_API_API_KEY'));
     }
 
     public static function createForOutputAdapterTesting(): self
@@ -80,7 +60,6 @@ final class ContainerConfiguration
 
     public function varDirectory(): string
     {
-        Assert::that($this->varDirectory)->string('varDirectory has not been configured');
         Assert::that($this->varDirectory)->directory()->writeable();
 
         return $this->varDirectory;
@@ -88,8 +67,6 @@ final class ContainerConfiguration
 
     public function abstractApiApiKey(): string
     {
-        Assert::that($this->abstractApiApiKey)->string('AbstractApi API key has not been configured');
-
         return $this->abstractApiApiKey;
     }
 }
