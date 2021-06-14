@@ -5,6 +5,7 @@ namespace DevPro\Domain\Model\Training;
 
 use Assert\Assert;
 use DevPro\Domain\Model\Common\Country;
+use DevPro\Domain\Model\Common\DateAndTime;
 use DevPro\Domain\Model\Common\EventRecordingCapabilities;
 use DevPro\Domain\Model\User\UserId;
 
@@ -15,7 +16,7 @@ final class Training
     private TrainingId $trainingId;
     private UserId $organizerId;
     private string $title;
-    private ScheduledDate $scheduledDate;
+    private DateAndTime $scheduledDate;
     private Country $country;
 
     private function __construct()
@@ -27,7 +28,7 @@ final class Training
         UserId $organizerId,
         Country $country,
         string $title,
-        ScheduledDate $scheduledDate
+        DateAndTime $scheduledDate
     ): self {
         Assert::that($title)->notEmpty('Title should not be empty');
 
@@ -59,7 +60,7 @@ final class Training
         $training->organizerId = UserId::fromString($record['organizerId']);
         $training->country = Country::fromString($record['country']);
         $training->title = $record['title'];
-        $training->scheduledDate = ScheduledDate::fromString($record['scheduledDate']);
+        $training->scheduledDate = DateAndTime::fromString($record['scheduledDate']);
 
         return $training;
     }

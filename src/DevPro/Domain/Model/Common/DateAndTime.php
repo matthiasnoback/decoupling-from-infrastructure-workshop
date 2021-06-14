@@ -1,25 +1,25 @@
 <?php
 declare(strict_types=1);
 
-namespace DevPro\Domain\Model\Training;
+namespace DevPro\Domain\Model\Common;
 
 use Assert\Assert;
 use DateTimeImmutable;
 use InvalidArgumentException;
 use Throwable;
 
-final class ScheduledDate
+final class DateAndTime
 {
     public const DATE_TIME_FORMAT = 'Y-m-d H:i';
 
-    private string $dateTime;
+    private DateTimeImmutable $dateTime;
 
-    private function __construct(string $dateTime)
+    private function __construct(DateTimeImmutable $dateTime)
     {
         $this->dateTime = $dateTime;
     }
 
-    public static function fromString(string $dateTime): ScheduledDate
+    public static function fromString(string $dateTime): DateAndTime
     {
         try {
             $dateTimeImmutable = DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $dateTime);
@@ -36,44 +36,41 @@ final class ScheduledDate
             );
         }
 
-        return self::fromDateTime($dateTimeImmutable);
-    }
-
-    public static function fromDateTime(DateTimeImmutable $dateTime): ScheduledDate
-    {
-        return new self($dateTime->format(self::DATE_TIME_FORMAT));
+        return new self($dateTimeImmutable);
     }
 
     public function asString(): string
     {
-        return $this->dateTime;
+        return $this->dateTime->format(self::DATE_TIME_FORMAT);
+    }
+
+    public function asDate(): Date
+    {
+        return Date::fromDateTimeImmutable($this->dateTime);
     }
 
     public function isInTheFuture(DateTimeImmutable $now): bool
     {
-        return $now < $this->toDateTimeImmutable();
+        return $now < $this->dateTime;
     }
 
     public function toDateTimeImmutable(): DateTimeImmutable
     {
-        $dateTimeImmutable = DateTimeImmutable::createFromFormat(self::DATE_TIME_FORMAT, $this->dateTime);
-        Assert::that($dateTimeImmutable)->isInstanceOf(DateTimeImmutable::class);
-
-        return $dateTimeImmutable;
+        return $this->dateTime;
     }
 
     public function year(): int
     {
-        return (int)$this->toDateTimeImmutable()->format('Y');
+        return (int)$this->dateTime->format('Y');
     }
 
     public function month(): int
     {
-        return (int)$this->toDateTimeImmutable()->format('m');
+        return (int)$this->dateTime->format('m');
     }
 
     public function day(): int
     {
-        return (int)$this->toDateTimeImmutable()->format('d');
+        return (int)$this->dateTime->format('d');
     }
 }

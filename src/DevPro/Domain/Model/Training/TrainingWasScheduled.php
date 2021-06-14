@@ -5,6 +5,7 @@ namespace DevPro\Domain\Model\Training;
 
 use DateTimeImmutable;
 use DevPro\Domain\Model\Common\Country;
+use DevPro\Domain\Model\Common\DateAndTime;
 use DevPro\Domain\Model\User\UserId;
 
 final class TrainingWasScheduled
@@ -13,14 +14,14 @@ final class TrainingWasScheduled
     private UserId $organizerId;
     private Country $country;
     private string $title;
-    private ScheduledDate $scheduledDate;
+    private DateAndTime $scheduledDate;
 
     public function __construct(
         TrainingId $trainingId,
         UserId $organizerId,
         Country $country,
         string $title,
-        ScheduledDate $scheduledDate
+        DateAndTime $scheduledDate
     ) {
         $this->trainingId = $trainingId;
         $this->organizerId = $organizerId;
@@ -49,7 +50,7 @@ final class TrainingWasScheduled
         return $this->title;
     }
 
-    public function scheduledDate(): ScheduledDate
+    public function scheduledDate(): DateAndTime
     {
         return $this->scheduledDate;
     }
