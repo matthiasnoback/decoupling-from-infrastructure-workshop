@@ -20,7 +20,7 @@ final class AbstractApiClientTest extends TestCase
     protected function setUp(): void
     {
         $this->container = new OutputAdapterTestServiceContainer(
-            ContainerConfiguration::createForOutputAdapterTesting(getenv())
+            ContainerConfiguration::createForOutputAdapterTesting()
         );
 
         $this->client = $this->container->abstractApiClient();

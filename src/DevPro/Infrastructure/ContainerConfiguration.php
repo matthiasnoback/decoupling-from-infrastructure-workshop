@@ -28,7 +28,11 @@ final class ContainerConfiguration
                 'not needed'
             );
         } else if ($environment === 'output_adapter_test') {
-            return self::createForOutputAdapterTesting($envVariables);
+            return new self(
+                'output_adapter_test',
+                sys_get_temp_dir(),
+                self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
+            );
         } elseif ($environment === 'end_to_end_test') {
             return new self(
                 'end_to_end_test',
@@ -50,22 +54,14 @@ final class ContainerConfiguration
         );
     }
 
-    public static function createForOutputAdapterTesting(array $envVariables): self
+    public static function createForOutputAdapterTesting(): self
     {
-        return new self(
-            'output_adapter_test',
-            sys_get_temp_dir(),
-            self::getEnv($envVariables, 'ABSTRACT_API_API_KEY')
-        );
+        return self::create('output_adapter_test', sys_get_temp_dir(), getenv());
     }
 
     public static function createForUseCaseTesting(): self
     {
-        return self::create(
-            'use_case_test',
-            sys_get_temp_dir(),
-            getenv()
-        );
+        return self::create('use_case_test', sys_get_temp_dir(), getenv());
     }
 
     private static function getEnv(array $envVariables, string $key): string
