@@ -10,7 +10,6 @@ use DevPro\Infrastructure\ContainerConfiguration;
 final class UseCaseTestServiceContainer extends AbstractServiceContainer
 {
     private ?ClockForTesting $clock = null;
-    private ?EventSubscriberSpy $eventSubscriberSpy = null;
 
     public static function create(): self
     {
@@ -32,14 +31,6 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
         $this->clock()->setCurrentDate($date);
     }
 
-    /**
-     * @return array<object>
-     */
-    public function dispatchedEvents(): array
-    {
-        return $this->eventSubscriberSpy()->dispatchedEvents();
-    }
-
     protected function registerSubscribers(EventDispatcher $eventDispatcher): void
     {
         // Register subscribers that should be available in every environment in the parent method
@@ -47,19 +38,12 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
 
         // Register additional event subscribers that are only meant to be notified in a testing environment:
 
-        $eventDispatcher->subscribeToAllEvents($this->eventSubscriberSpy());
-
         $eventDispatcher->subscribeToAllEvents($this->eventPrinter());
     }
 
     protected function clock(): ClockForTesting
     {
         return $this->clock ?? $this->clock = new ClockForTesting();
-    }
-
-    private function eventSubscriberSpy(): EventSubscriberSpy
-    {
-        return $this->eventSubscriberSpy ?? $this->eventSubscriberSpy = new EventSubscriberSpy();
     }
 
     private function eventPrinter(): callable
