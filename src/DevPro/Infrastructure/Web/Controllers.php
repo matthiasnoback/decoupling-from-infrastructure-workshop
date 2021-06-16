@@ -106,6 +106,16 @@ final class Controllers
         );
     }
 
+    public function upcomingTrainingsController(): void
+    {
+        echo $this->templateRenderer->render(
+            __DIR__ . '/View/upcoming_trainings.php',
+            [
+                'trainings' => $this->application->findAllUpcomingTrainings()
+            ]
+        );
+    }
+
     public function loginController(): void
     {
         $formErrors = [];

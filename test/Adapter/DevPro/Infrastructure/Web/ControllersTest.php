@@ -86,6 +86,18 @@ final class ControllersTest extends BrowserTest
         $this->assertBrowserSession()->pageTextContains('Successfully scheduled a new training');
     }
 
+    /**
+     * @test
+     */
+    public function it_shows_upcoming_trainings(): void
+    {
+        $this->browserSession->visit($this->url('/upcomingTrainings'));
+        $this->assertResponseWasSuccessful();
+
+        $this->assertBrowserSession()->pageTextContains('The title of the training');
+        $this->assertBrowserSession()->pageTextContains('Another training');
+    }
+
     private function logInAsOrganizer(): void
     {
         $this->browserSession->visit($this->url('/login'));
