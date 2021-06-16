@@ -46,4 +46,19 @@ final class Date
     {
         return $this->dateTimeImmutable;
     }
+
+    public function year(): int
+    {
+        return (int)$this->dateTimeImmutable->format('Y');
+    }
+
+    public function month(): int
+    {
+        return (int)$this->dateTimeImmutable->format('m');
+    }
+
+    public function day(): int
+    {
+        return (int)$this->dateTimeImmutable->format('d');
+    }
 }
