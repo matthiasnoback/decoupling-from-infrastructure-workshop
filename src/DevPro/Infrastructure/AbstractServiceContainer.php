@@ -136,7 +136,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     private function scheduleTrainingHandler(): ScheduleTrainingHandler
     {
-        return new ScheduleTrainingHandler($this->trainingRepository());
+        return new ScheduleTrainingHandler($this->trainingRepository(), $this->abstractApiClient());
     }
 
     protected function abstractApiClient(): AbstractApiClient
