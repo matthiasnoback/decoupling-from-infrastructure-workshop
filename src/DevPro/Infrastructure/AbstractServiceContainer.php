@@ -9,6 +9,7 @@ use Common\EventDispatcher\EventDispatcher;
 use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
+use DevPro\Application\ScheduleTrainingHandler;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUserHandler;
 use DevPro\Application\Users\SecurityUsers;
@@ -55,7 +56,8 @@ abstract class AbstractServiceContainer implements ServiceContainer
     {
         return new Application(
             $this->createUserHandler(),
-            $this->createOrganizerHandler()
+            $this->createOrganizerHandler(),
+            $this->scheduleTrainingHandler()
         );
     }
 
@@ -128,6 +130,11 @@ abstract class AbstractServiceContainer implements ServiceContainer
     private function createOrganizerHandler(): CreateOrganizerHandler
     {
         return new CreateOrganizerHandler($this->userRepository(), $this->eventDispatcher());
+    }
+
+    private function scheduleTrainingHandler(): ScheduleTrainingHandler
+    {
+        return new ScheduleTrainingHandler($this->trainingRepository());
     }
 
     protected function abstractApiClient(): AbstractApiClient

@@ -15,13 +15,16 @@ final class Application implements ApplicationInterface
 {
     private CreateUserHandler $createUserHandler;
     private CreateOrganizerHandler $createOrganizerHandler;
+    private ScheduleTrainingHandler $scheduleTrainingHandler;
 
     public function __construct(
         CreateUserHandler $createUserHandler,
-        CreateOrganizerHandler $createOrganizerHandler
+        CreateOrganizerHandler $createOrganizerHandler,
+        ScheduleTrainingHandler $scheduleTrainingHandler
     ) {
         $this->createUserHandler = $createUserHandler;
         $this->createOrganizerHandler = $createOrganizerHandler;
+        $this->scheduleTrainingHandler = $scheduleTrainingHandler;
     }
 
     public function createUser(CreateUser $command): UserId
@@ -36,7 +39,7 @@ final class Application implements ApplicationInterface
 
     public function scheduleTraining(ScheduleTraining $command): TrainingId
     {
-        throw new BadMethodCallException('Not implemented');
+        return $this->scheduleTrainingHandler->handle($command);
     }
 
     public function findAllUpcomingTrainings(): array
