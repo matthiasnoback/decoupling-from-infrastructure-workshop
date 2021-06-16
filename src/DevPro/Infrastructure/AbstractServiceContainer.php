@@ -111,7 +111,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     protected function trainingRepository(): TrainingRepository
     {
-        return new TrainingRepositoryUsingDbal($this->connection());
+        return new TrainingRepositoryUsingDbal($this->connection(), $this->clock());
     }
 
     protected function ticketRepository(): TicketRepository
@@ -167,6 +167,6 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     private function upcomingTrainings(): UpcomingTrainings
     {
-        return new TrainingRepositoryUsingDbal($this->connection());
+        return new TrainingRepositoryUsingDbal($this->connection(), $this->clock());
     }
 }

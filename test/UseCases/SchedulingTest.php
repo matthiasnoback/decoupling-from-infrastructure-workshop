@@ -35,7 +35,37 @@ final class SchedulingTest extends AbstractUseCaseTestCase
         self::assertContains(
             $title,
             array_map(
-                fn (UpcomingTraining $upcomingTraining) => $upcomingTraining->title(),
+                fn(UpcomingTraining $upcomingTraining) => $upcomingTraining->title(),
+                $this->container->application()->findAllUpcomingTrainings()
+            )
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function theDateOfTheTrainingIsInThePast(): void
+    {
+        // Given a training was scheduled for 2020-01-01
+        $date = '2020-01-01';
+        $title = 'A title';
+        $this->container->application()->scheduleTraining(
+            new ScheduleTraining(
+                $this->theOrganizer()->asString(),
+                'NL',
+                $title,
+                $date . ' 09:30'
+            )
+        );
+
+        // When today is 2020-01-02
+        $this->container->setCurrentDate('2020-01-02');
+
+        // Then the training does not show up in the list of upcoming trainings
+        self::assertNotContains(
+            $title,
+            array_map(
+                fn(UpcomingTraining $upcomingTraining) => $upcomingTraining->title(),
                 $this->container->application()->findAllUpcomingTrainings()
             )
         );

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace DevPro\Infrastructure\Database;
 
 use Assert\Assert;
+use DevPro\Application\Clock;
 use DevPro\Application\UpcomingTraining;
 use DevPro\Application\UpcomingTrainings;
 use DevPro\Domain\Model\Training\Training;
@@ -17,10 +18,12 @@ use RuntimeException;
 final class TrainingRepositoryUsingDbal implements TrainingRepository, UpcomingTrainings
 {
     private Connection $connection;
+    private Clock $clock;
 
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, Clock $clock)
     {
         $this->connection = $connection;
+        $this->clock = $clock;
     }
 
     public function save(Training $training): void
@@ -56,7 +59,10 @@ final class TrainingRepositoryUsingDbal implements TrainingRepository, UpcomingT
     public function findAllUpcomingTrainings(): array
     {
         $result = $this->connection->executeQuery(
-            'SELECT * FROM trainings'
+            'SELECT * FROM trainings WHERE scheduledDate > ?',
+            [
+                $this->clock->currentTime()->format('Y-m-d')
+            ]
         );
         Assert::that($result)->isInstanceOf(Result::class);
 
