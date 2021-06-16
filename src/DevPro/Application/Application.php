@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace DevPro\Application;
 
-use BadMethodCallException;
 use DevPro\Application\Users\CreateOrganizer;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUser;
@@ -16,15 +15,18 @@ final class Application implements ApplicationInterface
     private CreateUserHandler $createUserHandler;
     private CreateOrganizerHandler $createOrganizerHandler;
     private ScheduleTrainingHandler $scheduleTrainingHandler;
+    private UpcomingTrainings $upcomingTrainings;
 
     public function __construct(
         CreateUserHandler $createUserHandler,
         CreateOrganizerHandler $createOrganizerHandler,
-        ScheduleTrainingHandler $scheduleTrainingHandler
+        ScheduleTrainingHandler $scheduleTrainingHandler,
+        UpcomingTrainings $upcomingTrainings
     ) {
         $this->createUserHandler = $createUserHandler;
         $this->createOrganizerHandler = $createOrganizerHandler;
         $this->scheduleTrainingHandler = $scheduleTrainingHandler;
+        $this->upcomingTrainings = $upcomingTrainings;
     }
 
     public function createUser(CreateUser $command): UserId
@@ -44,6 +46,6 @@ final class Application implements ApplicationInterface
 
     public function findAllUpcomingTrainings(): array
     {
-        return [];
+        return $this->upcomingTrainings->findAllUpcomingTrainings();
     }
 }

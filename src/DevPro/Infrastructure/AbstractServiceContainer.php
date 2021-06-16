@@ -10,6 +10,7 @@ use DevPro\Application\Application;
 use DevPro\Application\ApplicationInterface;
 use DevPro\Application\Clock;
 use DevPro\Application\ScheduleTrainingHandler;
+use DevPro\Application\UpcomingTrainings;
 use DevPro\Application\Users\CreateOrganizerHandler;
 use DevPro\Application\Users\CreateUserHandler;
 use DevPro\Application\Users\SecurityUsers;
@@ -57,7 +58,8 @@ abstract class AbstractServiceContainer implements ServiceContainer
         return new Application(
             $this->createUserHandler(),
             $this->createOrganizerHandler(),
-            $this->scheduleTrainingHandler()
+            $this->scheduleTrainingHandler(),
+            $this->upcomingTrainings()
         );
     }
 
@@ -161,5 +163,10 @@ abstract class AbstractServiceContainer implements ServiceContainer
     protected function abstractApiBaseUrl(): string
     {
         return 'https://holidays.abstractapi.com/v1/';
+    }
+
+    private function upcomingTrainings(): UpcomingTrainings
+    {
+        return new TrainingRepositoryUsingDbal($this->connection());
     }
 }
