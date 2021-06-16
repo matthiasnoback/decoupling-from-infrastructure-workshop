@@ -12,4 +12,9 @@ interface ApplicationInterface
     public function createUser(CreateUser $command): UserId;
 
     public function createOrganizer(CreateOrganizer $command): UserId;
+
+    /**
+     * @return array<UpcomingTraining>
+     */
+    public function findAllUpcomingTrainings(): array;
 }
