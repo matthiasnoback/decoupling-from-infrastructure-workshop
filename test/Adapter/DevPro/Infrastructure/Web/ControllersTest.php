@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Test\Adapter\DevPro\Infrastructure\Web;
 
+use DevPro\Application\ScheduleTraining;
 use DevPro\Application\Users\CreateUser;
 use Test\Adapter\DevPro\Infrastructure\ApplicationSpy;
+use Test\Adapter\DevPro\Infrastructure\HardCodedSecurityUsers;
 use Test\Common\BrowserTest;
 
 final class ControllersTest extends BrowserTest
@@ -57,7 +59,31 @@ final class ControllersTest extends BrowserTest
     {
         $this->logInAsOrganizer();
 
-        $this->markTestIncomplete('TODO');
+        $this->browserSession->visit($this->url('/scheduleTraining'));
+        $this->assertResponseWasSuccessful();
+
+        $page = $this->browserSession->getPage();
+        $country = 'NL';
+        $page->fillField('country', $country);
+        $title = 'The training';
+        $page->fillField('title', $title);
+        $scheduledDate = '2021-06-16 09:30';
+        $page->fillField('scheduledDate', $scheduledDate);
+        $page->pressButton('Submit');
+
+        $this->assertResponseWasSuccessful();
+        $this->assertThatCommandWasProcessed(
+            new ScheduleTraining(
+                HardCodedSecurityUsers::ORGANIZER_ID,
+                $country,
+                $title,
+                $scheduledDate
+            )
+        );
+
+        $this->followRedirect();
+
+        $this->assertBrowserSession()->pageTextContains('Successfully scheduled a new training');
     }
 
     private function logInAsOrganizer(): void

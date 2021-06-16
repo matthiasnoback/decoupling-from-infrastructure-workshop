@@ -33,7 +33,9 @@ final class ApplicationSpy implements ApplicationInterface
 
     public function scheduleTraining(ScheduleTraining $command): TrainingId
     {
-        throw new BadMethodCallException('Not implemented');
+        $this->recordThatCommandWasSent($command);
+
+        return TrainingId::fromString('2c647990-5cae-47e0-9981-8e1fcc4290b5');
     }
 
     public function findAllUpcomingTrainings(): array
