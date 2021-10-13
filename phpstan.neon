@@ -7,7 +7,7 @@ parameters:
         - test/
     checkMissingIterableValueType: false
     excludes_analyse:
-        - src/DevPro/Infrastructure/Web/View
+        - src/MeetupOrganizing/Infrastructure/Web/View
     reportUnmatchedIgnoredErrors: false
 includes:
     - vendor/phpstan/phpstan-beberlei-assert/extension.neon

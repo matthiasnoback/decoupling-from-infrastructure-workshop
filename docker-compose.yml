@@ -37,7 +37,7 @@ services:
     fake_abstractapi:
         image: matthiasnoback/decoupling-from-infrastructure-workshop-web
         volumes:
-            - ./test/Adapter/DevPro/Infrastructure/Holidays/Fixtures:/app
+            - ./test/Adapter/MeetupOrganizing/Infrastructure/Holidays/Fixtures:/app
         ports:
             - 8081:8080
         command: ./

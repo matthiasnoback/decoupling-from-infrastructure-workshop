@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
-use DevPro\Domain\Model\Common\Date;
-use DevPro\Infrastructure\AbstractServiceContainer;
-use DevPro\Infrastructure\ContainerConfiguration;
+use MeetupOrganizing\Domain\Model\Common\Date;
+use MeetupOrganizing\Infrastructure\AbstractServiceContainer;
+use MeetupOrganizing\Infrastructure\ContainerConfiguration;
 
 final class UseCaseTestServiceContainer extends AbstractServiceContainer
 {

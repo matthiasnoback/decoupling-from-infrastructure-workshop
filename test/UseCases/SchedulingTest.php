@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace Test\UseCases;
 
-use DevPro\Application\Users\CreateOrganizer;
-use DevPro\Domain\Model\User\UserId;
+use MeetupOrganizing\Application\Users\CreateOrganizer;
+use MeetupOrganizing\Domain\Model\User\UserId;
 
 final class SchedulingTest extends AbstractUseCaseTestCase
 {
@@ -16,24 +16,24 @@ final class SchedulingTest extends AbstractUseCaseTestCase
     /**
      * @test
      */
-    public function aScheduledTrainingShowsUpInUpcomingTrainings(): void
+    public function aScheduledMeetupShowsUpInUpcomingMeetups(): void
     {
-        // When the organizer schedules a new training called "Decoupling from infrastructure" for "2020-01-24 09:30"
+        // When the organizer schedules a new meetup called "Decoupling from infrastructure" for "2020-01-24 20:00"
 
-        // Then it shows up on the list of upcoming trainings
+        // Then it shows up on the list of upcoming meetups
         $this->markTestIncomplete('TODO');
     }
 
     /**
      * @test
      */
-    public function theOrganizerTriesToScheduleATrainingOnANationalHoliday(): void
+    public function theOrganizerTriesToScheduleAMeetupOnANationalHoliday(): void
     {
         // Given "2020-12-25" is a national holiday in "NL"
 
-        // When the organizer tries to schedule a training on this date in this country
+        // When the organizer tries to schedule a meetup on this date in this country
 
-        // Then they see a message "The date of the training is a national holiday"
+        // Then they see a message "The date of the meetup is a national holiday"
 
         $this->markTestIncomplete('TODO');
     }

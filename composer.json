@@ -37,6 +37,6 @@
             "Test\\Common\\": "test/Common",
             "": "test/Unit"
         },
-        "files": ["src/DevPro/Infrastructure/Framework/functions.php"]
+        "files": ["src/MeetupOrganizing/Infrastructure/Framework/functions.php"]
     }
 }

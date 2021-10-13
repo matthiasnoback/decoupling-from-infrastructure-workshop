@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use DevPro\Infrastructure\AbstractDevelopmentServiceContainer;
-use DevPro\Infrastructure\ContainerConfiguration;
+use MeetupOrganizing\Infrastructure\AbstractDevelopmentServiceContainer;
+use MeetupOrganizing\Infrastructure\ContainerConfiguration;
 use Symfony\Component\ErrorHandler\Debug;
 
 require __DIR__ . '/../vendor/autoload.php';

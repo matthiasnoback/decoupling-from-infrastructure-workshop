@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Test\UseCases\Support;
 
 use DateTimeImmutable;
-use DevPro\Application\Clock;
-use DevPro\Domain\Model\Common\Date;
+use MeetupOrganizing\Application\Clock;
+use MeetupOrganizing\Domain\Model\Common\Date;
 use LogicException;
 
 final class ClockForTesting implements Clock

@@ -3,7 +3,7 @@ parameters:
 		-
 			message: "#^Unable to resolve the template type T in call to method static method Doctrine\\\\DBAL\\\\DriverManager\\:\\:getConnection\\(\\)$#"
 			count: 1
-			path: src/DevPro/Infrastructure/AbstractDevelopmentServiceContainer.php
+			path: src/MeetupOrganizing/Infrastructure/AbstractDevelopmentServiceContainer.php
 
 		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
