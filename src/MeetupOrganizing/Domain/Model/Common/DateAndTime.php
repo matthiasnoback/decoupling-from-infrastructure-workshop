@@ -10,7 +10,7 @@ use Throwable;
 
 final class DateAndTime
 {
-    public const DATE_TIME_FORMAT = 'Y-m-d H:i';
+    public const DATE_TIME_FORMAT = 'Y-m-d\TH:i';
 
     private DateTimeImmutable $dateTime;
 

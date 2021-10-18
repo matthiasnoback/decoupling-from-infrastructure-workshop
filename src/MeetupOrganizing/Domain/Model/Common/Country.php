@@ -19,6 +19,14 @@ final class Country
         $this->countryCode = $countryCode;
     }
 
+    /**
+     * @return array<string>
+     */
+    public static function codeAndNames(): array
+    {
+        return Countries::getNames();
+    }
+
     public static function fromString(string $countryCode): self
     {
         return new self($countryCode);

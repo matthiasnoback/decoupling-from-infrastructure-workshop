@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Test\UseCases;
 
+use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
+use MeetupOrganizing\Application\Meetups\UpcomingMeetup;
 use MeetupOrganizing\Application\Users\CreateOrganizer;
 use MeetupOrganizing\Domain\Model\User\UserId;
 
@@ -19,9 +21,22 @@ final class SchedulingTest extends AbstractUseCaseTestCase
     public function aScheduledMeetupShowsUpInUpcomingMeetups(): void
     {
         // When the organizer schedules a new meetup called "Decoupling from infrastructure" for "2020-01-24 20:00"
+        $title = 'Decoupling from infrastructure';
+        $this->container->application()->scheduleMeetup(
+            new ScheduleMeetup(
+                $this->theOrganizer()->asString(),
+                $this->aCountryCode(),
+                $title,
+                '2020-01-24T20:00'
+            )
+        );
 
         // Then it shows up on the list of upcoming meetups
-        $this->markTestIncomplete('TODO');
+        $allTitles = array_map(
+            fn (UpcomingMeetup $upcomingMeetup) => $upcomingMeetup->title(),
+            $this->container->application()->upcomingMeetups()
+        );
+        self::assertContains($title, $allTitles);
     }
 
     /**
@@ -41,5 +56,10 @@ final class SchedulingTest extends AbstractUseCaseTestCase
     private function theOrganizer(): UserId
     {
         return $this->container->application()->createOrganizer(new CreateOrganizer());
+    }
+
+    private function aCountryCode(): string
+    {
+        return 'NL';
     }
 }

@@ -9,6 +9,8 @@ use Common\EventDispatcher\EventDispatcher;
 use MeetupOrganizing\Application\Application;
 use MeetupOrganizing\Application\ApplicationInterface;
 use MeetupOrganizing\Application\Clock;
+use MeetupOrganizing\Application\Meetups\ScheduleMeetupHandler;
+use MeetupOrganizing\Application\Meetups\UpcomingMeetupRepository;
 use MeetupOrganizing\Application\Users\CreateOrganizerHandler;
 use MeetupOrganizing\Application\Users\CreateUserHandler;
 use MeetupOrganizing\Application\Users\SecurityUsers;
@@ -18,6 +20,7 @@ use MeetupOrganizing\Domain\Model\User\UserRepository;
 use MeetupOrganizing\Infrastructure\Database\SchemaManager;
 use MeetupOrganizing\Infrastructure\Database\SecurityUsersUsingDbal;
 use MeetupOrganizing\Infrastructure\Database\MeetupRepositoryUsingDbal;
+use MeetupOrganizing\Infrastructure\Database\UpcomingMeetupRepositoryUsingDbal;
 use MeetupOrganizing\Infrastructure\Database\UserRepositoryUsingDbal;
 use MeetupOrganizing\Infrastructure\Holidays\AbstractApiClient;
 use Doctrine\DBAL\Connection;
@@ -55,7 +58,9 @@ abstract class AbstractServiceContainer implements ServiceContainer
     {
         return new Application(
             $this->createUserHandler(),
-            $this->createOrganizerHandler()
+            $this->createOrganizerHandler(),
+            $this->scheduleMeetupHandler(),
+            $this->upcomingMeetupRepository()
         );
     }
 
@@ -120,6 +125,11 @@ abstract class AbstractServiceContainer implements ServiceContainer
         return new SecurityUsersUsingDbal($this->connection());
     }
 
+    private function upcomingMeetupRepository(): UpcomingMeetupRepository
+    {
+        return new UpcomingMeetupRepositoryUsingDbal($this->connection(), $this->clock());
+    }
+
     private function createUserHandler(): CreateUserHandler
     {
         return new CreateUserHandler($this->userRepository(), $this->eventDispatcher());
@@ -128,6 +138,11 @@ abstract class AbstractServiceContainer implements ServiceContainer
     private function createOrganizerHandler(): CreateOrganizerHandler
     {
         return new CreateOrganizerHandler($this->userRepository(), $this->eventDispatcher());
+    }
+
+    private function scheduleMeetupHandler(): ScheduleMeetupHandler
+    {
+        return new ScheduleMeetupHandler($this->meetupRepository());
     }
 
     protected function abstractApiClient(): AbstractApiClient

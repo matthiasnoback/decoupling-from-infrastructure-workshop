@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace MeetupOrganizing\Infrastructure\Web;
 
 use MeetupOrganizing\Application\ApplicationInterface;
+use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Users\CouldNotFindSecurityUser;
 use MeetupOrganizing\Application\Users\CreateUser;
 use MeetupOrganizing\Application\Users\SecurityUsers;
@@ -39,7 +40,12 @@ final class Controllers
             $username = 'world';
         }
 
-        echo $this->templateRenderer->render(__DIR__ . '/View/index.php', ['username' => $username]);
+        $upcomingMeetups = $this->application->upcomingMeetups();
+
+        echo $this->templateRenderer->render(__DIR__ . '/View/index.php', [
+            'username' => $username,
+            'upcomingMeetups' => $upcomingMeetups
+        ]);
     }
 
     public function registerUserController(): void
@@ -74,7 +80,46 @@ final class Controllers
 
     public function scheduleMeetupController(): void
     {
-        // TODO
+        if (!$this->isUserLoggedIn()) {
+            $this->session->addErrorFlash('In order to schedule a meetup you need to log in first');
+            header('Location: /login');
+            exit;
+        }
+
+        $formErrors = [];
+        $formData = ['country' => 'NL', 'title' => '', 'scheduledDate' => date('Y-m-d H:i')];
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $formData = array_merge($formData, $_POST);
+
+            if ($formData['title'] === '') {
+                $formErrors['title'] = 'Please provide a title';
+            }
+
+            if ($formErrors === []) {
+                $this->application->scheduleMeetup(
+                    new ScheduleMeetup(
+                        $this->getLoggedInUser()->id(),
+                        $formData['country'],
+                        $formData['title'],
+                        $formData['scheduledDate']
+                    )
+                );
+
+                $this->session->addSuccessFlash('You have scheduled a new meetup');
+
+                header('Location: /');
+                exit;
+            }
+        }
+
+        echo $this->templateRenderer->render(
+            __DIR__ . '/View/schedule_meetup.php',
+            [
+                'formData' => $formData,
+                'formErrors' => $formErrors
+            ]
+        );
     }
 
     public function loginController(): void
@@ -120,5 +165,10 @@ final class Controllers
         }
 
         return $loggedInUser;
+    }
+
+    private function isUserLoggedIn(): bool
+    {
+        return $this->session->get('logged_in_user') instanceof SecurityUser;
     }
 }

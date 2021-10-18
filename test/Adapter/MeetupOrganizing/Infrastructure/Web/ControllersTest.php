@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace Test\Adapter\MeetupOrganizing\Infrastructure\Web;
 
+use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
 use Test\Adapter\MeetupOrganizing\Infrastructure\ApplicationSpy;
+use Test\Adapter\MeetupOrganizing\Infrastructure\HardCodedSecurityUsers;
 use Test\Common\BrowserTest;
 
 final class ControllersTest extends BrowserTest
@@ -57,7 +59,28 @@ final class ControllersTest extends BrowserTest
     {
         $this->logInAsOrganizer();
 
-        $this->markTestIncomplete('TODO');
+        $this->browserSession->visit($this->url('/scheduleMeetup'));
+        $this->assertResponseWasSuccessful();
+
+        $page = $this->browserSession->getPage();
+        $page->fillField('title', 'Decoupling from infrastructure');
+        $page->fillField('country', 'NL');
+        $page->fillField('scheduledDate', '2020-01-24T20:00');
+        $page->pressButton('Submit');
+
+        $this->assertResponseWasSuccessful();
+        $this->assertThatCommandWasProcessed(
+            new ScheduleMeetup(
+            HardCodedSecurityUsers::ORGANIZER_ID,
+                'NL',
+                'Decoupling from infrastructure',
+                '2020-01-24T20:00'
+            )
+        );
+
+        $this->followRedirect();
+
+        $this->assertBrowserSession()->pageTextContains('You have scheduled a new meetup');
     }
 
     private function logInAsOrganizer(): void
