@@ -17,4 +17,9 @@ final class CouldNotScheduleMeetup extends RuntimeException
             )
         );
     }
+
+    public static function becauseTheUserIsNoOrganizer(): self
+    {
+        return new self('Could not schedule meetup because the user is no organizer');
+    }
 }

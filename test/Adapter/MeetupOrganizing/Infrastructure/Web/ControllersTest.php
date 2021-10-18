@@ -35,17 +35,18 @@ final class ControllersTest extends BrowserTest
      * @test
      * @see Controllers::registerUserController()
      */
-    public function it_calls_the_application_to_register_a_user(): void
+    public function it_calls_the_application_to_register_an_organizer(): void
     {
         $this->browserSession->visit($this->url('/registerUser'));
         $this->assertResponseWasSuccessful();
 
         $page = $this->browserSession->getPage();
         $page->fillField('username', 'Matthias');
+        $page->checkField('isOrganizer');
         $page->pressButton('Submit');
 
         $this->assertResponseWasSuccessful();
-        $this->assertThatCommandWasProcessed(new CreateUser('Matthias'));
+        $this->assertThatCommandWasProcessed(new CreateUser('Matthias', true));
 
         $this->followRedirect();
 

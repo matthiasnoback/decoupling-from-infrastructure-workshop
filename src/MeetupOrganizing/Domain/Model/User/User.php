@@ -18,7 +18,7 @@ final class User
     {
     }
 
-    public static function createNormalUser(UserId $userId, string $username): self
+    public static function create(UserId $userId, string $username, bool $isOrganizer): self
     {
         $instance = new self();
 
@@ -26,18 +26,7 @@ final class User
 
         $instance->userId = $userId;
         $instance->username = $username;
-        $instance->isOrganizer = false;
-
-        return $instance;
-    }
-
-    public static function createOrganizer(UserId $userId): self
-    {
-        $instance = new self();
-
-        $instance->userId = $userId;
-        $instance->username = 'Organizer';
-        $instance->isOrganizer = true;
+        $instance->isOrganizer = $isOrganizer;
 
         return $instance;
     }
@@ -65,5 +54,10 @@ final class User
         $instance->isOrganizer = (bool)$data['isOrganizer'];
 
         return $instance;
+    }
+
+    public function isOrganizer(): bool
+    {
+        return $this->isOrganizer;
     }
 }

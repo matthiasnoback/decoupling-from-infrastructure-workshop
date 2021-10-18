@@ -23,9 +23,10 @@ final class CreateUserHandler
 
     public function handle(CreateUser $command): UserId
     {
-        $user = User::createNormalUser(
+        $user = User::create(
             $this->userRepository->nextIdentity(),
-            $command->username()
+            $command->username(),
+            $command->isOrganizer()
         );
 
         $this->userRepository->save($user);

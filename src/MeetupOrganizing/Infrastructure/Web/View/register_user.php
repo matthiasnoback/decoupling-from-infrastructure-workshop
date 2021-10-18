@@ -17,6 +17,11 @@ include __DIR__ . '/_header.php';
                 <span class="help-block"><?php echo escape( $formErrors['username']); ?></span>
             <?php } ?>
         </div>
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="isOrganizer" id="isOrganizer"<?php if ($formData['isOrganizer']) { ?> checked<?php } ?>> Register as organizer
+            </label>
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 <?php

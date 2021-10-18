@@ -11,7 +11,6 @@ use MeetupOrganizing\Application\ApplicationInterface;
 use MeetupOrganizing\Application\Clock;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetupHandler;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetupRepository;
-use MeetupOrganizing\Application\Users\CreateOrganizerHandler;
 use MeetupOrganizing\Application\Users\CreateUserHandler;
 use MeetupOrganizing\Application\Users\SecurityUsers;
 use MeetupOrganizing\Domain\Model\Rsvp\RsvpRepository;
@@ -58,7 +57,6 @@ abstract class AbstractServiceContainer implements ServiceContainer
     {
         return new Application(
             $this->createUserHandler(),
-            $this->createOrganizerHandler(),
             $this->scheduleMeetupHandler(),
             $this->upcomingMeetupRepository()
         );
@@ -135,14 +133,9 @@ abstract class AbstractServiceContainer implements ServiceContainer
         return new CreateUserHandler($this->userRepository(), $this->eventDispatcher());
     }
 
-    private function createOrganizerHandler(): CreateOrganizerHandler
-    {
-        return new CreateOrganizerHandler($this->userRepository(), $this->eventDispatcher());
-    }
-
     private function scheduleMeetupHandler(): ScheduleMeetupHandler
     {
-        return new ScheduleMeetupHandler($this->meetupRepository());
+        return new ScheduleMeetupHandler($this->meetupRepository(), $this->userRepository());
     }
 
     protected function abstractApiClient(): AbstractApiClient

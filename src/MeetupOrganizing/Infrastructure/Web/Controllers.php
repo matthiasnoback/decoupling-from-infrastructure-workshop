@@ -50,8 +50,13 @@ final class Controllers
 
     public function registerUserController(): void
     {
+        if ($this->isUserLoggedIn()) {
+            header('Location: /');
+            exit;
+        }
+
         $formErrors = [];
-        $formData = ['username' => ''];
+        $formData = ['username' => '', 'isOrganizer' => false];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $formData = array_merge($formData, $_POST);
@@ -61,7 +66,12 @@ final class Controllers
             }
 
             if (empty($formErrors)) {
-                $this->application->createUser(new CreateUser($_POST['username']));
+                $this->application->createUser(
+                    new CreateUser(
+                        $_POST['username'],
+                        isset($_POST['isOrganizer'])
+                    )
+                );
                 $this->session->addSuccessFlash('Registration was successful');
 
                 header('Location: /');
@@ -124,6 +134,11 @@ final class Controllers
 
     public function loginController(): void
     {
+        if ($this->isUserLoggedIn()) {
+            header('Location: /');
+            exit;
+        }
+
         $formErrors = [];
         $formData = ['username' => ''];
 

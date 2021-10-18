@@ -5,7 +5,7 @@ namespace Test\UseCases;
 
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetup;
-use MeetupOrganizing\Application\Users\CreateOrganizer;
+use MeetupOrganizing\Application\Users\CreateUser;
 use MeetupOrganizing\Domain\Model\User\UserId;
 
 final class SchedulingTest extends AbstractUseCaseTestCase
@@ -55,7 +55,7 @@ final class SchedulingTest extends AbstractUseCaseTestCase
 
     private function theOrganizer(): UserId
     {
-        return $this->container->application()->createOrganizer(new CreateOrganizer());
+        return $this->container->application()->createUser(new CreateUser('Organizer', true));
     }
 
     private function aCountryCode(): string
