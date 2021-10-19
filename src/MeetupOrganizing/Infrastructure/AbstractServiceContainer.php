@@ -9,13 +9,14 @@ use Common\EventDispatcher\EventDispatcher;
 use MeetupOrganizing\Application\Application;
 use MeetupOrganizing\Application\ApplicationInterface;
 use MeetupOrganizing\Application\Clock;
+use MeetupOrganizing\Application\Meetups\MeetupDetailsRepository;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetupHandler;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetupRepository;
 use MeetupOrganizing\Application\Users\CreateUserHandler;
 use MeetupOrganizing\Application\Users\SecurityUsers;
-use MeetupOrganizing\Domain\Model\Rsvp\RsvpRepository;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupRepository;
 use MeetupOrganizing\Domain\Model\User\UserRepository;
+use MeetupOrganizing\Infrastructure\Database\MeetupDetailsRepositoryUsingDbal;
 use MeetupOrganizing\Infrastructure\Database\SchemaManager;
 use MeetupOrganizing\Infrastructure\Database\SecurityUsersUsingDbal;
 use MeetupOrganizing\Infrastructure\Database\MeetupRepositoryUsingDbal;
@@ -58,7 +59,8 @@ abstract class AbstractServiceContainer implements ServiceContainer
         return new Application(
             $this->createUserHandler(),
             $this->scheduleMeetupHandler(),
-            $this->upcomingMeetupRepository()
+            $this->upcomingMeetupRepository(),
+            $this->meetupDetailsRepository(),
         );
     }
 
@@ -113,11 +115,6 @@ abstract class AbstractServiceContainer implements ServiceContainer
         return new MeetupRepositoryUsingDbal($this->connection());
     }
 
-    protected function rsvpRepository(): RsvpRepository
-    {
-        throw new BadMethodCallException('Not implemented yet');
-    }
-
     protected function securityUsers(): SecurityUsers
     {
         return new SecurityUsersUsingDbal($this->connection());
@@ -126,6 +123,11 @@ abstract class AbstractServiceContainer implements ServiceContainer
     private function upcomingMeetupRepository(): UpcomingMeetupRepository
     {
         return new UpcomingMeetupRepositoryUsingDbal($this->connection(), $this->clock());
+    }
+
+    private function meetupDetailsRepository(): MeetupDetailsRepository
+    {
+        return new MeetupDetailsRepositoryUsingDbal($this->connection());
     }
 
     private function createUserHandler(): CreateUserHandler

@@ -48,11 +48,19 @@ final class Controllers
         ]);
     }
 
+    public function meetupDetailsController(): void
+    {
+        $meetupDetails = $this->application->meetupDetails($_GET['id']);
+
+        echo $this->templateRenderer->render(__DIR__ . '/View/meetup_details.php', [
+            'meetupDetails' => $meetupDetails
+        ]);
+    }
+
     public function registerUserController(): void
     {
         if ($this->isUserLoggedIn()) {
-            header('Location: /');
-            exit;
+            $this->redirectTo('/');
         }
 
         $formErrors = [];
@@ -74,8 +82,7 @@ final class Controllers
                 );
                 $this->session->addSuccessFlash('Registration was successful');
 
-                header('Location: /');
-                exit;
+                $this->redirectTo('/');
             }
         }
 
@@ -92,18 +99,20 @@ final class Controllers
     {
         if (!$this->isUserLoggedIn()) {
             $this->session->addErrorFlash('In order to schedule a meetup you need to log in first');
-            header('Location: /login');
-            exit;
+            $this->redirectTo('/login');
         }
 
         $formErrors = [];
-        $formData = ['country' => 'NL', 'title' => '', 'scheduledDate' => date('Y-m-d H:i')];
+        $formData = ['country' => 'NL', 'title' => '', 'description' => '', 'scheduledDate' => date('Y-m-d 20:00')];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $formData = array_merge($formData, $_POST);
 
             if ($formData['title'] === '') {
                 $formErrors['title'] = 'Please provide a title';
+            }
+            if ($formData['description'] === '') {
+                $formErrors['description'] = 'Please provide a description';
             }
 
             if ($formErrors === []) {
@@ -112,14 +121,14 @@ final class Controllers
                         $this->getLoggedInUser()->id(),
                         $formData['country'],
                         $formData['title'],
+                        $formData['description'],
                         $formData['scheduledDate']
                     )
                 );
 
                 $this->session->addSuccessFlash('You have scheduled a new meetup');
 
-                header('Location: /');
-                exit;
+                $this->redirectTo('/');
             }
         }
 
@@ -135,8 +144,7 @@ final class Controllers
     public function loginController(): void
     {
         if ($this->isUserLoggedIn()) {
-            header('Location: /');
-            exit;
+            $this->redirectTo('/');
         }
 
         $formErrors = [];
@@ -154,8 +162,7 @@ final class Controllers
                     $securityUser = $this->getSecurityUser->getByUsername($_POST['username'] ?? '');
                     $this->session->set('logged_in_user', $securityUser);
                     $this->session->addSuccessFlash('You have successfully logged in');
-                    header('Location: /');
-                    exit;
+                    $this->redirectTo('/');
                 } catch (CouldNotFindSecurityUser $exception) {
                     $formErrors['username'] = 'Invalid username';
                 }
@@ -169,6 +176,12 @@ final class Controllers
                 'formErrors' => $formErrors
             ]
         );
+    }
+
+    public function logoutController(): void
+    {
+        $this->session->clear();
+        $this->redirectTo('/');
     }
 
     private function getLoggedInUser(): SecurityUser
@@ -185,5 +198,11 @@ final class Controllers
     private function isUserLoggedIn(): bool
     {
         return $this->session->get('logged_in_user') instanceof SecurityUser;
+    }
+
+    private function redirectTo(string $url): void
+    {
+        header('Location: ' . $url);
+        exit;
     }
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Test\Adapter\MeetupOrganizing\Infrastructure;
 
 use MeetupOrganizing\Application\ApplicationInterface;
+use MeetupOrganizing\Application\Meetups\MeetupDetails;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
+use MeetupOrganizing\Application\Meetups\UpcomingMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupId;
 use MeetupOrganizing\Domain\Model\User\UserId;
@@ -33,7 +35,18 @@ final class ApplicationSpy implements ApplicationInterface
 
     public function upcomingMeetups(): array
     {
-        return [];
+        return [
+            new UpcomingMeetup(
+                '8db7f6ed-adc0-46f6-8f0c-b97c0f3821e3',
+                '2020-01-24T20:00',
+                'Decoupling from infrastructure'
+            )
+        ];
+    }
+
+    public function meetupDetails(string $meetupId): MeetupDetails
+    {
+        return new MeetupDetails('2020-01-24T20:00', 'Decoupling from infrastructure', 'Should be interesting');
     }
 
     private function recordThatCommandWasSent(object $command): void

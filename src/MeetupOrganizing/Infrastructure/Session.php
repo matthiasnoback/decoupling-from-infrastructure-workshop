@@ -67,4 +67,13 @@ final class Session
 
         return $flashes;
     }
+
+    public function clear(): void
+    {
+        // Preserve flashes
+        $unsetKeys = array_diff(array_keys($this->sessionData), ['flashes']);
+        foreach ($unsetKeys as $key) {
+            unset($this->sessionData[$key]);
+        }
+    }
 }

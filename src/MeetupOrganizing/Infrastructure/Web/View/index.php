@@ -20,12 +20,13 @@ if ($upcomingMeetups === []) {
 
 foreach ($upcomingMeetups as $upcomingMeetup) {
     ?>
-    <div class="panel panel-default">
+    <div class="panel panel-default meetup">
         <div class="panel-heading">
             <h3 class="panel-title"><?php echo escape($upcomingMeetup->title()); ?></h3>
         </div>
         <div class="panel-body">
-            <?php echo escape($upcomingMeetup->dateAndTime()); ?>
+            <p><?php echo escape($upcomingMeetup->dateAndTime()); ?></p>
+            <p><a href="/meetupDetails?id=<?php echo escape($upcomingMeetup->id()); ?>" class="btn btn-success">Details</a></p>
         </div>
     </div>
 <?php

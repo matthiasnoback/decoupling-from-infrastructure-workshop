@@ -5,19 +5,19 @@ namespace MeetupOrganizing\Application\Meetups;
 
 use MeetupOrganizing\Domain\Model\Common\Mapping;
 
-final class UpcomingMeetup
+final class MeetupDetails
 {
     use Mapping;
 
-    private string $id;
     private string $dateAndTime;
     private string $title;
+    private string $description;
 
-    public function __construct(string $id, string $dateAndTime, string $title)
+    public function __construct(string $dateAndTime, string $title, string $description)
     {
-        $this->id = $id;
         $this->dateAndTime = $dateAndTime;
         $this->title = $title;
+        $this->description = $description;
     }
 
     /**
@@ -26,15 +26,10 @@ final class UpcomingMeetup
     public static function fromDatabaseRecord(array $record): self
     {
         return new self(
-            self::getString($record, 'id'),
             self::getString($record, 'scheduledDate'),
-            self::getString($record, 'title')
+            self::getString($record, 'title'),
+            self::getString($record, 'description')
         );
-    }
-
-    public function id(): string
-    {
-        return $this->id;
     }
 
     public function dateAndTime(): string
@@ -45,5 +40,10 @@ final class UpcomingMeetup
     public function title(): string
     {
         return $this->title;
+    }
+
+    public function description(): string
+    {
+        return $this->description;
     }
 }

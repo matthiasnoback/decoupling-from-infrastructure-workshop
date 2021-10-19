@@ -19,6 +19,13 @@ include __DIR__ . '/_header.php';
                 <span class="help-block"><?php echo escape( $formErrors['title']); ?></span>
             <?php } ?>
         </div>
+        <div class="form-group<?php if (isset($formErrors['description'])) { ?> has-error<?php } ?>">
+            <label class="control-label" for="description">Description</label>
+            <textarea class="form-control" name="description" id="description" required><?php echo escape($formData['description']); ?></textarea>
+            <?php if (isset($formErrors['description'])) { ?>
+                <span class="help-block"><?php echo escape( $formErrors['description']); ?></span>
+            <?php } ?>
+        </div>
         <div class="form-group<?php if (isset($formErrors['scheduledDate'])) { ?> has-error<?php } ?>">
             <label class="control-label" for="scheduledDate">Scheduled date</label>
             <input class="form-control" name="scheduledDate" id="scheduledDate" type="datetime-local"

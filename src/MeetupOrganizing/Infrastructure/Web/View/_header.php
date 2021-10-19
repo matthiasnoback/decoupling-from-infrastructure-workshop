@@ -14,6 +14,7 @@
             <li><a href="/login">Login</a></li>
             <li><a href="/registerUser">Register</a></li>
             <li><a href="/scheduleMeetup">Schedule a meetup</a></li>
+            <li><a href="/logout">Logout</a></li>
         </ul>
 
     </div>

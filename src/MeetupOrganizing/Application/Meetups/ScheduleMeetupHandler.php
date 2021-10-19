@@ -32,6 +32,7 @@ final class ScheduleMeetupHandler
             $organizer->userId(),
             $command->countryCode(),
             $command->title(),
+            $command->description(),
             $command->scheduledDate()
         );
 

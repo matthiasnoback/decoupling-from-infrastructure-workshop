@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace MeetupOrganizing\Application;
 
+use MeetupOrganizing\Application\Meetups\MeetupDetails;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
@@ -19,4 +20,6 @@ interface ApplicationInterface
      * @return array<UpcomingMeetup>
      */
     public function upcomingMeetups(): array;
+
+    public function meetupDetails(string $meetupId): MeetupDetails;
 }

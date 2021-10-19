@@ -7,15 +7,18 @@ use Assert\Assert;
 use MeetupOrganizing\Domain\Model\Common\Country;
 use MeetupOrganizing\Domain\Model\Common\DateAndTime;
 use MeetupOrganizing\Domain\Model\Common\EventRecordingCapabilities;
+use MeetupOrganizing\Domain\Model\Common\Mapping;
 use MeetupOrganizing\Domain\Model\User\UserId;
 
 final class Meetup
 {
+    use Mapping;
     use EventRecordingCapabilities;
 
     private MeetupId $meetupId;
     private UserId $organizerId;
     private string $title;
+    private string $description;
     private DateAndTime $scheduledDate;
     private Country $country;
 
@@ -28,9 +31,11 @@ final class Meetup
         UserId $organizerId,
         Country $country,
         string $title,
+        string $description,
         DateAndTime $scheduledDate
     ): self {
         Assert::that($title)->notEmpty('Title should not be empty');
+        Assert::that($description)->notEmpty('Description should not be empty');
 
         $meetup = new self();
 
@@ -38,6 +43,7 @@ final class Meetup
         $meetup->organizerId = $organizerId;
         $meetup->country = $country;
         $meetup->title = $title;
+        $meetup->description = $description;
         $meetup->scheduledDate = $scheduledDate;
 
         $meetup->recordThat(
@@ -56,11 +62,12 @@ final class Meetup
     {
         $meetup = new self();
 
-        $meetup->meetupId = MeetupId::fromString($record['id']);
-        $meetup->organizerId = UserId::fromString($record['organizerId']);
-        $meetup->country = Country::fromString($record['country']);
-        $meetup->title = $record['title'];
-        $meetup->scheduledDate = DateAndTime::fromString($record['scheduledDate']);
+        $meetup->meetupId = MeetupId::fromString(self::getString($record, 'id'));
+        $meetup->organizerId = UserId::fromString(self::getString($record, 'organizerId'));
+        $meetup->country = Country::fromString(self::getString($record, 'country'));
+        $meetup->title = self::getString($record, 'title');
+        $meetup->description = self::getString($record, 'description');
+        $meetup->scheduledDate = DateAndTime::fromString(self::getString($record, 'scheduledDate'));
 
         return $meetup;
     }
@@ -72,6 +79,7 @@ final class Meetup
             'organizerId' => $this->organizerId->asString(),
             'country' => $this->country->asString(),
             'title' => $this->title,
+            'description' => $this->description,
             'scheduledDate' => $this->scheduledDate->asString()
         ];
     }

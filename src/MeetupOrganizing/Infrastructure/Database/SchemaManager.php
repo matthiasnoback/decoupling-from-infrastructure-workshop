@@ -45,6 +45,7 @@ final class SchemaManager
         $meetups->addColumn('id', 'string');
         $meetups->addColumn('organizerId', 'string');
         $meetups->addColumn('title', 'string');
+        $meetups->addColumn('description', 'string');
         $meetups->addColumn('scheduledDate', 'string');
         $meetups->addColumn('country', 'string');
         $meetups->setPrimaryKey(['id']);

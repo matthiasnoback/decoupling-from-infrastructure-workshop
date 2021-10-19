@@ -12,13 +12,20 @@ final class ScheduleMeetup
     private string $organizerId;
     private string $countryCode;
     private string $title;
+    private string $description;
     private string $scheduledDate;
 
-    public function __construct(string $organizerId, string $countryCode, string $title, string $scheduledDate)
-    {
+    public function __construct(
+        string $organizerId,
+        string $countryCode,
+        string $title,
+        string $description,
+        string $scheduledDate
+    ) {
         $this->organizerId = $organizerId;
         $this->countryCode = $countryCode;
         $this->title = $title;
+        $this->description = $description;
         $this->scheduledDate = $scheduledDate;
     }
 
@@ -40,5 +47,10 @@ final class ScheduleMeetup
     public function title(): string
     {
         return $this->title;
+    }
+
+    public function description(): string
+    {
+        return $this->description;
     }
 }
