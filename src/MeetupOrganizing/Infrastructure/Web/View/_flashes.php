@@ -6,7 +6,7 @@ declare(strict_types=1);
 foreach ($session->getFlashes() as $type => $flashes) {
     foreach ($flashes as $message) {
         ?>
-        <div class="alert alert-<?php echo escape($type); ?>"><?php echo escape($message); ?></div>
+        <div class="flash alert alert-<?php echo escape($type); ?>"><?php echo escape($message); ?></div>
         <?php
     }
 }

@@ -141,6 +141,20 @@ final class Controllers
         );
     }
 
+    public function rsvpToMeetupController(): void
+    {
+        if (!$this->isUserLoggedIn()) {
+            $this->session->addErrorFlash('You need to log in in order to RSVP to a meetup');
+            $this->redirectTo('/login');
+        }
+
+        $meetupId = $_POST['meetupId'];
+
+        // @TODO implement
+
+        $this->redirectTo('/meetupDetails?meetupId=' . $meetupId);
+    }
+
     public function loginController(): void
     {
         if ($this->isUserLoggedIn()) {

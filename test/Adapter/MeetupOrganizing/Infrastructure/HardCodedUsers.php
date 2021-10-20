@@ -11,16 +11,19 @@ use MeetupOrganizing\Domain\Model\User\UserId;
 final class HardCodedUsers implements Users
 {
     public const ORGANIZER_ID = 'e5c53d97-3c09-4b84-b376-8c7f3bdf2622';
+    public const ORGANIZER_USERNAME = 'Organizer';
+
     public const USER_ID = '7c78026b-47f6-4e05-b2e4-4270d7c567e1';
+    public const USER_USERNAME = 'User';
 
     private const RECORDS = [
         [
             'userId' => self::ORGANIZER_ID,
-            'username' => 'Organizer'
+            'username' => self::ORGANIZER_USERNAME
         ],
         [
             'userId' => self::USER_ID,
-            'username' => 'User'
+            'username' => self::USER_USERNAME
         ]
     ];
 

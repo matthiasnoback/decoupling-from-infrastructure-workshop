@@ -30,7 +30,7 @@ final class ControllersTest extends BrowserTest
         $page->fillField('username', '');
         $page->pressButton('Submit');
 
-        $this->assertBrowserSession()->pageTextContains('Username should not be empty');
+        $this->assertFormHasError('Username should not be empty');
     }
 
     /**
@@ -53,7 +53,7 @@ final class ControllersTest extends BrowserTest
 
         $this->followRedirect();
 
-        $this->assertBrowserSession()->pageTextContains('Registration was successful');
+        $this->assertFlashMessageContains('Registration was successful');
     }
 
     /**
@@ -88,46 +88,72 @@ final class ControllersTest extends BrowserTest
 
         $this->followRedirect();
 
-        $this->assertBrowserSession()->pageTextContains('You have scheduled a new meetup');
+        $this->assertFlashMessageContains('You have scheduled a new meetup');
     }
 
     /**
      * @test
+     *
+     * @see Controllers::indexController()
+     * @see Controllers::meetupDetailsController()
      * @see ApplicationSpy::upcomingMeetups()
      * @see ApplicationSpy::meetupDetails()
      */
     public function you_can_look_at_the_details_of_a_meetup(): void
     {
-        $this->browserSession->visit($this->url('/'));
-        $this->assertResponseWasSuccessful();
+        $this->goToListOfUpcomingMeetups();
 
-        $page = $this->browserSession->getPage();
-        // Go to meetup details page
-        $meetupElement = $page->find('css', '.meetup');
-        self::assertNotNull($meetupElement);
-        $meetupElement->clickLink('Details');
+        $this->goToMeetupDetailsPage();
 
         $this->assertBrowserSession()->pageTextContains('Should be interesting');
     }
 
+    /**
+     * @test
+     *
+     * @see Controllers::rsvpToMeetupController()
+     * @see ApplicationSpy::upcomingMeetups()
+     * @see ApplicationSpy::meetupDetails()
+     */
+    public function you_can_rsvp_to_a_meetup_on_the_meetup_details_page(): void
+    {
+        $this->loginAsUser();
+
+        $this->goToListOfUpcomingMeetups();
+
+        $this->goToMeetupDetailsPage();
+
+        $this->markTestIncomplete('TODO implement Controllers::rsvpToMeetupController');
+
+//        $this->browserSession->getPage()->pressButton('RSVP');
+//
+//        $this->assertFlashMessageContains('You have RSVPed to this meetup');
+//
+//        $this->followRedirect();
+//
+//        $this->assertBrowserSession()->elementTextContains('css', 'attendees-list', 'User');
+    }
+
+    /**
+     * @see Controllers::loginController()
+     */
     private function logInAsOrganizer(): void
     {
-        $this->browserSession->visit($this->url('/login'));
-        $this->assertResponseWasSuccessful();
-
-        $page = $this->browserSession->getPage();
-        $page->fillField('username', 'Organizer');
-        $page->pressButton('Submit');
-        $this->assertResponseWasSuccessful();
+        $this->logInAs(HardCodedUsers::ORGANIZER_USERNAME);
     }
 
     private function logInAsUser(): void
     {
+        $this->logInAs(HardCodedUsers::USER_USERNAME);
+    }
+
+    private function logInAs(string $username): void
+    {
         $this->browserSession->visit($this->url('/login'));
         $this->assertResponseWasSuccessful();
 
         $page = $this->browserSession->getPage();
-        $page->fillField('username', 'User');
+        $page->fillField('username', $username);
         $page->pressButton('Submit');
         $this->assertResponseWasSuccessful();
     }
@@ -163,5 +189,30 @@ final class ControllersTest extends BrowserTest
                 $this->browserSession->getPage()->getText()
             )
         );
+    }
+
+    private function goToListOfUpcomingMeetups(): void
+    {
+        $this->browserSession->visit($this->url('/'));
+        $this->assertResponseWasSuccessful();
+    }
+
+    private function goToMeetupDetailsPage(): void
+    {
+        $page = $this->browserSession->getPage();
+        // Go to meetup details page
+        $meetupElement = $page->find('css', '.meetup');
+        self::assertNotNull($meetupElement);
+        $meetupElement->clickLink('Details');
+    }
+
+    private function assertFormHasError(string $expectedError): void
+    {
+        $this->assertBrowserSession()->elementTextContains('css', 'form', $expectedError);
+    }
+
+    private function assertFlashMessageContains(string $expectedMessage): void
+    {
+        $this->assertBrowserSession()->elementTextContains('css', '.flash', $expectedMessage);
     }
 }

@@ -46,7 +46,12 @@ final class ApplicationSpy implements ApplicationInterface
 
     public function meetupDetails(string $meetupId): MeetupDetails
     {
-        return new MeetupDetails('2020-01-24T20:00', 'Decoupling from infrastructure', 'Should be interesting');
+        return new MeetupDetails(
+            '8db7f6ed-adc0-46f6-8f0c-b97c0f3821e3',
+            '2020-01-24T20:00',
+            'Decoupling from infrastructure',
+            'Should be interesting'
+        );
     }
 
     private function recordThatCommandWasSent(object $command): void
