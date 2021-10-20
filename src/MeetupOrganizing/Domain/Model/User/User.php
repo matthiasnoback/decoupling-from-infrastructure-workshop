@@ -56,6 +56,9 @@ final class User
         ];
     }
 
+    /**
+     * @see SchemaManager::addUsersTable()
+     */
     public static function fromDatabaseRecord(array $data): self
     {
         $instance = new self();

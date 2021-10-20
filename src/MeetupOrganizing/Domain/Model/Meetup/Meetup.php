@@ -64,6 +64,13 @@ final class Meetup
         return $this->meetupId;
     }
 
+    /**
+     * @param array<string,string|null> $meetupRecord
+     * @param array<array<string,string|null>> $rsvpRecords
+     *
+     * @see SchemaManager::addMeetupsTable()
+     * @see SchemaManager::addRsvpsTable()
+     */
     public static function fromDatabaseRecord(array $meetupRecord, array $rsvpRecords): self
     {
         $meetup = new self();
