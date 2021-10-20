@@ -125,13 +125,12 @@ final class ControllersTest extends BrowserTest
 
         $this->markTestIncomplete('TODO implement Controllers::rsvpToMeetupController');
 
-//        $this->browserSession->getPage()->pressButton('RSVP');
-//
-//        $this->assertFlashMessageContains('You have RSVPed to this meetup');
-//
-//        $this->followRedirect();
-//
-//        $this->assertBrowserSession()->elementTextContains('css', 'attendees-list', 'User');
+        //$this->browserSession->getPage()->pressButton('RSVP');
+        //$this->assertResponseWasSuccessful();
+        //$this->assertThatCommandWasProcessed(...);
+
+        //$this->followRedirect();
+        //$this->assertFlashMessageContains('You have RSVPed to this meetup');
     }
 
     /**
