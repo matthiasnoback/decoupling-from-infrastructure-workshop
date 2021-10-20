@@ -9,13 +9,13 @@ final class UpcomingMeetup
 {
     use Mapping;
 
-    private string $id;
+    private string $meetupId;
     private string $dateAndTime;
     private string $title;
 
-    public function __construct(string $id, string $dateAndTime, string $title)
+    public function __construct(string $meetupId, string $dateAndTime, string $title)
     {
-        $this->id = $id;
+        $this->meetupId = $meetupId;
         $this->dateAndTime = $dateAndTime;
         $this->title = $title;
     }
@@ -26,15 +26,15 @@ final class UpcomingMeetup
     public static function fromDatabaseRecord(array $record): self
     {
         return new self(
-            self::getString($record, 'id'),
+            self::getString($record, 'meetupId'),
             self::getString($record, 'scheduledDate'),
             self::getString($record, 'title')
         );
     }
 
-    public function id(): string
+    public function meetupId(): string
     {
-        return $this->id;
+        return $this->meetupId;
     }
 
     public function dateAndTime(): string

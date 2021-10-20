@@ -23,7 +23,7 @@ final class MeetupDetailsRepositoryUsingDbal implements MeetupDetailsRepository
     public function getMeetupDetails(MeetupId $meetupId): MeetupDetails
     {
         $result = $this->connection->executeQuery(
-            'SELECT * FROM meetups WHERE id = ?',
+            'SELECT * FROM meetups WHERE meetupId = ?',
             [
                 $meetupId->asString()
             ]

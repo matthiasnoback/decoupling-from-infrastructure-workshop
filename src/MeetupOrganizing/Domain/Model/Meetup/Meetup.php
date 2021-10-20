@@ -62,7 +62,7 @@ final class Meetup
     {
         $meetup = new self();
 
-        $meetup->meetupId = MeetupId::fromString(self::getString($record, 'id'));
+        $meetup->meetupId = MeetupId::fromString(self::getString($record, 'meetupId'));
         $meetup->organizerId = UserId::fromString(self::getString($record, 'organizerId'));
         $meetup->country = Country::fromString(self::getString($record, 'country'));
         $meetup->title = self::getString($record, 'title');
@@ -75,7 +75,7 @@ final class Meetup
     public function getDatabaseRecordData(): array
     {
         return [
-            'id' => $this->meetupId->asString(),
+            'meetupId' => $this->meetupId->asString(),
             'organizerId' => $this->organizerId->asString(),
             'country' => $this->country->asString(),
             'title' => $this->title,

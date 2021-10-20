@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace MeetupOrganizing\Infrastructure\Database;
 
 use Assert\Assert;
+use MeetupOrganizing\Domain\Model\User\CouldNotFindUser;
 use MeetupOrganizing\Domain\Model\User\User;
 use MeetupOrganizing\Domain\Model\User\UserId;
 use MeetupOrganizing\Domain\Model\User\UserRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result;
 use Ramsey\Uuid\Uuid;
-use RuntimeException;
 
 final class UserRepositoryUsingDbal implements UserRepository
 {
@@ -29,7 +29,7 @@ final class UserRepositoryUsingDbal implements UserRepository
     public function getById(UserId $userId): User
     {
         $result = $this->connection->executeQuery(
-            'SELECT * FROM users WHERE id = ?',
+            'SELECT * FROM users WHERE userId = ?',
             [
                 $userId->asString()
             ]
@@ -38,9 +38,7 @@ final class UserRepositoryUsingDbal implements UserRepository
 
         $record = $result->fetchAssociative();
         if ($record === false) {
-            throw new RuntimeException(
-                sprintf('Could not find user with ID "%s"', $userId->asString())
-            );
+            throw CouldNotFindUser::withId($userId);
         }
 
         return User::fromDatabaseRecord($record);

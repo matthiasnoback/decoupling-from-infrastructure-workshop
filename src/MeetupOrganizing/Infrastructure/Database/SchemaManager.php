@@ -36,19 +36,24 @@ final class SchemaManager
         $schema = new Schema();
 
         $users = $schema->createTable('users');
-        $users->addColumn('id', 'string');
+        $users->addColumn('userId', 'string');
         $users->addColumn('username', 'string');
         $users->addColumn('isOrganizer', 'boolean');
-        $users->setPrimaryKey(['id']);
+        $users->setPrimaryKey(['userId']);
 
         $meetups = $schema->createTable('meetups');
-        $meetups->addColumn('id', 'string');
+        $meetups->addColumn('meetupId', 'string');
         $meetups->addColumn('organizerId', 'string');
         $meetups->addColumn('title', 'string');
         $meetups->addColumn('description', 'string');
         $meetups->addColumn('scheduledDate', 'string');
         $meetups->addColumn('country', 'string');
-        $meetups->setPrimaryKey(['id']);
+        $meetups->setPrimaryKey(['meetupId']);
+
+        $rsvps = $schema->createTable('rsvps');
+        $rsvps->addColumn('rsvpId', 'string');
+        $rsvps->addColumn('meetupId', 'string');
+        $rsvps->setPrimaryKey(['rsvpId', 'meetupId']);
 
         // Here you can add your own tables to the schema
 

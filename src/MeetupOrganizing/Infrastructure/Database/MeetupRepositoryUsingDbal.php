@@ -28,7 +28,7 @@ final class MeetupRepositoryUsingDbal implements MeetupRepository
             // The meetup already exists
 
             $this->connection->update('meetups', $meetup->getDatabaseRecordData(), [
-                'id' => $meetup->meetupId()->asString()
+                'meetupId' => $meetup->meetupId()->asString()
             ]);
         } catch (CouldNotFindMeetup $exception) {
             $this->connection->insert('meetups', $meetup->getDatabaseRecordData());
@@ -38,7 +38,7 @@ final class MeetupRepositoryUsingDbal implements MeetupRepository
     public function getById(MeetupId $meetupId): Meetup
     {
         $result = $this->connection->executeQuery(
-            'SELECT * FROM meetups WHERE id = ?',
+            'SELECT * FROM meetups WHERE meetupId = ?',
             [
                 $meetupId->asString()
             ]

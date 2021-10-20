@@ -5,18 +5,18 @@ namespace MeetupOrganizing\Application\Users;
 
 final class SecurityUser
 {
-    private string $id;
+    private string $userId;
     private string $username;
 
-    public function __construct(string $id, string $username)
+    public function __construct(string $userId, string $username)
     {
-        $this->id = $id;
+        $this->userId = $userId;
         $this->username = $username;
     }
 
-    public function id(): string
+    public function userId(): string
     {
-        return $this->id;
+        return $this->userId;
     }
 
     public function username(): string

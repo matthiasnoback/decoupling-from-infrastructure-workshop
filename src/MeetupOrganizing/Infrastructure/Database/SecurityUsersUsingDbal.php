@@ -19,21 +19,21 @@ final class SecurityUsersUsingDbal implements SecurityUsers
         $this->connection = $connection;
     }
 
-    public function getByUsername(string $name): SecurityUser
+    public function getByUsername(string $username): SecurityUser
     {
         $result = $this->connection->executeQuery(
             'SELECT * FROM users WHERE username = ?',
             [
-                $name
+                $username
             ]
         );
         Assert::that($result)->isInstanceOf(Result::class);
 
         $record = $result->fetchAssociative();
         if ($record === false) {
-            throw CouldNotFindSecurityUser::withUsername($name);
+            throw CouldNotFindSecurityUser::withUsername($username);
         }
 
-        return new SecurityUser($record['id'], $record['username']);
+        return new SecurityUser($record['userId'], $record['username']);
     }
 }

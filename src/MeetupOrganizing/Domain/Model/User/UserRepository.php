@@ -10,7 +10,7 @@ interface UserRepository
     public function save(User $user): void;
 
     /**
-     * @throws RuntimeException When the entity could not be found
+     * @throws CouldNotFindUser When the entity could not be found
      */
     public function getById(UserId $userId): User;
 

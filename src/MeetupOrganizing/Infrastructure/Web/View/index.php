@@ -26,7 +26,7 @@ foreach ($upcomingMeetups as $upcomingMeetup) {
         </div>
         <div class="panel-body">
             <p><?php echo escape($upcomingMeetup->dateAndTime()); ?></p>
-            <p><a href="/meetupDetails?id=<?php echo escape($upcomingMeetup->id()); ?>" class="btn btn-success">Details</a></p>
+            <p><a href="/meetupDetails?meetupId=<?php echo escape($upcomingMeetup->meetupId()); ?>" class="btn btn-success">Details</a></p>
         </div>
     </div>
 <?php

@@ -50,7 +50,7 @@ final class Controllers
 
     public function meetupDetailsController(): void
     {
-        $meetupDetails = $this->application->meetupDetails($_GET['id']);
+        $meetupDetails = $this->application->meetupDetails($_GET['meetupId']);
 
         echo $this->templateRenderer->render(__DIR__ . '/View/meetup_details.php', [
             'meetupDetails' => $meetupDetails
@@ -118,7 +118,7 @@ final class Controllers
             if ($formErrors === []) {
                 $this->application->scheduleMeetup(
                     new ScheduleMeetup(
-                        $this->getLoggedInUser()->id(),
+                        $this->getLoggedInUser()->userId(),
                         $formData['country'],
                         $formData['title'],
                         $formData['description'],

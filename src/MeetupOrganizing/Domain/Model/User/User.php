@@ -39,7 +39,7 @@ final class User
     public function getDatabaseRecordData(): array
     {
         return [
-            'id' => $this->userId->asString(),
+            'userId' => $this->userId->asString(),
             'username' => $this->username,
             'isOrganizer' => $this->isOrganizer
         ];
@@ -49,7 +49,7 @@ final class User
     {
         $instance = new self();
 
-        $instance->userId = UserId::fromString($data['id']);
+        $instance->userId = UserId::fromString($data['userId']);
         $instance->username = $data['username'];
         $instance->isOrganizer = (bool)$data['isOrganizer'];
 
