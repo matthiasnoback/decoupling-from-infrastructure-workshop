@@ -35,12 +35,28 @@ final class SchemaManager
     {
         $schema = new Schema();
 
+        $this->addUsersTable($schema);
+
+        $this->addMeetupsTable($schema);
+
+        $this->addRsvpsTable($schema);
+
+        // Here you can add your own tables to the schema
+
+        return $schema;
+    }
+
+    private function addUsersTable(Schema $schema): void
+    {
         $users = $schema->createTable('users');
         $users->addColumn('userId', 'string');
         $users->addColumn('username', 'string');
         $users->addColumn('isOrganizer', 'boolean');
         $users->setPrimaryKey(['userId']);
+    }
 
+    private function addMeetupsTable(Schema $schema): void
+    {
         $meetups = $schema->createTable('meetups');
         $meetups->addColumn('meetupId', 'string');
         $meetups->addColumn('organizerId', 'string');
@@ -49,14 +65,13 @@ final class SchemaManager
         $meetups->addColumn('scheduledDate', 'string');
         $meetups->addColumn('country', 'string');
         $meetups->setPrimaryKey(['meetupId']);
+    }
 
+    private function addRsvpsTable(Schema $schema): void
+    {
         $rsvps = $schema->createTable('rsvps');
         $rsvps->addColumn('attendeeId', 'string');
         $rsvps->addColumn('meetupId', 'string');
         $rsvps->setPrimaryKey(['attendeeId', 'meetupId']);
-
-        // Here you can add your own tables to the schema
-
-        return $schema;
     }
 }

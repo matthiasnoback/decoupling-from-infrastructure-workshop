@@ -9,6 +9,7 @@ use MeetupOrganizing\Domain\Model\Common\DateAndTime;
 use MeetupOrganizing\Domain\Model\Common\EventRecordingCapabilities;
 use MeetupOrganizing\Domain\Model\Common\Mapping;
 use MeetupOrganizing\Domain\Model\User\UserId;
+use MeetupOrganizing\Infrastructure\Database\SchemaManager;
 
 final class Meetup
 {
@@ -21,6 +22,11 @@ final class Meetup
     private string $description;
     private DateAndTime $scheduledDate;
     private Country $country;
+
+    /**
+     * @var array<UserId>
+     */
+    private array $rsvps = [];
 
     private function __construct()
     {
@@ -58,7 +64,7 @@ final class Meetup
         return $this->meetupId;
     }
 
-    public static function fromDatabaseRecord(array $meetupRecord): self
+    public static function fromDatabaseRecord(array $meetupRecord, array $rsvpRecords): self
     {
         $meetup = new self();
 
@@ -69,9 +75,15 @@ final class Meetup
         $meetup->description = self::getString($meetupRecord, 'description');
         $meetup->scheduledDate = DateAndTime::fromString(self::getString($meetupRecord, 'scheduledDate'));
 
+        // @TODO convert records from the `rsvps` table to `UserId` objects:
+        $meetup->rsvps = [];
+
         return $meetup;
     }
 
+    /**
+     * @see SchemaManager::addMeetupsTable()
+     */
     public function getDatabaseRecordData(): array
     {
         return [
@@ -82,6 +94,17 @@ final class Meetup
             'description' => $this->description,
             'scheduledDate' => $this->scheduledDate->asString()
         ];
+    }
+
+    /**
+     * @return array<array<string,string>>
+     *
+     * @see SchemaManager::addRsvpsTable()
+     */
+    public function getRsvpRecordsData(): array
+    {
+        // @TODO implement
+        return [];
     }
 
     public function changeTitle(string $newTitle): void

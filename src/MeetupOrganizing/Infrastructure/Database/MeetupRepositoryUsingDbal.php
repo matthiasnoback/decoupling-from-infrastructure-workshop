@@ -23,16 +23,25 @@ final class MeetupRepositoryUsingDbal implements MeetupRepository
 
     public function save(Meetup $meetup): void
     {
-        try {
-            $this->getById($meetup->meetupId());
-            // The meetup already exists
+        $this->connection->transactional(
+            function () use ($meetup) {
+                try {
+                    $this->getById($meetup->meetupId());
+                    // The meetup already exists
 
-            $this->connection->update('meetups', $meetup->getDatabaseRecordData(), [
-                'meetupId' => $meetup->meetupId()->asString()
-            ]);
-        } catch (CouldNotFindMeetup $exception) {
-            $this->connection->insert('meetups', $meetup->getDatabaseRecordData());
-        }
+                    $this->connection->update('meetups', $meetup->getDatabaseRecordData(), [
+                        'meetupId' => $meetup->meetupId()->asString()
+                    ]);
+                } catch (CouldNotFindMeetup $exception) {
+                    $this->connection->insert('meetups', $meetup->getDatabaseRecordData());
+                }
+
+                $this->connection->delete('rsvps', ['meetupId' => $meetup->meetupId()->asString()]);
+                foreach ($meetup->getRsvpRecordsData() as $rsvpRecordData) {
+                    $this->connection->insert('rsvps', $rsvpRecordData);
+                }
+            }
+        );
     }
 
     public function getById(MeetupId $meetupId): Meetup
@@ -50,7 +59,15 @@ final class MeetupRepositoryUsingDbal implements MeetupRepository
             throw CouldNotFindMeetup::withId($meetupId);
         }
 
-        return Meetup::fromDatabaseRecord($meetupRecord);
+        $rsvpResult = $this->connection->executeQuery(
+            'SELECT * FROM rsvps WHERE meetupId = ?',
+            [
+                $meetupId->asString()
+            ]
+        );
+        Assert::that($rsvpResult)->isInstanceOf(Result::class);
+
+        return Meetup::fromDatabaseRecord($meetupRecord, $rsvpResult->fetchAllAssociative());
     }
 
     public function nextIdentity(): MeetupId

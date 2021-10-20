@@ -5,6 +5,7 @@ namespace MeetupOrganizing\Domain\Model\User;
 
 use Assert\Assert;
 use MeetupOrganizing\Domain\Model\Common\EventRecordingCapabilities;
+use MeetupOrganizing\Infrastructure\Database\SchemaManager;
 
 final class User
 {
@@ -41,6 +42,11 @@ final class User
         return $this->username;
     }
 
+    /**
+     * @return array<string,bool|string>
+     *
+     * @see SchemaManager::addUsersTable()
+     */
     public function getDatabaseRecordData(): array
     {
         return [
