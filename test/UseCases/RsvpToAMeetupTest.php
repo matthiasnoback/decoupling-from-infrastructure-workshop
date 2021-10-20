@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Test\UseCases;
 
+use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
+use MeetupOrganizing\Domain\Model\Meetup\MeetupId;
 use MeetupOrganizing\Domain\Model\User\User;
 
 final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
@@ -79,9 +81,22 @@ final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
         //Then it's impossible to RSVP to this meetup
     }
 
-    private function anOrganizer(string $username = 'Organizer'): User
+    private function aMeetup(): MeetupId
     {
-        return $this->aUser($username, true);
+        return $this->container->application()->scheduleMeetup(
+            new ScheduleMeetup(
+                $this->anOrganizer()->userId()->asString(),
+                $this->aCountryCode(),
+                $this->aTitle(),
+                $this->aDescription(),
+                $this->aDateAndTime()
+            )
+        );
+    }
+
+    private function anOrganizer(): User
+    {
+        return $this->aUser('Organizer', true);
     }
 
     private function aUser(string $username = 'User', bool $isOrganizer = false): User
@@ -89,5 +104,25 @@ final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
         $userId = $this->container->application()->createUser(new CreateUser($username, $isOrganizer));
 
         return $this->container->userRepository()->getById($userId);
+    }
+
+    private function aCountryCode(): string
+    {
+        return 'NL';
+    }
+
+    private function aTitle(): string
+    {
+        return 'Decoupling from infrastructure';
+    }
+
+    private function aDescription(): string
+    {
+        return 'Should be interesting';
+    }
+
+    private function aDateAndTime(): string
+    {
+        return '2021-01-01T20:00';
     }
 }
