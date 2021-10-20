@@ -5,6 +5,7 @@ namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
 use MeetupOrganizing\Domain\Model\Common\Date;
+use MeetupOrganizing\Domain\Model\User\UserRepository;
 use MeetupOrganizing\Infrastructure\AbstractServiceContainer;
 use MeetupOrganizing\Infrastructure\ContainerConfiguration;
 
@@ -56,5 +57,10 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
 
             echo '- Event dispatched: ' . $eventAsString . "\n";
         };
+    }
+
+    public function userRepository(): UserRepository
+    {
+        return parent::userRepository();
     }
 }

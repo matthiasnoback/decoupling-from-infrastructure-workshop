@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace Test\UseCases;
 
+use MeetupOrganizing\Application\Users\CreateUser;
+use MeetupOrganizing\Domain\Model\User\User;
+
 final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
 {
     /**
@@ -22,9 +25,8 @@ final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
          *     at ease in an unfamiliar crowd.
          */
 
-        //Given the organizer has scheduled a meetup
-        //When a user RSVPs to this meetup
-        //Then they should be registered as an attendee
+        //When a user RSVPs to a meetup
+        //Then their name should be on the list of attendees for this meetup
     }
 
     /**
@@ -46,10 +48,10 @@ final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
     {
         $this->markTestIncomplete();
         //Given the organizer has scheduled a meetup with a maximum of 5 attendees
-        //And so far 4 attendees have registered themselves for this meetup
+        //And so far 4 attendees have RSVPed to this meetup
         //When a user RSVPs to this meetup
         //Then the meetup should still show up on the list of upcoming meetups
-        //But it will be impossible to RSVP to this meetup
+        //But it will be impossible for another user to RSVP to this meetup
     }
 
     /**
@@ -75,5 +77,17 @@ final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
         //Given a meetup has been scheduled for "2020-01-15"
         //When it's "2020-01-15"
         //Then it's impossible to RSVP to this meetup
+    }
+
+    private function anOrganizer(string $username = 'Organizer'): User
+    {
+        return $this->aUser($username, true);
+    }
+
+    private function aUser(string $username = 'User', bool $isOrganizer = false): User
+    {
+        $userId = $this->container->application()->createUser(new CreateUser($username, $isOrganizer));
+
+        return $this->container->userRepository()->getById($userId);
     }
 }

@@ -13,12 +13,12 @@ use MeetupOrganizing\Application\Meetups\MeetupDetailsRepository;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetupHandler;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetupRepository;
 use MeetupOrganizing\Application\Users\CreateUserHandler;
-use MeetupOrganizing\Application\Users\SecurityUsers;
+use MeetupOrganizing\Application\Users\Users;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupRepository;
 use MeetupOrganizing\Domain\Model\User\UserRepository;
 use MeetupOrganizing\Infrastructure\Database\MeetupDetailsRepositoryUsingDbal;
 use MeetupOrganizing\Infrastructure\Database\SchemaManager;
-use MeetupOrganizing\Infrastructure\Database\SecurityUsersUsingDbal;
+use MeetupOrganizing\Infrastructure\Database\UsersUsingDbal;
 use MeetupOrganizing\Infrastructure\Database\MeetupRepositoryUsingDbal;
 use MeetupOrganizing\Infrastructure\Database\UpcomingMeetupRepositoryUsingDbal;
 use MeetupOrganizing\Infrastructure\Database\UserRepositoryUsingDbal;
@@ -115,9 +115,9 @@ abstract class AbstractServiceContainer implements ServiceContainer
         return new MeetupRepositoryUsingDbal($this->connection());
     }
 
-    protected function securityUsers(): SecurityUsers
+    protected function securityUsers(): Users
     {
-        return new SecurityUsersUsingDbal($this->connection());
+        return new UsersUsingDbal($this->connection());
     }
 
     private function upcomingMeetupRepository(): UpcomingMeetupRepository

@@ -36,6 +36,11 @@ final class User
         return $this->userId;
     }
 
+    public function username(): string
+    {
+        return $this->username;
+    }
+
     public function getDatabaseRecordData(): array
     {
         return [

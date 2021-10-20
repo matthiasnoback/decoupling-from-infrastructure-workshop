@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Test\Adapter\MeetupOrganizing\Infrastructure;
 
 use MeetupOrganizing\Application\ApplicationInterface;
-use MeetupOrganizing\Application\Users\SecurityUsers;
+use MeetupOrganizing\Application\Users\Users;
 use MeetupOrganizing\Infrastructure\AbstractDevelopmentServiceContainer;
 
 final class InputAdapterTestServiceContainer extends AbstractDevelopmentServiceContainer
@@ -21,8 +21,8 @@ final class InputAdapterTestServiceContainer extends AbstractDevelopmentServiceC
         return new ApplicationSpy();
     }
 
-    protected function securityUsers(): SecurityUsers
+    protected function securityUsers(): Users
     {
-        return new HardCodedSecurityUsers();
+        return new HardCodedUsers();
     }
 }

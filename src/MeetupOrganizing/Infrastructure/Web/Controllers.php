@@ -5,10 +5,10 @@ namespace MeetupOrganizing\Infrastructure\Web;
 
 use MeetupOrganizing\Application\ApplicationInterface;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
-use MeetupOrganizing\Application\Users\CouldNotFindSecurityUser;
+use MeetupOrganizing\Application\Users\CouldNotFindUser;
 use MeetupOrganizing\Application\Users\CreateUser;
-use MeetupOrganizing\Application\Users\SecurityUsers;
-use MeetupOrganizing\Application\Users\SecurityUser;
+use MeetupOrganizing\Application\Users\Users;
+use MeetupOrganizing\Application\Users\User;
 use MeetupOrganizing\Infrastructure\Framework\TemplateRenderer;
 use MeetupOrganizing\Infrastructure\Session;
 use RuntimeException;
@@ -16,18 +16,18 @@ use RuntimeException;
 final class Controllers
 {
     private ApplicationInterface $application;
-    private SecurityUsers $getSecurityUser;
+    private Users $users;
     private Session $session;
     private TemplateRenderer $templateRenderer;
 
     public function __construct(
         ApplicationInterface $application,
-        SecurityUsers $getSecurityUser,
+        Users $users,
         Session $session,
         TemplateRenderer $templateRenderer
     ) {
         $this->application = $application;
-        $this->getSecurityUser = $getSecurityUser;
+        $this->users = $users;
         $this->session = $session;
         $this->templateRenderer = $templateRenderer;
     }
@@ -118,7 +118,7 @@ final class Controllers
             if ($formErrors === []) {
                 $this->application->scheduleMeetup(
                     new ScheduleMeetup(
-                        $this->getLoggedInUser()->userId(),
+                        $this->getLoggedInUser()->userId()->asString(),
                         $formData['country'],
                         $formData['title'],
                         $formData['description'],
@@ -159,11 +159,11 @@ final class Controllers
 
             if (empty($formErrors)) {
                 try {
-                    $securityUser = $this->getSecurityUser->getByUsername($_POST['username'] ?? '');
+                    $securityUser = $this->users->getByUsername($_POST['username'] ?? '');
                     $this->session->set('logged_in_user', $securityUser);
                     $this->session->addSuccessFlash('You have successfully logged in');
                     $this->redirectTo('/');
-                } catch (CouldNotFindSecurityUser $exception) {
+                } catch (CouldNotFindUser $exception) {
                     $formErrors['username'] = 'Invalid username';
                 }
             }
@@ -184,11 +184,11 @@ final class Controllers
         $this->redirectTo('/');
     }
 
-    private function getLoggedInUser(): SecurityUser
+    private function getLoggedInUser(): User
     {
         $loggedInUser = $this->session->get('logged_in_user');
 
-        if (!$loggedInUser instanceof SecurityUser) {
+        if (!$loggedInUser instanceof User) {
             throw new RuntimeException('There is no logged in user');
         }
 
@@ -197,7 +197,7 @@ final class Controllers
 
     private function isUserLoggedIn(): bool
     {
-        return $this->session->get('logged_in_user') instanceof SecurityUser;
+        return $this->session->get('logged_in_user') instanceof User;
     }
 
     private function redirectTo(string $url): void

@@ -7,7 +7,7 @@ use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
 use MeetupOrganizing\Infrastructure\Web\Controllers;
 use Test\Adapter\MeetupOrganizing\Infrastructure\ApplicationSpy;
-use Test\Adapter\MeetupOrganizing\Infrastructure\HardCodedSecurityUsers;
+use Test\Adapter\MeetupOrganizing\Infrastructure\HardCodedUsers;
 use Test\Common\BrowserTest;
 
 final class ControllersTest extends BrowserTest
@@ -78,7 +78,7 @@ final class ControllersTest extends BrowserTest
         $this->assertResponseWasSuccessful();
         $this->assertThatCommandWasProcessed(
             new ScheduleMeetup(
-            HardCodedSecurityUsers::ORGANIZER_ID,
+            HardCodedUsers::ORGANIZER_ID,
                 'NL',
                 'Decoupling from infrastructure',
                 'Should be interesting',
