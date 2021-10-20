@@ -53,6 +53,7 @@ final class SchemaManager
         $users->addColumn('username', 'string');
         $users->addColumn('isOrganizer', 'boolean');
         $users->setPrimaryKey(['userId']);
+        $users->addUniqueIndex(['username']);
     }
 
     private function addMeetupsTable(Schema $schema): void

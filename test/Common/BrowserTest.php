@@ -32,6 +32,11 @@ abstract class BrowserTest extends TestCase
         $this->browserSession->setCookie('environment', $this->environment());
     }
 
+    protected function tearDown(): void
+    {
+        $this->browserSession->reset();
+    }
+
     abstract protected function environment(): string;
 
     protected function url(string $path): string
