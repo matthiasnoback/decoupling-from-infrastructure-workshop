@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Test\UseCases;
 
-final class RsvpTest extends AbstractUseCaseTestCase
+final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
 {
     /**
      * @test
@@ -25,6 +25,18 @@ final class RsvpTest extends AbstractUseCaseTestCase
         //Given the organizer has scheduled a meetup
         //When a user RSVPs to this meetup
         //Then they should be registered as an attendee
+    }
+
+    /**
+     * @test
+     */
+    public function a_user_has_already_rsvped_to_the_meetup(): void
+    {
+        $this->markTestIncomplete();
+
+        //Given a user has already RSVPed to a meetup
+        //When they RSVP to the same meetup again
+        //Then they should still be registered once as an attendee
     }
 
     /**

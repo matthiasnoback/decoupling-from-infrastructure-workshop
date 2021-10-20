@@ -51,9 +51,9 @@ final class SchemaManager
         $meetups->setPrimaryKey(['meetupId']);
 
         $rsvps = $schema->createTable('rsvps');
-        $rsvps->addColumn('rsvpId', 'string');
+        $rsvps->addColumn('attendeeId', 'string');
         $rsvps->addColumn('meetupId', 'string');
-        $rsvps->setPrimaryKey(['rsvpId', 'meetupId']);
+        $rsvps->setPrimaryKey(['attendeeId', 'meetupId']);
 
         // Here you can add your own tables to the schema
 

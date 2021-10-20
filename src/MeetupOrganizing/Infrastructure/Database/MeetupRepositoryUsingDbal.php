@@ -37,20 +37,20 @@ final class MeetupRepositoryUsingDbal implements MeetupRepository
 
     public function getById(MeetupId $meetupId): Meetup
     {
-        $result = $this->connection->executeQuery(
+        $meetupResult = $this->connection->executeQuery(
             'SELECT * FROM meetups WHERE meetupId = ?',
             [
                 $meetupId->asString()
             ]
         );
-        Assert::that($result)->isInstanceOf(Result::class);
+        Assert::that($meetupResult)->isInstanceOf(Result::class);
 
-        $record = $result->fetchAssociative();
-        if ($record === false) {
+        $meetupRecord = $meetupResult->fetchAssociative();
+        if ($meetupRecord === false) {
             throw CouldNotFindMeetup::withId($meetupId);
         }
 
-        return Meetup::fromDatabaseRecord($record);
+        return Meetup::fromDatabaseRecord($meetupRecord);
     }
 
     public function nextIdentity(): MeetupId

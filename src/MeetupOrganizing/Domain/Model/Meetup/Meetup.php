@@ -58,16 +58,16 @@ final class Meetup
         return $this->meetupId;
     }
 
-    public static function fromDatabaseRecord(array $record): self
+    public static function fromDatabaseRecord(array $meetupRecord): self
     {
         $meetup = new self();
 
-        $meetup->meetupId = MeetupId::fromString(self::getString($record, 'meetupId'));
-        $meetup->organizerId = UserId::fromString(self::getString($record, 'organizerId'));
-        $meetup->country = Country::fromString(self::getString($record, 'country'));
-        $meetup->title = self::getString($record, 'title');
-        $meetup->description = self::getString($record, 'description');
-        $meetup->scheduledDate = DateAndTime::fromString(self::getString($record, 'scheduledDate'));
+        $meetup->meetupId = MeetupId::fromString(self::getString($meetupRecord, 'meetupId'));
+        $meetup->organizerId = UserId::fromString(self::getString($meetupRecord, 'organizerId'));
+        $meetup->country = Country::fromString(self::getString($meetupRecord, 'country'));
+        $meetup->title = self::getString($meetupRecord, 'title');
+        $meetup->description = self::getString($meetupRecord, 'description');
+        $meetup->scheduledDate = DateAndTime::fromString(self::getString($meetupRecord, 'scheduledDate'));
 
         return $meetup;
     }
