@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\Adapter\MeetupOrganizing\Infrastructure;
 
 use MeetupOrganizing\Application\Users\SecurityUsers;
+use MeetupOrganizing\Domain\Model\Meetup\MeetupRepository;
 use MeetupOrganizing\Domain\Model\User\UserRepository;
 use MeetupOrganizing\Infrastructure\AbstractDevelopmentServiceContainer;
 use MeetupOrganizing\Infrastructure\Holidays\AbstractApiClient;
@@ -24,6 +25,11 @@ final class OutputAdapterTestServiceContainer extends AbstractDevelopmentService
     public function userRepository(): UserRepository
     {
         return parent::userRepository();
+    }
+
+    public function meetupRepository(): MeetupRepository
+    {
+        return parent::meetupRepository();
     }
 
     public function securityUsers(): SecurityUsers

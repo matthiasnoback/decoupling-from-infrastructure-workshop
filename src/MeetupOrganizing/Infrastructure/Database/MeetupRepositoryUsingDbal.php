@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace MeetupOrganizing\Infrastructure\Database;
 
 use Assert\Assert;
+use MeetupOrganizing\Domain\Model\Meetup\CouldNotFindMeetup;
 use MeetupOrganizing\Domain\Model\Meetup\Meetup;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupId;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Result;
 use Ramsey\Uuid\Uuid;
-use RuntimeException;
 
 final class MeetupRepositoryUsingDbal implements MeetupRepository
 {
@@ -23,7 +23,16 @@ final class MeetupRepositoryUsingDbal implements MeetupRepository
 
     public function save(Meetup $meetup): void
     {
-        $this->connection->insert('meetups', $meetup->getDatabaseRecordData());
+        try {
+            $this->getById($meetup->meetupId());
+            // The meetup already exists
+
+            $this->connection->update('meetups', $meetup->getDatabaseRecordData(), [
+                'id' => $meetup->meetupId()->asString()
+            ]);
+        } catch (CouldNotFindMeetup $exception) {
+            $this->connection->insert('meetups', $meetup->getDatabaseRecordData());
+        }
     }
 
     public function getById(MeetupId $meetupId): Meetup
@@ -38,9 +47,7 @@ final class MeetupRepositoryUsingDbal implements MeetupRepository
 
         $record = $result->fetchAssociative();
         if ($record === false) {
-            throw new RuntimeException(
-                sprintf('Could not find meetups with ID "%s"', $meetupId->asString())
-            );
+            throw CouldNotFindMeetup::withId($meetupId);
         }
 
         return Meetup::fromDatabaseRecord($record);

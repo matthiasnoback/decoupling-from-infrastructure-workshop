@@ -83,4 +83,9 @@ final class Meetup
             'scheduledDate' => $this->scheduledDate->asString()
         ];
     }
+
+    public function changeTitle(string $newTitle): void
+    {
+        $this->title = $newTitle;
+    }
 }
