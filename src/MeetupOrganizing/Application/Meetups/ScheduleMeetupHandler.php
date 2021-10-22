@@ -3,27 +3,27 @@ declare(strict_types=1);
 
 namespace MeetupOrganizing\Application\Meetups;
 
+use MeetupOrganizing\Domain\Model\Common\NationalHoliday;
 use MeetupOrganizing\Domain\Model\Meetup\CouldNotScheduleMeetup;
 use MeetupOrganizing\Domain\Model\Meetup\Meetup;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupId;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupRepository;
 use MeetupOrganizing\Domain\Model\User\UserRepository;
-use MeetupOrganizing\Infrastructure\Holidays\AbstractApiClient;
 
 final class ScheduleMeetupHandler
 {
     private MeetupRepository $meetupRepository;
     private UserRepository $userRepository;
-    private AbstractApiClient $abstractApiClient;
+    private NationalHoliday $nationalHoliday;
 
     public function __construct(
         MeetupRepository $meetupRepository,
         UserRepository $userRepository,
-        AbstractApiClient $abstractApiClient
+        NationalHoliday $nationalHoliday
     ) {
         $this->meetupRepository = $meetupRepository;
         $this->userRepository = $userRepository;
-        $this->abstractApiClient = $abstractApiClient;
+        $this->nationalHoliday = $nationalHoliday;
     }
 
     public function handle(ScheduleMeetup $command): MeetupId
@@ -33,12 +33,7 @@ final class ScheduleMeetupHandler
             throw CouldNotScheduleMeetup::becauseTheUserIsNoOrganizer();
         }
 
-        if (count($this->abstractApiClient->getHolidays(
-            $command->scheduledDate()->year(),
-            $command->scheduledDate()->month(),
-            $command->scheduledDate()->day(),
-            $command->countryCode()->asString()
-        )) > 0) {
+        if ($this->nationalHoliday->isNationalHoliday($command->countryCode(), $command->scheduledDate()->asDate())) {
             throw CouldNotScheduleMeetup::becauseTheDateIsANationalHolidayInThisCountry(
                 $command->scheduledDate(),
                 $command->countryCode()

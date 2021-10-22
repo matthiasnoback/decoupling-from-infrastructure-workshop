@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace MeetupOrganizing\Infrastructure;
 
 use Assert\Assert;
-use BadMethodCallException;
 use Common\EventDispatcher\EventDispatcher;
 use MeetupOrganizing\Application\Application;
 use MeetupOrganizing\Application\ApplicationInterface;
@@ -15,6 +14,8 @@ use MeetupOrganizing\Application\Meetups\ScheduleMeetupHandler;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetupRepository;
 use MeetupOrganizing\Application\Users\CreateUserHandler;
 use MeetupOrganizing\Application\Users\Users;
+use MeetupOrganizing\Domain\Model\Common\NationalHoliday;
+use MeetupOrganizing\Domain\Model\Common\NationalHolidayApiClient;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupRepository;
 use MeetupOrganizing\Domain\Model\User\UserRepository;
 use MeetupOrganizing\Infrastructure\Database\MeetupDetailsRepositoryUsingDbal;
@@ -139,7 +140,11 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     private function scheduleMeetupHandler(): ScheduleMeetupHandler
     {
-        return new ScheduleMeetupHandler($this->meetupRepository(), $this->userRepository(), $this->abstractApiClient());
+        return new ScheduleMeetupHandler(
+            $this->meetupRepository(),
+            $this->userRepository(),
+            $this->nationalHoliday()
+        );
     }
 
     protected function abstractApiClient(): AbstractApiClient
@@ -166,5 +171,10 @@ abstract class AbstractServiceContainer implements ServiceContainer
     protected function abstractApiBaseUrl(): string
     {
         return 'https://holidays.abstractapi.com/v1/';
+    }
+
+    protected function nationalHoliday(): NationalHoliday
+    {
+        return new NationalHolidayApiClient($this->abstractApiClient());
     }
 }

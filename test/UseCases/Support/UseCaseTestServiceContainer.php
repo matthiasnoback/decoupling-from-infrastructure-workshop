@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace Test\UseCases\Support;
 
 use Common\EventDispatcher\EventDispatcher;
+use MeetupOrganizing\Application\Meetups\ScheduleMeetupHandler;
 use MeetupOrganizing\Domain\Model\Common\Date;
+use MeetupOrganizing\Domain\Model\Common\NationalHoliday;
 use MeetupOrganizing\Domain\Model\User\UserRepository;
 use MeetupOrganizing\Infrastructure\AbstractServiceContainer;
 use MeetupOrganizing\Infrastructure\ContainerConfiguration;
+use Test\Common\FakeNationalHoliday;
 
 final class UseCaseTestServiceContainer extends AbstractServiceContainer
 {
@@ -62,5 +65,10 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
     public function userRepository(): UserRepository
     {
         return parent::userRepository();
+    }
+
+    protected function nationalHoliday(): NationalHoliday
+    {
+        return new FakeNationalHoliday();
     }
 }
