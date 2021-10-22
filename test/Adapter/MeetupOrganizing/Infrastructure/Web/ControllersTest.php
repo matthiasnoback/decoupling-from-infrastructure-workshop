@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace Test\Adapter\MeetupOrganizing\Infrastructure\Web;
 
+use MeetupOrganizing\Application\Meetups\RsvpToMeetup;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
+use MeetupOrganizing\Domain\Model\Meetup\MeetupId;
+use MeetupOrganizing\Domain\Model\User\UserId;
 use MeetupOrganizing\Infrastructure\Web\Controllers;
 use Test\Adapter\MeetupOrganizing\Infrastructure\ApplicationSpy;
 use Test\Adapter\MeetupOrganizing\Infrastructure\HardCodedUsers;
@@ -126,14 +129,18 @@ final class ControllersTest extends BrowserTest
 
         $this->goToMeetupDetailsPage();
 
-        $this->markTestIncomplete('TODO implement Controllers::rsvpToMeetupController');
+        $this->browserSession->getPage()->pressButton('RSVP');
+        $this->assertResponseWasSuccessful();
 
-        //$this->browserSession->getPage()->pressButton('RSVP');
-        //$this->assertResponseWasSuccessful();
-        //$this->assertThatCommandWasProcessed(...);
+        $this->assertThatCommandWasProcessed(
+            new RsvpToMeetup(
+                MeetupId::fromString(ApplicationSpy::THE_ONLY_MEETUP_ID),
+                UserId::fromString(HardCodedUsers::USER_ID)
+            )
+        );
 
-        //$this->followRedirect();
-        //$this->assertFlashMessageContains('You have RSVPed to this meetup');
+        $this->followRedirect();
+        $this->assertFlashMessageContains('You have RSVPed to this meetup');
     }
 
     /**

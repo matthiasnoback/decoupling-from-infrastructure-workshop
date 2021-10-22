@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace MeetupOrganizing\Infrastructure\Web;
 
 use MeetupOrganizing\Application\ApplicationInterface;
+use MeetupOrganizing\Application\Meetups\RsvpToMeetup;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Users\CouldNotFindUser;
 use MeetupOrganizing\Application\Users\CreateUser;
 use MeetupOrganizing\Application\Users\Users;
 use MeetupOrganizing\Application\Users\User;
+use MeetupOrganizing\Domain\Model\Meetup\MeetupId;
 use MeetupOrganizing\Infrastructure\Framework\TemplateRenderer;
 use MeetupOrganizing\Infrastructure\Session;
 use RuntimeException;
@@ -150,7 +152,10 @@ final class Controllers
 
         $meetupId = $_POST['meetupId'];
 
-        // @TODO implement
+        $this->application->rsvpToMeetup(
+            new RsvpToMeetup(MeetupId::fromString($meetupId), $this->getLoggedInUser()->userId())
+        );
+        $this->session->addSuccessFlash('You have RSVPed to this meetup');
 
         $this->redirectTo('/meetupDetails?meetupId=' . $meetupId);
     }

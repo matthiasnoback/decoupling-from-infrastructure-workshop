@@ -16,6 +16,7 @@ use MeetupOrganizing\Domain\Model\User\UserId;
 final class ApplicationSpy implements ApplicationInterface
 {
     const COMMAND_SENT_HEADER = 'X-Command-Sent';
+    const THE_ONLY_MEETUP_ID = '8db7f6ed-adc0-46f6-8f0c-b97c0f3821e3';
 
     public function __construct()
     {
@@ -32,19 +33,19 @@ final class ApplicationSpy implements ApplicationInterface
     {
         $this->recordThatCommandWasSent($command);
 
-        return MeetupId::fromString('8db7f6ed-adc0-46f6-8f0c-b97c0f3821e3');
+        return MeetupId::fromString(self::THE_ONLY_MEETUP_ID);
     }
 
     public function rsvpToMeetup(RsvpToMeetup $command): void
     {
-        throw new No();
+        $this->recordThatCommandWasSent($command);
     }
 
     public function upcomingMeetups(): array
     {
         return [
             new UpcomingMeetup(
-                '8db7f6ed-adc0-46f6-8f0c-b97c0f3821e3',
+                self::THE_ONLY_MEETUP_ID,
                 '2020-01-24T20:00',
                 'Decoupling from infrastructure'
             )
@@ -54,7 +55,7 @@ final class ApplicationSpy implements ApplicationInterface
     public function meetupDetails(string $meetupId): MeetupDetails
     {
         return new MeetupDetails(
-            '8db7f6ed-adc0-46f6-8f0c-b97c0f3821e3',
+            self::THE_ONLY_MEETUP_ID,
             '2020-01-24T20:00',
             'Decoupling from infrastructure',
             'Should be interesting',

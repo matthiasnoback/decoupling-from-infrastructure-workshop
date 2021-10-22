@@ -33,7 +33,7 @@ final class MeetupDetails
 
     /**
      * @param array<string,string|null> $meetupRecord
-     * @param array<string,string|null> $rsvpRecords
+     * @param array<array<string,string|null>> $rsvpRecords
      */
     public static function fromDatabaseRecord(array $meetupRecord, array $rsvpRecords): self
     {
