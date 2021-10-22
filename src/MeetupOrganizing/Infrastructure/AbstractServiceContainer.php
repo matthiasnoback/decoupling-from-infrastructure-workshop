@@ -15,7 +15,7 @@ use MeetupOrganizing\Application\Meetups\UpcomingMeetupRepository;
 use MeetupOrganizing\Application\Users\CreateUserHandler;
 use MeetupOrganizing\Application\Users\Users;
 use MeetupOrganizing\Domain\Model\Common\NationalHoliday;
-use MeetupOrganizing\Domain\Model\Common\NationalHolidayApiClient;
+use MeetupOrganizing\Infrastructure\Holidays\NationalHolidayApiClient;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupRepository;
 use MeetupOrganizing\Domain\Model\User\UserRepository;
 use MeetupOrganizing\Infrastructure\Database\MeetupDetailsRepositoryUsingDbal;

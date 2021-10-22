@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace MeetupOrganizing\Domain\Model\Common;
+namespace MeetupOrganizing\Infrastructure\Holidays;
 
-use MeetupOrganizing\Infrastructure\Holidays\AbstractApiClient;
+use MeetupOrganizing\Domain\Model\Common\Country;
+use MeetupOrganizing\Domain\Model\Common\Date;
+use MeetupOrganizing\Domain\Model\Common\NationalHoliday;
 
 final class NationalHolidayApiClient implements NationalHoliday
 {
