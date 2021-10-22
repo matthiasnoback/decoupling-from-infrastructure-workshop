@@ -12,11 +12,10 @@ final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
 {
     /**
      * @test
+     * @group wip
      */
     public function a_user_rsvps_to_a_meetup(): void
     {
-        $this->markTestIncomplete();
-
         /*
          * Feature: RSVPs
          *
@@ -27,8 +26,14 @@ final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
          *     at ease in an unfamiliar crowd.
          */
 
+        $user = $this->aUser();
+        $meetupId = $this->aMeetup();
+
         //When a user RSVPs to a meetup
+
         //Then their name should be on the list of attendees for this meetup
+        $meetupDetails = $this->container->application()->meetupDetails($meetupId->asString());
+        self::assertContains($user->username(), $meetupDetails->attendeeNames());
     }
 
     /**
