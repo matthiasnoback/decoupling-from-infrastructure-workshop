@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Test\UseCases;
 
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
+use MeetupOrganizing\Application\RsvpToMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupId;
 use MeetupOrganizing\Domain\Model\User\User;
@@ -30,6 +31,9 @@ final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
         $meetupId = $this->aMeetup();
 
         //When a user RSVPs to a meetup
+        $this->container->application()->rsvpToMeetup(
+            new RsvpToMeetup($meetupId, $user->userId())
+        );
 
         //Then their name should be on the list of attendees for this meetup
         $meetupDetails = $this->container->application()->meetupDetails($meetupId->asString());
