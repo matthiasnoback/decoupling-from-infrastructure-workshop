@@ -8,7 +8,6 @@ use MeetupOrganizing\Application\Meetups\UpcomingMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
 use MeetupOrganizing\Domain\Model\Meetup\CouldNotScheduleMeetup;
 use MeetupOrganizing\Domain\Model\User\UserId;
-use PHPUnit\Framework\AssertionFailedError;
 use Throwable;
 
 final class SchedulingMeetupsTest extends AbstractUseCaseTestCase
@@ -74,6 +73,7 @@ final class SchedulingMeetupsTest extends AbstractUseCaseTestCase
     public function the_day_of_the_meetup_is_a_national_holiday(): void
     {
         // Given "2020-12-25" is a national holiday in "NL"
+        $this->container->nationalHoliday()->markAsNationalHoliday('2020-12-25', 'NL');
 
         // When the organizer tries to schedule a meetup on this date in this country
         $exception = self::expectThrowable(function () {

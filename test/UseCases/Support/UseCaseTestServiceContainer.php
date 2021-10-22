@@ -67,8 +67,8 @@ final class UseCaseTestServiceContainer extends AbstractServiceContainer
         return parent::userRepository();
     }
 
-    protected function nationalHoliday(): NationalHoliday
+    public function nationalHoliday(): FakeNationalHoliday
     {
-        return new FakeNationalHoliday();
+        return $this->nationalHoliday ??= new FakeNationalHoliday();
     }
 }
