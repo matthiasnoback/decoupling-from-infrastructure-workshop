@@ -19,5 +19,11 @@ final class RsvpToMeetupHandler
 
     public function handle(RsvpToMeetup $command): void
     {
+        $user = $this->userRepository->getById($command->attendeeId());
+
+        $meetup = $this->meetupRepository->getById($command->meetupId());
+        $meetup = $meetup->withRsvp($user->userId());
+
+        $this->meetupRepository->save($meetup);
     }
 }

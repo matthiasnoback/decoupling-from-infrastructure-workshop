@@ -118,4 +118,12 @@ final class Meetup
     {
         $this->title = $newTitle;
     }
+
+    public function withRsvp(UserId $attendeeId): self
+    {
+        $self = clone $this;
+        $self->rsvps[] = $attendeeId;
+
+        return $self;
+    }
 }
