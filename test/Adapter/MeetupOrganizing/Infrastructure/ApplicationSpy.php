@@ -57,7 +57,10 @@ final class ApplicationSpy implements ApplicationInterface
             '8db7f6ed-adc0-46f6-8f0c-b97c0f3821e3',
             '2020-01-24T20:00',
             'Decoupling from infrastructure',
-            'Should be interesting'
+            'Should be interesting',
+            [
+                'Matthias Noback'
+            ]
         );
     }
 

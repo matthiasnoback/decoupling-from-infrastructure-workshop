@@ -105,7 +105,10 @@ final class ControllersTest extends BrowserTest
 
         $this->goToMeetupDetailsPage();
 
-        $this->assertBrowserSession()->pageTextContains('Should be interesting');
+        $this->assertBrowserSession()->elementTextContains('css', '.meetup_description', 'Should be interesting');
+
+        $this->assertBrowserSession()->elementsCount('css', '.meetup_attendee', 1);
+        $this->assertBrowserSession()->elementTextContains('css', '.meetup_attendee', 'Matthias Noback');
     }
 
     /**
