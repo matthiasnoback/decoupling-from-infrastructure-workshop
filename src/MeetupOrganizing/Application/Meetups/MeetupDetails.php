@@ -14,12 +14,18 @@ final class MeetupDetails
     private string $title;
     private string $description;
 
+    /**
+     * @var array<string>
+     */
+    private array $attendeeNames;
+
     public function __construct(string $meetupId, string $dateAndTime, string $title, string $description)
     {
         $this->meetupId = $meetupId;
         $this->dateAndTime = $dateAndTime;
         $this->title = $title;
         $this->description = $description;
+        $this->attendeeNames = [];
     }
 
     /**
@@ -53,5 +59,13 @@ final class MeetupDetails
     public function meetupId(): string
     {
         return $this->meetupId;
+    }
+
+    /**
+     * @return array<string>
+     */
+    public function attendeeNames(): array
+    {
+        return $this->attendeeNames;
     }
 }
