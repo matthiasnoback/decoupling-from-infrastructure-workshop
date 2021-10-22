@@ -22,4 +22,6 @@ interface ApplicationInterface
     public function upcomingMeetups(): array;
 
     public function meetupDetails(string $meetupId): MeetupDetails;
+
+    public function rsvpToMeetup(RsvpToMeetup $command): void;
 }

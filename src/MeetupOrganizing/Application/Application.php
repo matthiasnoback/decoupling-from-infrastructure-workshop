@@ -51,4 +51,9 @@ final class Application implements ApplicationInterface
     {
         return $this->meetupDetailsRepository->getMeetupDetails(MeetupId::fromString($meetupId));
     }
+
+    public function rsvpToMeetup(RsvpToMeetup $command): void
+    {
+        throw new No('@TODO: call a handler');
+    }
 }
