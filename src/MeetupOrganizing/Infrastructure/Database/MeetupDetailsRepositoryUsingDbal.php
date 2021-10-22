@@ -22,21 +22,31 @@ final class MeetupDetailsRepositoryUsingDbal implements MeetupDetailsRepository
 
     public function getMeetupDetails(MeetupId $meetupId): MeetupDetails
     {
-        $result = $this->connection->executeQuery(
+        $meetupResult = $this->connection->executeQuery(
             'SELECT * FROM meetups WHERE meetupId = ?',
             [
                 $meetupId->asString()
             ]
         );
-        Assert::that($result)->isInstanceOf(Result::class);
+        Assert::that($meetupResult)->isInstanceOf(Result::class);
 
-        $record = $result->fetchAssociative();
-        if ($record === false) {
+        $meetupRecord = $meetupResult->fetchAssociative();
+        if ($meetupRecord === false) {
             throw new RuntimeException(
                 sprintf('Could not find meetups with ID "%s"', $meetupId->asString())
             );
         }
 
-        return MeetupDetails::fromDatabaseRecord($record);
+        $rsvpResults = $this->connection->executeQuery(
+            'SELECT users.username AS attendeeName FROM rsvps INNER JOIN users ON attendeeId = userId WHERE meetupId = ?',
+            [
+                $meetupId->asString()
+            ]
+        );
+        Assert::that($rsvpResults)->isInstanceOf(Result::class);
+
+        $rsvpRecords = $rsvpResults->fetchAllAssociative();
+
+        return MeetupDetails::fromDatabaseRecord($meetupRecord, $rsvpRecords);
     }
 }

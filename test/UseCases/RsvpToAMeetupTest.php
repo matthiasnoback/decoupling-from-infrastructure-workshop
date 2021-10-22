@@ -13,7 +13,6 @@ final class RsvpToAMeetupTest extends AbstractUseCaseTestCase
 {
     /**
      * @test
-     * @group wip
      */
     public function a_user_rsvps_to_a_meetup(): void
     {

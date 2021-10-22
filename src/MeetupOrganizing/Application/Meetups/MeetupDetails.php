@@ -19,25 +19,30 @@ final class MeetupDetails
      */
     private array $attendeeNames;
 
-    public function __construct(string $meetupId, string $dateAndTime, string $title, string $description)
+    /**
+     * @param array<string> $attendeeNames
+     */
+    public function __construct(string $meetupId, string $dateAndTime, string $title, string $description, array $attendeeNames)
     {
         $this->meetupId = $meetupId;
         $this->dateAndTime = $dateAndTime;
         $this->title = $title;
         $this->description = $description;
-        $this->attendeeNames = [];
+        $this->attendeeNames = $attendeeNames;
     }
 
     /**
-     * @param array<string,string|null> $record
+     * @param array<string,string|null> $meetupRecord
+     * @param array<string,string|null> $rsvpRecords
      */
-    public static function fromDatabaseRecord(array $record): self
+    public static function fromDatabaseRecord(array $meetupRecord, array $rsvpRecords): self
     {
         return new self(
-            self::getString($record, 'meetupId'),
-            self::getString($record, 'scheduledDate'),
-            self::getString($record, 'title'),
-            self::getString($record, 'description')
+            self::getString($meetupRecord, 'meetupId'),
+            self::getString($meetupRecord, 'scheduledDate'),
+            self::getString($meetupRecord, 'title'),
+            self::getString($meetupRecord, 'description'),
+            array_map(fn (array $rsvpRecord) => self::getString($rsvpRecord, 'attendeeName'), $rsvpRecords)
         );
     }
 
