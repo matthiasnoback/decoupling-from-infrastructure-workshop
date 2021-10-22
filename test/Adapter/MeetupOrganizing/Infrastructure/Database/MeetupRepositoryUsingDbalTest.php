@@ -46,7 +46,7 @@ final class MeetupRepositoryUsingDbalTest extends TestCase
         $this->assertSavedEntityEqualsRetrievedEntity($meetup);
 
         foreach ($mutators as $mutator) {
-            $mutator->mutate($meetup);
+            $meetup = $mutator->mutate($meetup);
 
             $this->assertSavedEntityEqualsRetrievedEntity($meetup);
         }
@@ -62,9 +62,9 @@ final class MeetupRepositoryUsingDbalTest extends TestCase
             $meetup,
             [
                 new class implements MeetupMutator {
-                    public function mutate(Meetup $meetup): void
+                    public function mutate(Meetup $meetup): Meetup
                     {
-                        $meetup->changeTitle('The new title');
+                        return $meetup->changeTitle('The new title');
                     }
                 }
             ]

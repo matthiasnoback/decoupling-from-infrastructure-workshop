@@ -114,9 +114,12 @@ final class Meetup
         return [];
     }
 
-    public function changeTitle(string $newTitle): void
+    public function changeTitle(string $newTitle): self
     {
-        $this->title = $newTitle;
+        $copy = clone $this;
+        $copy->title = $newTitle;
+
+        return $copy;
     }
 
     public function withRsvp(UserId $attendeeId): self

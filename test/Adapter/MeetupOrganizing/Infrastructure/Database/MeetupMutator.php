@@ -7,5 +7,5 @@ use MeetupOrganizing\Domain\Model\Meetup\Meetup;
 
 interface MeetupMutator
 {
-    public function mutate(Meetup $meetup): void;
+    public function mutate(Meetup $meetup): Meetup;
 }
