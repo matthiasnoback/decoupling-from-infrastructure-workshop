@@ -139,7 +139,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
 
     private function scheduleMeetupHandler(): ScheduleMeetupHandler
     {
-        return new ScheduleMeetupHandler($this->meetupRepository(), $this->userRepository());
+        return new ScheduleMeetupHandler($this->meetupRepository(), $this->userRepository(), $this->abstractApiClient());
     }
 
     protected function abstractApiClient(): AbstractApiClient

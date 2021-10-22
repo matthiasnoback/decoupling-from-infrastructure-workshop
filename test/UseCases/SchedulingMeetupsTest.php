@@ -6,7 +6,10 @@ namespace Test\UseCases;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
+use MeetupOrganizing\Domain\Model\Meetup\CouldNotScheduleMeetup;
 use MeetupOrganizing\Domain\Model\User\UserId;
+use PHPUnit\Framework\AssertionFailedError;
+use Throwable;
 
 final class SchedulingMeetupsTest extends AbstractUseCaseTestCase
 {
@@ -43,7 +46,7 @@ final class SchedulingMeetupsTest extends AbstractUseCaseTestCase
 
         // Then it shows up on the list of upcoming meetups
         $allTitles = array_map(
-            fn (UpcomingMeetup $upcomingMeetup) => $upcomingMeetup->title(),
+            fn(UpcomingMeetup $upcomingMeetup) => $upcomingMeetup->title(),
             $this->container->application()->upcomingMeetups()
         );
         self::assertContains($title, $allTitles);
@@ -73,10 +76,21 @@ final class SchedulingMeetupsTest extends AbstractUseCaseTestCase
         // Given "2020-12-25" is a national holiday in "NL"
 
         // When the organizer tries to schedule a meetup on this date in this country
+        $exception = self::expectThrowable(function () {
+            $this->container->application()->scheduleMeetup(
+                new ScheduleMeetup(
+                    $this->theOrganizer()->asString(),
+                    'NL',
+                    $this->aTitle(),
+                    $this->aDescription(),
+                    '2020-12-25T20:00'
+                )
+            );
+        });
 
         // Then the meetup won't be scheduled because the date of the meetup is a national holiday
-
-        $this->markTestIncomplete('TODO');
+        self::assertInstanceOf(CouldNotScheduleMeetup::class, $exception);
+        self::assertStringContainsString('is a national holiday', $exception->getMessage());
     }
 
     private function theOrganizer(): UserId
@@ -87,5 +101,26 @@ final class SchedulingMeetupsTest extends AbstractUseCaseTestCase
     private function aCountryCode(): string
     {
         return 'NL';
+    }
+
+    private function aTitle(): string
+    {
+        return 'A title';
+    }
+
+    private function aDescription(): string
+    {
+        return 'A description';
+    }
+
+    private static function expectThrowable(callable $callable): Throwable
+    {
+        try {
+            $callable();
+        } catch (Throwable $throwable) {
+            return $throwable;
+        }
+
+        self::fail('Expected a throwable');
     }
 }
