@@ -82,8 +82,10 @@ final class Meetup
         $meetup->description = self::getString($meetupRecord, 'description');
         $meetup->scheduledDate = DateAndTime::fromString(self::getString($meetupRecord, 'scheduledDate'));
 
-        // @TODO convert records from the `rsvps` table to `UserId` objects:
         $meetup->rsvps = [];
+        foreach ($rsvpRecords as $rsvpRecord) {
+            $meetup->rsvps[] = UserId::fromString(self::getString($rsvpRecord, 'attendeeId'));
+        }
 
         return $meetup;
     }
@@ -110,8 +112,16 @@ final class Meetup
      */
     public function getRsvpRecordsData(): array
     {
-        // @TODO implement
-        return [];
+        $records = [];
+
+        foreach ($this->rsvps as $rsvp) {
+            $records[] = [
+                'meetupId' => $this->meetupId->asString(),
+                'attendeeId' => $rsvp->asString()
+            ];
+        }
+
+        return $records;
     }
 
     public function changeTitle(string $newTitle): self

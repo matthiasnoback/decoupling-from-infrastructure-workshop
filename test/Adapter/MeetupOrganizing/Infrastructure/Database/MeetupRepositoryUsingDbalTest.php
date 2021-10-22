@@ -69,6 +69,19 @@ final class MeetupRepositoryUsingDbalTest extends TestCase
                 }
             ]
         ];
+
+        $meetup = $this->aMeetup();
+        yield [
+            $meetup,
+            [
+                new class implements MeetupMutator {
+                    public function mutate(Meetup $meetup): Meetup
+                    {
+                        return $meetup->withRsvp(UserId::fromString('0e1b4c24-8c54-4a5a-8d0a-f04a379062ee'));
+                    }
+                }
+            ]
+        ];
     }
 
     protected function aMeetup(): Meetup
