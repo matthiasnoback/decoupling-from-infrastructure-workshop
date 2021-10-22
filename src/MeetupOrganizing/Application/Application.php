@@ -5,6 +5,8 @@ namespace MeetupOrganizing\Application;
 
 use MeetupOrganizing\Application\Meetups\MeetupDetails;
 use MeetupOrganizing\Application\Meetups\MeetupDetailsRepository;
+use MeetupOrganizing\Application\Meetups\RsvpToMeetup;
+use MeetupOrganizing\Application\Meetups\RsvpToMeetupHandler;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetupHandler;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetupRepository;
@@ -19,17 +21,20 @@ final class Application implements ApplicationInterface
     private ScheduleMeetupHandler $scheduleMeetupHandler;
     private UpcomingMeetupRepository $upcomingMeetupRepository;
     private MeetupDetailsRepository $meetupDetailsRepository;
+    private RsvpToMeetupHandler $rsvpToMeetupHandler;
 
     public function __construct(
         CreateUserHandler $createUserHandler,
         ScheduleMeetupHandler $scheduleMeetupHandler,
         UpcomingMeetupRepository $upcomingMeetupRepository,
-        MeetupDetailsRepository $meetupDetailsRepository
+        MeetupDetailsRepository $meetupDetailsRepository,
+        RsvpToMeetupHandler $rsvpToMeetupHandler
     ) {
         $this->createUserHandler = $createUserHandler;
         $this->scheduleMeetupHandler = $scheduleMeetupHandler;
         $this->upcomingMeetupRepository = $upcomingMeetupRepository;
         $this->meetupDetailsRepository = $meetupDetailsRepository;
+        $this->rsvpToMeetupHandler = $rsvpToMeetupHandler;
     }
 
     public function createUser(CreateUser $command): UserId
@@ -54,6 +59,6 @@ final class Application implements ApplicationInterface
 
     public function rsvpToMeetup(RsvpToMeetup $command): void
     {
-        throw new No('@TODO: call a handler');
+        $this->rsvpToMeetupHandler->handle($command);
     }
 }

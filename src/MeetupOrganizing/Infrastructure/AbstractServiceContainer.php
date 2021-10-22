@@ -10,6 +10,7 @@ use MeetupOrganizing\Application\Application;
 use MeetupOrganizing\Application\ApplicationInterface;
 use MeetupOrganizing\Application\Clock;
 use MeetupOrganizing\Application\Meetups\MeetupDetailsRepository;
+use MeetupOrganizing\Application\Meetups\RsvpToMeetupHandler;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetupHandler;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetupRepository;
 use MeetupOrganizing\Application\Users\CreateUserHandler;
@@ -61,6 +62,7 @@ abstract class AbstractServiceContainer implements ServiceContainer
             $this->scheduleMeetupHandler(),
             $this->upcomingMeetupRepository(),
             $this->meetupDetailsRepository(),
+            new RsvpToMeetupHandler($this->userRepository(), $this->meetupRepository())
         );
     }
 

@@ -8,7 +8,7 @@ use MeetupOrganizing\Application\Meetups\MeetupDetails;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetup;
 use MeetupOrganizing\Application\No;
-use MeetupOrganizing\Application\RsvpToMeetup;
+use MeetupOrganizing\Application\Meetups\RsvpToMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupId;
 use MeetupOrganizing\Domain\Model\User\UserId;

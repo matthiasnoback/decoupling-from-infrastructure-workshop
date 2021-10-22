@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace MeetupOrganizing\Application;
 
 use MeetupOrganizing\Application\Meetups\MeetupDetails;
+use MeetupOrganizing\Application\Meetups\RsvpToMeetup;
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
 use MeetupOrganizing\Application\Meetups\UpcomingMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;

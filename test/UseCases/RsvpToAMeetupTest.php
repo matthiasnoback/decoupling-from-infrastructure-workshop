@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Test\UseCases;
 
 use MeetupOrganizing\Application\Meetups\ScheduleMeetup;
-use MeetupOrganizing\Application\RsvpToMeetup;
+use MeetupOrganizing\Application\Meetups\RsvpToMeetup;
 use MeetupOrganizing\Application\Users\CreateUser;
 use MeetupOrganizing\Domain\Model\Meetup\MeetupId;
 use MeetupOrganizing\Domain\Model\User\User;
